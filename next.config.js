@@ -8,7 +8,10 @@ const nextConfig = {
         pathname: '/a/**',
       },
     ],
+    unoptimized: true,
+    domains: ['lh3.googleusercontent.com'],
   },
+  output: 'standalone',
 };
 
 module.exports = nextConfig;
