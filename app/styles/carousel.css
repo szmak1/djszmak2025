@@ -1,0 +1,55 @@
+/* Custom styles for the reviews carousel */
+.reviews-slider {
+  padding: 0 20px;
+}
+
+.reviews-slider .slick-slide {
+  padding: 0 10px;
+  height: auto !important;
+}
+
+.reviews-slider .slick-dots {
+  bottom: -40px;
+}
+
+.reviews-slider .slick-dots li button:before {
+  color: #fff;
+  opacity: 0.5;
+}
+
+.reviews-slider .slick-dots li.slick-active button:before {
+  color: #fff;
+  opacity: 1;
+}
+
+.reviews-slider .slick-track {
+  display: flex;
+  gap: 20px;
+  align-items: stretch;
+  margin: 0 -10px;
+}
+
+.reviews-slider .slick-slide {
+  height: inherit !important;
+}
+
+.reviews-slider .slick-slide > div {
+  height: 100%;
+  display: flex;
+}
+
+.reviews-slider .slick-slide > div > div {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* RTL specific styles */
+.reviews-slider .slick-track {
+  direction: rtl;
+}
+
+.reviews-slider .slick-slide {
+  direction: ltr;
+}
