@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   description:
     'Boka DJ Szmak för din fest i Skåne! Med över 10 års erfarenhet som DJ i Malmö och hela Skåne, kan jag garantera en fantastisk kväll med perfekt musikmix för ditt event.',
   keywords: 'nyckelord1, nyckelord2, nyckelord3',
-  robots: 'index, follow',
+  robots: 'noindex, nofollow',
   openGraph: {
     title: 'DJ Szmak - DJ i Skåne',
     description:
