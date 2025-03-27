@@ -1,14 +1,15 @@
-import Image from 'next/image'
-import Link from 'next/link'
+import Image from 'next/image';
+import Link from 'next/link';
 
 interface TextWithImageProps {
-  title: string
-  description: string
-  imageSrc: string
-  imageAlt: string
-  imagePosition?: 'left' | 'right'
-  buttonText?: string
-  buttonLink?: string
+  title: string;
+  description: string;
+  imageSrc: string;
+  imageAlt: string;
+  imagePosition?: 'left' | 'right';
+  imagePositionY?: 'top' | 'center' | 'bottom';
+  buttonText?: string;
+  buttonLink?: string;
 }
 
 export default function TextWithImage({
@@ -17,11 +18,23 @@ export default function TextWithImage({
   imageSrc,
   imageAlt,
   imagePosition = 'left',
+  imagePositionY = 'center',
   buttonText,
   buttonLink,
 }: TextWithImageProps) {
-  const contentOrder = imagePosition === 'left' ? 'lg:order-2' : ''
-  const imageOrder = imagePosition === 'left' ? 'lg:order-1' : ''
+  const contentOrder = imagePosition === 'left' ? 'lg:order-2' : '';
+  const imageOrder = imagePosition === 'left' ? 'lg:order-1' : '';
+
+  const getObjectPosition = () => {
+    switch (imagePositionY) {
+      case 'top':
+        return 'object-top';
+      case 'bottom':
+        return 'object-bottom';
+      default:
+        return 'object-center';
+    }
+  };
 
   return (
     <div className="py-16 md:py-24 bg-[#0a0a0a]">
@@ -32,9 +45,7 @@ export default function TextWithImage({
             <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-white">
               {title}
             </h2>
-            <p className="font-sans text-lg text-white/90 mb-8">
-              {description}
-            </p>
+            <p className="font-sans text-lg text-white/90 mb-8">{description}</p>
             {buttonText && buttonLink && (
               <Link
                 href={buttonLink}
@@ -52,12 +63,12 @@ export default function TextWithImage({
                 src={imageSrc}
                 alt={imageAlt}
                 fill
-                className="object-cover hover:scale-105 transition-transform duration-500"
+                className={`object-cover hover:scale-105 transition-transform duration-500 ${getObjectPosition()}`}
               />
             </div>
           </div>
         </div>
       </div>
     </div>
-  )
-} 
+  );
+}

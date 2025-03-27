@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 interface VideoSectionProps {
   videoHeading: string;
@@ -16,6 +16,33 @@ export default function VideoSection({
   videoDescription,
 }: VideoSectionProps) {
   const [isHovered, setIsHovered] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            video.play().catch(error => {
+              console.log('Video play failed:', error);
+            });
+          } else {
+            video.pause();
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    observer.observe(video);
+
+    return () => {
+      observer.unobserve(video);
+    };
+  }, []);
 
   return (
     <section className="pb-10 pt-16">
@@ -38,9 +65,9 @@ export default function VideoSection({
                 onMouseLeave={() => setIsHovered(false)}
               >
                 <video
+                  ref={videoRef}
                   className="w-full max-w-4xl rounded-lg"
                   controls={isHovered}
-                  autoPlay
                   muted
                   loop
                   playsInline

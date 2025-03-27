@@ -44,7 +44,9 @@ export default function FAQ() {
   return (
     <section className="py-20">
       <div className="container mx-auto px-4">
-        <h2 className="text-4xl md:text-5xl font-heading text-white text-center mb-12">FAQ</h2>
+        <h2 className="text-4xl md:text-5xl font-heading font-bold text-white text-center mb-12">
+          FAQ
+        </h2>
         <div className="max-w-3xl mx-auto space-y-4">
           {faqItems.map((item, index) => (
             <div key={index} className="border border-white/20 rounded-lg overflow-hidden">

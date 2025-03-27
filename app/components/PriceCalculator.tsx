@@ -180,6 +180,9 @@ export default function PriceCalculator() {
     message: '',
   });
   const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
   const calculateTotal = () => {
     let total = 0;
@@ -312,10 +315,59 @@ export default function PriceCalculator() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission here
-    console.log('Form submitted:', formData);
+    setIsSubmitting(true);
+    setSubmitError('');
+    setSubmitSuccess(false);
+
+    try {
+      const response = await fetch('/api/quote-request', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          partyType: selectedParty,
+          addons: selectedAddons,
+          extraHours,
+          distance: distanceInfo.distance,
+          totalPrice: calculateTotal(),
+          features: getSelectedFeatures().features,
+          excludedFeatures: getSelectedFeatures().excludedFeatures,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to send quote request');
+      }
+
+      setSubmitSuccess(true);
+      // Reset form
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        date: '',
+        location: '',
+        message: '',
+      });
+      setSelectedParty('');
+      setSelectedAddons([]);
+      setExtraHours(0);
+      setDistanceInfo({
+        address: '',
+        distance: 0,
+        pricePerKm: 100,
+      });
+      setCurrentStep(1);
+    } catch (error) {
+      setSubmitError(error instanceof Error ? error.message : 'Failed to send quote request');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const getSelectedFeatures = () => {
@@ -338,9 +390,38 @@ export default function PriceCalculator() {
   return (
     <section className="py-20">
       <div className="container mx-auto px-4">
-        <h2 className="text-4xl md:text-5xl font-heading text-white text-center mb-12">
+        <h2 className="text-4xl md:text-5xl font-heading font-bold text-white text-center mb-6">
           Skapa Ditt DJ-paket
         </h2>
+        <div className="max-w-3xl mx-auto text-center mb-12">
+          <p className="text-xl text-gray-300 mb-4">
+            Få en skräddarsydd offert för din fest genom att fylla i formuläret nedan. Vi erbjuder
+            professionella DJ-tjänster för alla typer av evenemang.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-gray-400">
+            <div className="bg-gray-800/50 p-4 rounded-lg">
+              <div className="text-blue-500 text-2xl mb-2">1</div>
+              <p className="font-semibold text-white mb-1">Välj Festtyp</p>
+              <p className="text-sm">Välj den festtyp som passar ditt evenemang bäst</p>
+            </div>
+            <div className="bg-gray-800/50 p-4 rounded-lg">
+              <div className="text-blue-500 text-2xl mb-2">2</div>
+              <p className="font-semibold text-white mb-1">Anpassa Paketet</p>
+              <p className="text-sm">Lägg till extra tjänster och beräkna avstånd</p>
+            </div>
+            <div className="bg-gray-800/50 p-4 rounded-lg">
+              <div className="text-blue-500 text-2xl mb-2">3</div>
+              <p className="font-semibold text-white mb-1">Skicka Förfrågan</p>
+              <p className="text-sm">Fyll i dina uppgifter och få en detaljerad offert</p>
+            </div>
+          </div>
+          <div className="mt-8 text-gray-300">
+            <p className="mb-2">✓ Få svar inom 24 timmar</p>
+            <p className="mb-2">✓ Gratis offert</p>
+            <p className="mb-2">✓ Inga bindande avtal</p>
+            <p>✓ Skräddarsydda paket för ditt evenemang</p>
+          </div>
+        </div>
 
         {/* Progress Steps */}
         <div className="flex justify-center mb-12">
@@ -373,19 +454,25 @@ export default function PriceCalculator() {
             <div>
               {currentStep === 1 && (
                 <>
-                  <h3 className="text-2xl font-semibold text-white mb-2">Välj Festtyp</h3>
+                  <h3 className="text-2xl font-heading font-semibold text-white mb-2">
+                    Välj Festtyp
+                  </h3>
                   <p className="text-gray-400">Välj en festtyp för att fortsätta</p>
                 </>
               )}
               {currentStep === 2 && (
                 <>
-                  <h3 className="text-2xl font-semibold text-white mb-2">Beräkna Avstånd</h3>
+                  <h3 className="text-2xl font-heading font-semibold text-white mb-2">
+                    Beräkna Avstånd
+                  </h3>
                   <p className="text-gray-400">Ange adress för att beräkna avstånd från Malmö</p>
                 </>
               )}
               {currentStep === 3 && (
                 <>
-                  <h3 className="text-2xl font-semibold text-white mb-2">Välj Extra Tjänster</h3>
+                  <h3 className="text-2xl font-heading font-semibold text-white mb-2">
+                    Välj Extra Tjänster
+                  </h3>
                   <p className="text-gray-400">
                     Lägg till extra tjänster för att förbättra din fest
                   </p>
@@ -393,7 +480,9 @@ export default function PriceCalculator() {
               )}
               {currentStep === 4 && (
                 <>
-                  <h3 className="text-2xl font-semibold text-white mb-2">Kontaktinformation</h3>
+                  <h3 className="text-2xl font-heading font-semibold text-white mb-2">
+                    Kontaktinformation
+                  </h3>
                   <p className="text-gray-400">
                     Fyll i dina uppgifter för att skicka din förfrågan
                   </p>
@@ -401,7 +490,7 @@ export default function PriceCalculator() {
               )}
             </div>
             <div className="text-right">
-              <h3 className="text-xl font-semibold text-white mb-2">Totalt Pris</h3>
+              <h3 className="text-xl font-heading font-semibold text-white mb-2">Totalt Pris</h3>
               <div className="text-3xl font-bold text-blue-500">
                 {calculateTotal().toLocaleString('sv-SE')} kr
               </div>
@@ -432,7 +521,9 @@ export default function PriceCalculator() {
                           <Icon className="w-6 h-6 text-blue-500" />
                         </div>
                         <div className="text-right">
-                          <h4 className="text-xl font-semibold text-white">{party.name}</h4>
+                          <h4 className="text-xl font-heading font-semibold text-white">
+                            {party.name}
+                          </h4>
                           <p className="text-gray-400 text-sm">{party.description}</p>
                         </div>
                       </div>
@@ -613,7 +704,9 @@ export default function PriceCalculator() {
                           <Icon className="w-6 h-6 text-blue-500" />
                         </div>
                         <div className="text-right">
-                          <h4 className="text-xl font-semibold text-white">{addon.name}</h4>
+                          <h4 className="text-xl font-heading font-semibold text-white">
+                            {addon.name}
+                          </h4>
                           <p className="text-gray-400 text-sm">{addon.description}</p>
                         </div>
                       </div>
@@ -692,73 +785,111 @@ export default function PriceCalculator() {
           {currentStep === 4 && (
             <div>
               <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-6">
-                <div>
-                  <label className="block text-gray-300 mb-2 text-lg font-semibold">Namn</label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleFormChange}
-                    className="w-full bg-gray-800 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-300 mb-2 text-lg font-semibold">E-post</label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleFormChange}
-                    className="w-full bg-gray-800 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-300 mb-2 text-lg font-semibold">Telefon</label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleFormChange}
-                    className="w-full bg-gray-800 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-300 mb-2 text-lg font-semibold">Datum</label>
-                  <input
-                    type="date"
-                    name="date"
-                    value={formData.date}
-                    onChange={handleFormChange}
-                    className="w-full bg-gray-800 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-300 mb-2 text-lg font-semibold">Plats</label>
-                  <input
-                    type="text"
-                    name="location"
-                    value={formData.location}
-                    onChange={handleFormChange}
-                    className="w-full bg-gray-800 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-300 mb-2 text-lg font-semibold">
-                    Meddelande
-                  </label>
-                  <textarea
-                    name="message"
-                    value={formData.message}
-                    onChange={handleFormChange}
-                    rows={4}
-                    className="w-full bg-gray-800 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
+                {submitSuccess ? (
+                  <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-6 text-center">
+                    <div className="text-green-500 text-2xl mb-2">Tack för din förfrågan!</div>
+                    <p className="text-gray-300">
+                      Vi har skickat en bekräftelse till din e-postadress. Vi återkommer till dig
+                      inom 24 timmar med en detaljerad offert.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => setSubmitSuccess(false)}
+                      className="mt-4 px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-300"
+                    >
+                      Skicka en ny förfrågan
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    <div>
+                      <label className="block text-gray-300 mb-2 text-lg font-semibold">Namn</label>
+                      <input
+                        type="text"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleFormChange}
+                        className="w-full bg-gray-800 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-gray-300 mb-2 text-lg font-semibold">
+                        E-post
+                      </label>
+                      <input
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleFormChange}
+                        className="w-full bg-gray-800 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-gray-300 mb-2 text-lg font-semibold">
+                        Telefon
+                      </label>
+                      <input
+                        type="tel"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleFormChange}
+                        className="w-full bg-gray-800 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-gray-300 mb-2 text-lg font-semibold">
+                        Datum
+                      </label>
+                      <input
+                        type="date"
+                        name="date"
+                        value={formData.date}
+                        onChange={handleFormChange}
+                        className="w-full bg-gray-800 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-gray-300 mb-2 text-lg font-semibold">
+                        Plats
+                      </label>
+                      <input
+                        type="text"
+                        name="location"
+                        value={formData.location}
+                        onChange={handleFormChange}
+                        className="w-full bg-gray-800 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-gray-300 mb-2 text-lg font-semibold">
+                        Meddelande
+                      </label>
+                      <textarea
+                        name="message"
+                        value={formData.message}
+                        onChange={handleFormChange}
+                        rows={4}
+                        className="w-full bg-gray-800 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
+                        placeholder="Berätta gärna mer om din fest och eventuella önskemål..."
+                      />
+                    </div>
+                    {submitError && <div className="text-red-500 text-center">{submitError}</div>}
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className={`w-full px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors duration-300 ${
+                        isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+                      }`}
+                    >
+                      {isSubmitting ? 'Skickar förfrågan...' : 'Skicka Förfrågan'}
+                    </button>
+                  </>
+                )}
               </form>
             </div>
           )}

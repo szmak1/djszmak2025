@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { FaStar, FaStarHalf, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import Image from 'next/image';
 
 interface Review {
   author_name: string;
@@ -162,6 +163,7 @@ export default function GoogleReviews() {
               <span className="text-white ml-2 text-xl md:text-2xl font-heading">
                 {overallRating.toFixed(1)}
               </span>
+              <Image src="/logos/google.svg" alt="Google" width={48} height={48} className="ml-2" />
             </div>
             <p className="font-sans text-lg md:text-xl text-white/90">
               Baserat på {totalRatings} omdömen{' '}
@@ -203,9 +205,11 @@ export default function GoogleReviews() {
                         className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-700/50"
                       >
                         <div className="flex items-start space-x-4">
-                          <img
+                          <Image
                             src={review.profile_photo_url || '/default-avatar.png'}
                             alt={review.author_name}
+                            width={48}
+                            height={48}
                             className="w-12 h-12 rounded-full ring-2 ring-blue-500/20"
                           />
                           <div className="flex-1 min-w-0">

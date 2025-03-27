@@ -41,16 +41,9 @@ export async function GET() {
       throw new Error('Missing API key or Place ID');
     }
 
-    console.log('Attempting to fetch reviews with:', {
-      placeId,
-      keyLength: apiKey.length,
-    });
-
     const url = new URL('https://places.googleapis.com/v1/places/' + placeId);
     url.searchParams.append('fields', 'reviews,rating,userRatingCount,displayName');
     url.searchParams.append('languageCode', 'sv');
-
-    console.log('Request URL:', url.toString());
 
     const response = await fetch(url.toString(), {
       headers: {
@@ -77,9 +70,6 @@ export async function GET() {
     }
 
     const data = (await response.json()) as GooglePlacesResponse;
-    console.log('Google Places API response:', data);
-    console.log('Total number of reviews:', data.reviews?.length || 0);
-    console.log('All reviews:', JSON.stringify(data.reviews, null, 2));
 
     if (!data) {
       console.error('No data in API response');

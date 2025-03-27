@@ -30,10 +30,42 @@ export default function HeroVideo() {
         <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-16 2xl:px-32 max-w-[1920px] mx-auto">
           <div className="max-w-3xl mx-auto text-center text-white">
             <h1 className="font-heading text-4xl md:text-6xl font-bold mb-6 animate-fade-in tracking-tight drop-shadow-lg">
-              {content.title}
+              DJ Skåne med ljud, ljus & DJ-utrustning
             </h1>
             <p className="font-sans text-lg md:text-xl mb-8 animate-fade-in-delay drop-shadow-lg">
-              {content.subtitle}
+              Hyr en proffsig DJ till{' '}
+              <Link href="/bröllop" className="text-blue-400 hover:text-blue-300 transition-colors">
+                bröllop
+              </Link>
+              ,{' '}
+              <Link
+                href="/födelsedagsfest"
+                className="text-blue-400 hover:text-blue-300 transition-colors"
+              >
+                födelsedagsfest
+              </Link>
+              ,{' '}
+              <Link
+                href="/studentfest"
+                className="text-blue-400 hover:text-blue-300 transition-colors"
+              >
+                studentfest
+              </Link>
+              ,{' '}
+              <Link
+                href="/företagsfest"
+                className="text-blue-400 hover:text-blue-300 transition-colors"
+              >
+                företagsfest
+              </Link>{' '}
+              &{' '}
+              <Link
+                href="/nattklubb"
+                className="text-blue-400 hover:text-blue-300 transition-colors"
+              >
+                nattklubb
+              </Link>{' '}
+              i Malmö och Skåne.
             </p>
             <Link
               href={content.buttonLink}
