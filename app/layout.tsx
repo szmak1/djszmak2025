@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: '/images/share-logo.png',
+        url: '/images/share_logoDJszmak.png',
         width: 1200,
         height: 628,
         alt: 'DJ Szmak Logo',
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     title: 'DJ i Malmö med ljudsystem, ljus och high-end utrustning, Boka här!',
     description:
       'Hyr DJ i Malmö till födelsedagsfest, bröllopsfest, studentfest & företagsfest. Säkra din fest och boka erfaren DJ till festen.',
-    images: ['/images/share-logo.png'],
+    images: ['/images/share_logoDJszmak.png'],
   },
   alternates: {
     canonical: 'https://djszmak.se',
