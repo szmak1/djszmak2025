@@ -7,56 +7,47 @@ interface FAQItem {
   answer: string | string[];
 }
 
-const faqItems: FAQItem[] = [
-  {
-    question: 'Går det att boka DJ Szmak som DJ i Skåne?',
-    answer: 'DJ Szmak har hela Skåne som arbetsområde.',
-  },
-  {
-    question: 'Hur bokar jag djszmak?',
-    answer: [
-      'DJ Szmak kan bokas på 3 olika sätt som DJ Skåne:',
-      'Via formuläret djszmak.se/kontakt',
-      'Via mejl till info@djszmak.se',
-      'Via telefon till 070-88 290 77',
-      'Efter att ni skickat in förfrågan så får ni en offert/förslag av informationen ni har angett i kontakt formuläret via mejl. Det är viktigt att ni verkligen läser igenom denna offert/förslag som ni får. Känns allt ok kan ni därefter lägga en deposition på 1000kr för att din fest ska bli 100% bokad. Resterande belopp faktureras via Frilans Finans efter spelningen. Ni behöver även signera en uppdragsoffert från Frilans Finans som jag skickar till er.',
-    ],
-  },
-  {
-    question: 'Transport - och resekostnad för DJ i skåne?',
-    answer:
-      'Transport och resekostnad tillkommer vid körning utanför Malmö stad. 25kr per mil till den önskade destinationen inom Skåne.',
-  },
-  {
-    question: 'När ska man boka?',
-    answer:
-      'Viktigt att boka så snart ni vet datumet för festen annars är risken stor att jag redan är bokad. Jag rekommenderar minst 3-6 månader innan fest datumet.',
-  },
-];
+interface FAQProps {
+  faqItems?: FAQItem[];
+}
 
-export default function FAQ() {
+export default function FAQ({ faqItems = [] }: FAQProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const toggleFAQ = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
   };
 
+  if (!faqItems || faqItems.length === 0) {
+    return null;
+  }
+
   return (
     <section className="py-20">
       <div className="container mx-auto px-4">
-        <h2 className="text-4xl md:text-5xl font-heading font-bold text-white text-center mb-12">
-          FAQ
+        <h2 className="text-4xl md:text-5xl font-heading font-bold text-center mb-4">
+          <span className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent">
+            Vanliga Frågor
+          </span>
         </h2>
+        <p className="text-gray-400 text-center text-lg mb-12 max-w-2xl mx-auto">
+          Här hittar du svar på de vanligaste frågorna om våra DJ-tjänster
+        </p>
         <div className="max-w-3xl mx-auto space-y-4">
           {faqItems.map((item, index) => (
-            <div key={index} className="border border-white/20 rounded-lg overflow-hidden">
+            <div
+              key={index}
+              className="group border border-[#00ff97]/20 rounded-lg overflow-hidden bg-black/50 hover:border-[#00ff97]/40 transition-all duration-300"
+            >
               <button
                 onClick={() => toggleFAQ(index)}
-                className="w-full px-6 py-4 text-left flex justify-between items-center bg-black hover:bg-white/5 transition-colors"
+                className="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-[#00ff97]/5 transition-colors"
               >
-                <span className="text-xl font-heading text-white">{item.question}</span>
+                <span className="text-xl font-heading text-white group-hover:text-[#00ff97] transition-colors">
+                  {item.question}
+                </span>
                 <span
-                  className={`transform transition-transform duration-300 ${
+                  className={`transform transition-transform duration-300 text-[#00ff97] ${
                     openIndex === index ? 'rotate-180' : ''
                   }`}
                 >
@@ -68,17 +59,17 @@ export default function FAQ() {
                   openIndex === index ? 'max-h-[1000px]' : 'max-h-0'
                 }`}
               >
-                <div className="px-6 py-4 bg-black/50">
+                <div className="px-6 py-4 bg-gradient-to-r from-[#00ff97]/5 to-transparent">
                   {Array.isArray(item.answer) ? (
-                    <div className="space-y-2 text-white">
+                    <div className="space-y-3 text-gray-300">
                       {item.answer.map((line, i) => (
-                        <p key={i} className="text-lg">
+                        <p key={i} className="text-lg leading-relaxed">
                           {line}
                         </p>
                       ))}
                     </div>
                   ) : (
-                    <p className="text-lg text-white">{item.answer}</p>
+                    <p className="text-lg text-gray-300 leading-relaxed">{item.answer}</p>
                   )}
                 </div>
               </div>

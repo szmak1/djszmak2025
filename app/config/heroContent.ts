@@ -8,9 +8,9 @@ interface HeroContent {
 
 export const heroContent: Record<string, HeroContent> = {
   '/': {
-    title: 'Din Professionella DJ för Alla Tillfällen',
+    title: 'DJ i Malmö & Skåne med LJUD, LJUS & LEDGOLV',
     subtitle:
-      'Skapa oförglömliga ögonblick med professionell underhållning och högkvalitativt ljud',
+      'Hyr en erfaren DJ med professionell utrustning till bröllop, födelsedagsfest, studentfest, företagsfest och nattklubb i Malmö och Skåne. Vi erbjuder proffsig DJ-service med kvalitetsutrustning för alla typer av evenemang.',
     buttonText: 'Boka Din Event Nu',
     buttonLink: '/kontakt',
     videoSrc: '/videos/main-dj.mp4',

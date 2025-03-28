@@ -8,11 +8,109 @@ import GoogleReviews from './components/GoogleReviews';
 import PriceCalculator from './components/PriceCalculator';
 import TextSection from './components/TextSection';
 import VideoWithText from './components/VideoWithText';
+import Link from 'next/link';
+
+const faqItems = [
+  {
+    question: 'Går det att boka DJ Szmak som DJ i Skåne?',
+    answer: 'DJ Szmak har hela Skåne som arbetsområde.',
+  },
+  {
+    question: 'Hur bokar jag djszmak?',
+    answer: [
+      'DJ Szmak kan bokas på 3 olika sätt som DJ Skåne:',
+      'Via formuläret djszmak.se/kontakt',
+      'Via mejl till info@djszmak.se',
+      'Via telefon till 070-88 290 77',
+      'Efter att ni skickat in förfrågan så får ni en offert/förslag av informationen ni har angett i kontakt formuläret via mejl. Det är viktigt att ni verkligen läser igenom denna offert/förslag som ni får. Känns allt ok kan ni därefter lägga en deposition på 1000kr för att din fest ska bli 100% bokad. Resterande belopp faktureras via Frilans Finans efter spelningen. Ni behöver även signera en uppdragsoffert från Frilans Finans som jag skickar till er.',
+    ],
+  },
+  {
+    question: 'Transport - och resekostnad för DJ i skåne?',
+    answer:
+      'Transport och resekostnad tillkommer vid körning utanför Malmö stad. 25kr per mil till den önskade destinationen inom Skåne.',
+  },
+  {
+    question: 'När ska man boka?',
+    answer:
+      'Viktigt att boka så snart ni vet datumet för festen annars är risken stor att jag redan är bokad. Jag rekommenderar minst 3-6 månader innan fest datumet.',
+  },
+];
 
 export default function Home() {
   return (
     <div>
-      <HeroVideo />
+      <HeroVideo
+        title={
+          <>
+            <span className="text-white">DJ i Malmö & Skåne med</span>{' '}
+            <span className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent">
+              <strong>LJUD</strong>
+            </span>
+            ,{' '}
+            <span className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent">
+              <strong>LJUS</strong>
+            </span>{' '}
+            &{' '}
+            <span className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent">
+              <strong>LEDGOLV</strong>
+            </span>
+          </>
+        }
+        subtitle={
+          <>
+            <span className="sr-only">Hyr en proffsig DJ med ljud, ljus och ledgolv till</span>
+            <span className="font-semibold">
+              Hyr en erfaren DJ med professionell utrustning till
+            </span>{' '}
+            <Link
+              href="/brollopsfest"
+              className="bg-gradient-to-r from-[#00ff97] to-[#007ed4] bg-clip-text text-transparent hover:from-[#00ff97] hover:to-[#00daa8] transition-all duration-300 font-medium hover:drop-shadow-[0_0_8px_rgba(0,255,151,0.3)] focus:outline-none focus:ring-2 focus:ring-[#00ff97] focus:ring-offset-2 focus:ring-offset-black rounded-sm"
+              aria-label="Hyr DJ till bröllop i Malmö och Skåne"
+            >
+              bröllop
+            </Link>
+            ,{' '}
+            <Link
+              href="/fodelsedagsfest"
+              className="bg-gradient-to-r from-[#00ff97] to-[#007ed4] bg-clip-text text-transparent hover:from-[#00ff97] hover:to-[#00daa8] transition-all duration-300 font-medium hover:drop-shadow-[0_0_8px_rgba(0,255,151,0.3)] focus:outline-none focus:ring-2 focus:ring-[#00ff97] focus:ring-offset-2 focus:ring-offset-black rounded-sm"
+              aria-label="Hyr DJ till födelsedagsfest i Malmö och Skåne"
+            >
+              födelsedagsfest
+            </Link>
+            ,{' '}
+            <Link
+              href="/studentfest"
+              className="bg-gradient-to-r from-[#00ff97] to-[#007ed4] bg-clip-text text-transparent hover:from-[#00ff97] hover:to-[#00daa8] transition-all duration-300 font-medium hover:drop-shadow-[0_0_8px_rgba(0,255,151,0.3)] focus:outline-none focus:ring-2 focus:ring-[#00ff97] focus:ring-offset-2 focus:ring-offset-black rounded-sm"
+              aria-label="Hyr DJ till studentfest i Malmö och Skåne"
+            >
+              studentfest
+            </Link>
+            ,{' '}
+            <Link
+              href="/foretagsfest"
+              className="bg-gradient-to-r from-[#00ff97] to-[#007ed4] bg-clip-text text-transparent hover:from-[#00ff97] hover:to-[#00daa8] transition-all duration-300 font-medium hover:drop-shadow-[0_0_8px_rgba(0,255,151,0.3)] focus:outline-none focus:ring-2 focus:ring-[#00ff97] focus:ring-offset-2 focus:ring-offset-black rounded-sm"
+              aria-label="Hyr DJ till företagsfest i Malmö och Skåne"
+            >
+              företagsfest
+            </Link>{' '}
+            och{' '}
+            <Link
+              href="/nattklubbsgig"
+              className="bg-gradient-to-r from-[#00ff97] to-[#007ed4] bg-clip-text text-transparent hover:from-[#00ff97] hover:to-[#00daa8] transition-all duration-300 font-medium hover:drop-shadow-[0_0_8px_rgba(0,255,151,0.3)] focus:outline-none focus:ring-2 focus:ring-[#00ff97] focus:ring-offset-2 focus:ring-offset-black rounded-sm"
+              aria-label="Hyr DJ till nattklubb i Malmö och Skåne"
+            >
+              nattklubb
+            </Link>{' '}
+            i <strong>Malmö</strong> och <strong>Skåne</strong>. Vi erbjuder{' '}
+            <strong>proffsig DJ-service</strong> med <strong>kvalitetsutrustning</strong> för alla
+            typer av evenemang.
+          </>
+        }
+        buttonText="Boka Din Event Nu"
+        buttonLink="#pricecalculator"
+        videoSrc="/videos/main-dj.mp4"
+      />
       <Divider />
       <PartyCards />
       {/* About David Szmak section */}
@@ -60,23 +158,23 @@ Tveka inte att ta kontakt med mig med frågor eller förfrågningar!`}
       />
 
       {/* First section with djskåne1 */}
-      <TextWithImage
+      {/* <TextWithImage
         title="Professionell DJ-Service"
         description="Med över 10 års erfarenhet levererar vi högkvalitativ underhållning för alla typer av event. Från intima bröllop till stora företagsfester, vi anpassar musiken efter dina önskemål."
         imageSrc="/images/djskåne1.webp"
         imageAlt="DJ Skåne professionell service"
         buttonText="Läs mer om våra tjänster"
         buttonLink="/services"
-      />
+      /> */}
 
       {/* Second section with djskåne2 */}
-      <TextWithImage
+      {/* <TextWithImage
         title="Modern Utrustning"
         description="Vi använder endast den senaste tekniken och högkvalitativ ljudutrustning för att säkerställa den bästa möjliga upplevelsen för dig och dina gäster."
         imageSrc="/images/djskåne2.webp"
         imageAlt="DJ Skåne modern utrustning"
         imagePosition="right"
-      />
+      /> */}
 
       <VideoSection
         videoHeading="LEDGOLV"
@@ -85,7 +183,7 @@ Tveka inte att ta kontakt med mig med frågor eller förfrågningar!`}
       />
 
       <PriceCalculator />
-      <FAQ />
+      <FAQ faqItems={faqItems} />
       <GoogleReviews />
     </div>
   );

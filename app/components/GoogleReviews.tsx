@@ -107,16 +107,16 @@ export default function GoogleReviews() {
     const hasHalfStar = rating % 1 >= 0.5;
 
     for (let i = 0; i < fullStars; i++) {
-      stars.push(<FaStar key={`star-${i}`} className="text-yellow-400" />);
+      stars.push(<FaStar key={`star-${i}`} className="text-[#00ff97]" />);
     }
 
     if (hasHalfStar) {
-      stars.push(<FaStarHalf key="half-star" className="text-yellow-400" />);
+      stars.push(<FaStarHalf key="half-star" className="text-[#00ff97]" />);
     }
 
     const remainingStars = 5 - stars.length;
     for (let i = 0; i < remainingStars; i++) {
-      stars.push(<FaStar key={`empty-star-${i}`} className="text-gray-400" />);
+      stars.push(<FaStar key={`empty-star-${i}`} className="text-gray-600" />);
     }
 
     return stars;
@@ -134,7 +134,7 @@ export default function GoogleReviews() {
     return (
       <section className="py-20">
         <div className="container mx-auto px-4">
-          <div className="text-center text-white">Laddar recensioner...</div>
+          <div className="text-center text-[#00ff97]">Laddar recensioner...</div>
         </div>
       </section>
     );
@@ -153,8 +153,10 @@ export default function GoogleReviews() {
   return (
     <section className="py-20">
       <div className="container mx-auto px-4">
-        <h2 className="font-heading text-4xl md:text-6xl font-bold text-white text-center mb-8 tracking-tight drop-shadow-lg">
-          Google Recensioner
+        <h2 className="font-heading text-4xl md:text-6xl font-bold text-center mb-4">
+          <span className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent">
+            Google Recensioner
+          </span>
         </h2>
         {overallRating > 0 && (
           <div className="flex flex-col items-center mb-12">
@@ -165,13 +167,13 @@ export default function GoogleReviews() {
               </span>
               <Image src="/logos/google.svg" alt="Google" width={48} height={48} className="ml-2" />
             </div>
-            <p className="font-sans text-lg md:text-xl text-white/90">
+            <p className="font-sans text-lg md:text-xl text-gray-400">
               Baserat på {totalRatings} omdömen{' '}
               <a
                 href={googleReviewsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-400 hover:text-blue-300 underline ml-1"
+                className="text-[#00ff97] hover:text-[#00daa8] underline ml-1 transition-colors"
               >
                 Läs alla recensioner
               </a>
@@ -202,29 +204,31 @@ export default function GoogleReviews() {
                     .map((review, index) => (
                       <div
                         key={index}
-                        className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-700/50"
+                        className="group border border-[#00ff97]/20 rounded-lg bg-black/50 hover:border-[#00ff97]/40 transition-all duration-300"
                       >
-                        <div className="flex items-start space-x-4">
-                          <Image
-                            src={review.profile_photo_url || '/default-avatar.png'}
-                            alt={review.author_name}
-                            width={48}
-                            height={48}
-                            className="w-12 h-12 rounded-full ring-2 ring-blue-500/20"
-                          />
-                          <div className="flex-1 min-w-0">
-                            <h3 className="text-lg font-semibold text-white truncate">
-                              {review.author_name}
-                            </h3>
-                            <div className="flex items-center gap-2 mt-1 mb-3">
-                              <div className="flex">{renderStars(review.rating)}</div>
-                              <span className="text-gray-400 text-sm">
-                                {formatDate(review.time)}
-                              </span>
+                        <div className="p-6">
+                          <div className="flex items-start space-x-4">
+                            <Image
+                              src={review.profile_photo_url || '/default-avatar.png'}
+                              alt={review.author_name}
+                              width={48}
+                              height={48}
+                              className="w-12 h-12 rounded-full ring-2 ring-[#00ff97]/20"
+                            />
+                            <div className="flex-1 min-w-0">
+                              <h3 className="text-lg font-semibold text-white truncate group-hover:text-[#00ff97] transition-colors">
+                                {review.author_name}
+                              </h3>
+                              <div className="flex items-center gap-2 mt-1 mb-3">
+                                <div className="flex">{renderStars(review.rating)}</div>
+                                <span className="text-gray-400 text-sm">
+                                  {formatDate(review.time)}
+                                </span>
+                              </div>
+                              <p className="text-gray-300 leading-relaxed line-clamp-4">
+                                {review.text}
+                              </p>
                             </div>
-                            <p className="text-gray-300 leading-relaxed line-clamp-4">
-                              {review.text}
-                            </p>
                           </div>
                         </div>
                       </div>
@@ -237,14 +241,14 @@ export default function GoogleReviews() {
           {/* Navigation Arrows */}
           <button
             onClick={prevSlide}
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 md:-translate-x-8 bg-gray-800/80 hover:bg-gray-700 text-white p-3 rounded-full shadow-lg backdrop-blur-sm transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 md:-translate-x-8 bg-black/80 hover:bg-[#00ff97]/10 text-[#00ff97] p-3 rounded-full shadow-lg backdrop-blur-sm transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-[#00ff97] border border-[#00ff97]/20"
             aria-label="Previous reviews"
           >
             <FaChevronLeft className="w-4 h-4" />
           </button>
           <button
             onClick={nextSlide}
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 md:translate-x-8 bg-gray-800/80 hover:bg-gray-700 text-white p-3 rounded-full shadow-lg backdrop-blur-sm transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 md:translate-x-8 bg-black/80 hover:bg-[#00ff97]/10 text-[#00ff97] p-3 rounded-full shadow-lg backdrop-blur-sm transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-[#00ff97] border border-[#00ff97]/20"
             aria-label="Next reviews"
           >
             <FaChevronRight className="w-4 h-4" />
@@ -262,8 +266,10 @@ export default function GoogleReviews() {
                     setTimeout(() => setIsAnimating(false), 500);
                   }
                 }}
-                className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
-                  currentSlide === index ? 'bg-blue-500 w-6' : 'bg-gray-600 hover:bg-gray-500'
+                className={`h-2.5 rounded-full transition-all duration-300 ${
+                  currentSlide === index
+                    ? 'bg-[#00ff97] w-6'
+                    : 'bg-gray-600 hover:bg-[#00ff97]/50 w-2.5'
                 }`}
                 aria-label={`Go to review group ${index + 1}`}
               />

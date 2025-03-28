@@ -1,11 +1,17 @@
-import HeroVideo from '@/app/components/HeroVideo'
-import TextWithImage from '@/app/components/TextWithImage'
-import Divider from '@/app/components/Divider'
+import HeroVideo from '@/app/components/HeroVideo';
+import TextWithImage from '@/app/components/TextWithImage';
+import Divider from '@/app/components/Divider';
 
 export default function Födelsedagsfest() {
   return (
     <div>
-      <HeroVideo />
+      <HeroVideo
+        title="Fira Födelsedagen med Perfekt Musik"
+        subtitle="En oförglömlig födelsedagsfest med professionell DJ-underhållning"
+        buttonText="Boka DJ för Födelsedag"
+        buttonLink="/kontakt"
+        videoSrc="/videos/fodelsedagsfest.mp4"
+      />
       <Divider />
       <TextWithImage
         title="DJ till födelsedagsfest"
@@ -17,5 +23,5 @@ export default function Födelsedagsfest() {
         buttonLink="/kontakt"
       />
     </div>
-  )
-} 
+  );
+}

@@ -1,11 +1,17 @@
-import HeroVideo from '@/app/components/HeroVideo'
-import TextWithImage from '@/app/components/TextWithImage'
-import Divider from '@/app/components/Divider'
+import HeroVideo from '@/app/components/HeroVideo';
+import TextWithImage from '@/app/components/TextWithImage';
+import Divider from '@/app/components/Divider';
 
 export default function Foretagsfest() {
   return (
     <div>
-      <HeroVideo />
+      <HeroVideo
+        title="Professionell DJ för Er Företagsfest"
+        subtitle="Skapa en minnesvärd företagsfest med perfekt musikmix för alla"
+        buttonText="Boka DJ för Företagsfest"
+        buttonLink="/kontakt"
+        videoSrc="/videos/foretagsfest.mp4"
+      />
       <Divider />
       <TextWithImage
         title="DJ till företagsfest"
@@ -17,5 +23,5 @@ export default function Foretagsfest() {
         buttonLink="/kontakt"
       />
     </div>
-  )
+  );
 }

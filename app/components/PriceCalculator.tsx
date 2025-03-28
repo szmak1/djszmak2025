@@ -161,9 +161,34 @@ const addons: Addon[] = [
   },
 ];
 
-export default function PriceCalculator() {
+interface PriceCalculatorProps {
+  defaultPartyType?: string;
+  stepDescriptions?: {
+    step1: {
+      title: string;
+      description: string;
+    };
+    step2: {
+      title: string;
+      description: string;
+    };
+    step3: {
+      title: string;
+      description: string;
+    };
+    step4: {
+      title: string;
+      description: string;
+    };
+  };
+}
+
+export default function PriceCalculator({
+  defaultPartyType,
+  stepDescriptions,
+}: PriceCalculatorProps) {
   const [currentStep, setCurrentStep] = useState(1);
-  const [selectedParty, setSelectedParty] = useState<string>('');
+  const [selectedParty, setSelectedParty] = useState<string>(defaultPartyType || '');
   const [selectedAddons, setSelectedAddons] = useState<string[]>([]);
   const [extraHours, setExtraHours] = useState(0);
   const [distanceInfo, setDistanceInfo] = useState<DistanceInfo>({
@@ -183,6 +208,27 @@ export default function PriceCalculator() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState('');
+
+  const defaultStepDescriptions = {
+    step1: {
+      title: 'Välj Festtyp',
+      description: 'Välj den festtyp som passar ditt evenemang bäst',
+    },
+    step2: {
+      title: 'Välj Extra Tjänster',
+      description: 'Lägg till extra tjänster för att förbättra din fest',
+    },
+    step3: {
+      title: 'Beräkna Avstånd',
+      description: 'Ange adress för att beräkna avstånd från Malmö',
+    },
+    step4: {
+      title: 'Kontaktinformation',
+      description: 'Fyll i dina uppgifter för att skicka din förfrågan',
+    },
+  };
+
+  const steps = stepDescriptions || defaultStepDescriptions;
 
   const calculateTotal = () => {
     let total = 0;
@@ -215,7 +261,7 @@ export default function PriceCalculator() {
       setError('Välj en festtyp för att fortsätta');
       return;
     }
-    if (currentStep === 2) {
+    if (currentStep === 3) {
       if (!formData.location.trim()) {
         setError('Vänligen ange en stad för att beräkna avståndet');
         return;
@@ -354,7 +400,7 @@ export default function PriceCalculator() {
         location: '',
         message: '',
       });
-      setSelectedParty('');
+      setSelectedParty(defaultPartyType || ''); // Reset to defaultPartyType if provided, otherwise empty
       setSelectedAddons([]);
       setExtraHours(0);
       setDistanceInfo({
@@ -388,31 +434,44 @@ export default function PriceCalculator() {
   const { features, excludedFeatures } = getSelectedFeatures();
 
   return (
-    <section className="py-20">
+    <div id="pricecalculator" className="w-full py-16 ">
       <div className="container mx-auto px-4">
         <h2 className="text-4xl md:text-5xl font-heading font-bold text-white text-center mb-6">
           Skapa Ditt DJ-paket
         </h2>
-        <div className="max-w-3xl mx-auto text-center mb-12">
+        <div className="max-w-4xl mx-auto text-center mb-12">
           <p className="text-xl text-gray-300 mb-4">
             Få en skräddarsydd offert för din fest genom att fylla i formuläret nedan. Vi erbjuder
             professionella DJ-tjänster för alla typer av evenemang.
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-gray-400">
-            <div className="bg-gray-800/50 p-4 rounded-lg">
-              <div className="text-blue-500 text-2xl mb-2">1</div>
-              <p className="font-semibold text-white mb-1">Välj Festtyp</p>
-              <p className="text-sm">Välj den festtyp som passar ditt evenemang bäst</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-gray-400">
+            <div className="bg-black/50 border border-[#00ff97]/20 p-4 rounded-lg">
+              <div className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent text-2xl mb-2">
+                1
+              </div>
+              <p className="font-semibold text-white mb-2">{steps.step1.title}</p>
+              <p className="text-sm">{steps.step1.description}</p>
             </div>
-            <div className="bg-gray-800/50 p-4 rounded-lg">
-              <div className="text-blue-500 text-2xl mb-2">2</div>
-              <p className="font-semibold text-white mb-1">Anpassa Paketet</p>
-              <p className="text-sm">Lägg till extra tjänster och beräkna avstånd</p>
+            <div className="bg-black/50 border border-[#00ff97]/20 p-4 rounded-lg">
+              <div className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent text-2xl mb-2">
+                2
+              </div>
+              <p className="font-semibold text-white mb-2">{steps.step2.title}</p>
+              <p className="text-sm">{steps.step2.description}</p>
             </div>
-            <div className="bg-gray-800/50 p-4 rounded-lg">
-              <div className="text-blue-500 text-2xl mb-2">3</div>
-              <p className="font-semibold text-white mb-1">Skicka Förfrågan</p>
-              <p className="text-sm">Fyll i dina uppgifter och få en detaljerad offert</p>
+            <div className="bg-black/50 border border-[#00ff97]/20 p-4 rounded-lg">
+              <div className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent text-2xl mb-2">
+                3
+              </div>
+              <p className="font-semibold text-white mb-2">{steps.step3.title}</p>
+              <p className="text-sm">{steps.step3.description}</p>
+            </div>
+            <div className="bg-black/50 border border-[#00ff97]/20 p-4 rounded-lg">
+              <div className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent text-2xl mb-2">
+                4
+              </div>
+              <p className="font-semibold text-white mb-2">{steps.step4.title}</p>
+              <p className="text-sm">{steps.step4.description}</p>
             </div>
           </div>
           <div className="mt-8 text-gray-300">
@@ -430,7 +489,9 @@ export default function PriceCalculator() {
               <div key={step} className="flex items-center">
                 <div
                   className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                    currentStep >= step ? 'bg-blue-500 text-white' : 'bg-gray-700 text-gray-400'
+                    currentStep >= step
+                      ? 'bg-gradient-to-r from-[#00ff97] to-[#007ed4] text-white'
+                      : 'bg-gray-700 text-gray-400'
                   }`}
                 >
                   {step}
@@ -438,7 +499,9 @@ export default function PriceCalculator() {
                 {step < 4 && (
                   <div
                     className={`w-20 h-1 mx-2 ${
-                      currentStep >= step ? 'bg-blue-500' : 'bg-gray-700'
+                      currentStep >= step
+                        ? 'bg-gradient-to-r from-[#00ff97] to-[#007ed4]'
+                        : 'bg-gray-700'
                     }`}
                   />
                 )}
@@ -463,19 +526,19 @@ export default function PriceCalculator() {
               {currentStep === 2 && (
                 <>
                   <h3 className="text-2xl font-heading font-semibold text-white mb-2">
-                    Beräkna Avstånd
-                  </h3>
-                  <p className="text-gray-400">Ange adress för att beräkna avstånd från Malmö</p>
-                </>
-              )}
-              {currentStep === 3 && (
-                <>
-                  <h3 className="text-2xl font-heading font-semibold text-white mb-2">
                     Välj Extra Tjänster
                   </h3>
                   <p className="text-gray-400">
                     Lägg till extra tjänster för att förbättra din fest
                   </p>
+                </>
+              )}
+              {currentStep === 3 && (
+                <>
+                  <h3 className="text-2xl font-heading font-semibold text-white mb-2">
+                    Beräkna Avstånd
+                  </h3>
+                  <p className="text-gray-400">Ange adress för att beräkna avstånd från Malmö</p>
                 </>
               )}
               {currentStep === 4 && (
@@ -491,7 +554,7 @@ export default function PriceCalculator() {
             </div>
             <div className="text-right">
               <h3 className="text-xl font-heading font-semibold text-white mb-2">Totalt Pris</h3>
-              <div className="text-3xl font-bold text-blue-500">
+              <div className="text-3xl font-bold bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent">
                 {calculateTotal().toLocaleString('sv-SE')} kr
               </div>
             </div>
@@ -510,15 +573,15 @@ export default function PriceCalculator() {
                   return (
                     <div
                       key={party.id}
-                      className={`bg-gray-800 rounded-lg p-6 cursor-pointer transition-all duration-300 ${
+                      className={`bg-black/50 border border-[#00ff97]/20 rounded-lg p-6 cursor-pointer transition-all duration-300 ${
                         isSelected
-                          ? 'ring-2 ring-blue-500 shadow-lg scale-105'
+                          ? 'ring-2 ring-[#00ff97] shadow-lg scale-105'
                           : 'hover:shadow-md hover:scale-102'
                       }`}
                     >
                       <div className="flex items-center justify-between mb-4">
-                        <div className="relative w-12 h-12 flex items-center justify-center bg-blue-500/10 rounded-lg">
-                          <Icon className="w-6 h-6 text-blue-500" />
+                        <div className="relative w-12 h-12 flex items-center justify-center bg-[#00ff97]/10 rounded-lg">
+                          <Icon className="w-6 h-6 text-[#00ff97]" />
                         </div>
                         <div className="text-right">
                           <h4 className="text-xl font-heading font-semibold text-white">
@@ -527,7 +590,7 @@ export default function PriceCalculator() {
                           <p className="text-gray-400 text-sm">{party.description}</p>
                         </div>
                       </div>
-                      <div className="text-2xl font-bold text-blue-500 mb-2">
+                      <div className="text-2xl font-bold bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent mb-2">
                         {party.basePrice.toLocaleString('sv-SE')} kr
                         {extraHours > 0 && (
                           <span className="text-lg text-gray-400 ml-2">
@@ -631,7 +694,7 @@ export default function PriceCalculator() {
                         <div className="flex justify-end mt-4">
                           <button
                             onClick={() => handlePartySelect(party.id)}
-                            className="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors duration-300"
+                            className="px-6 py-2 bg-gradient-to-r from-[#79f1a4] to-[#0e5cad] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(121,241,164,0.5)]"
                           >
                             Välj
                           </button>
@@ -645,48 +708,6 @@ export default function PriceCalculator() {
           )}
 
           {currentStep === 2 && (
-            <div className="max-w-2xl mx-auto">
-              <form onSubmit={handleLocationSubmit} className="space-y-6">
-                <div>
-                  <label className="block text-gray-300 mb-2 text-lg font-semibold">
-                    Festplats Adress
-                  </label>
-                  <input
-                    type="text"
-                    name="location"
-                    value={formData.location}
-                    onChange={handleFormChange}
-                    placeholder="Ange fullständig adress"
-                    className="w-full bg-gray-800 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
-                    required
-                  />
-                </div>
-                {error && <div className="text-red-500">{error}</div>}
-                {distanceInfo.distance > 0 && (
-                  <div className="bg-gray-800 rounded-lg p-4">
-                    <div className="text-green-500 mb-2">
-                      Avstånd från Malmö: {distanceInfo.distance.toFixed(1)} km
-                    </div>
-                    <div className="text-gray-400">
-                      Resekostnad:{' '}
-                      {Math.round(distanceInfo.distance / 10) * distanceInfo.pricePerKm} kr
-                      <span className="text-sm ml-2">
-                        ({Math.round(distanceInfo.distance / 10)} mil)
-                      </span>
-                    </div>
-                  </div>
-                )}
-                <button
-                  type="submit"
-                  className="w-full px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-300"
-                >
-                  Beräkna Avstånd
-                </button>
-              </form>
-            </div>
-          )}
-
-          {currentStep === 3 && (
             <div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
                 {addons.map(addon => {
@@ -695,13 +716,13 @@ export default function PriceCalculator() {
                   return (
                     <div
                       key={addon.id}
-                      className={`bg-gray-800 rounded-lg p-6 transition-all duration-300 ${
-                        isSelected ? 'ring-2 ring-blue-500 shadow-lg scale-105' : 'hover:shadow-md'
+                      className={`bg-black/50 border border-[#00ff97]/20 rounded-lg p-6 transition-all duration-300 ${
+                        isSelected ? 'ring-2 ring-[#00ff97] shadow-lg scale-105' : 'hover:shadow-md'
                       }`}
                     >
                       <div className="flex items-center justify-between mb-4">
-                        <div className="relative w-12 h-12 flex items-center justify-center bg-blue-500/10 rounded-lg">
-                          <Icon className="w-6 h-6 text-blue-500" />
+                        <div className="relative w-12 h-12 flex items-center justify-center bg-[#00ff97]/10 rounded-lg">
+                          <Icon className="w-6 h-6 text-[#00ff97]" />
                         </div>
                         <div className="text-right">
                           <h4 className="text-xl font-heading font-semibold text-white">
@@ -710,7 +731,7 @@ export default function PriceCalculator() {
                           <p className="text-gray-400 text-sm">{addon.description}</p>
                         </div>
                       </div>
-                      <div className="text-2xl font-bold text-blue-500 mb-4">
+                      <div className="text-2xl font-bold bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent mb-4">
                         {addon.price.toLocaleString('sv-SE')} kr
                       </div>
                       {isSelected ? (
@@ -769,7 +790,7 @@ export default function PriceCalculator() {
                         <div className="flex justify-end mt-4">
                           <button
                             onClick={() => toggleAddon(addon.id)}
-                            className="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors duration-300"
+                            className="px-6 py-2 bg-gradient-to-r from-[#79f1a4] to-[#0e5cad] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(121,241,164,0.5)]"
                           >
                             Välj
                           </button>
@@ -782,12 +803,56 @@ export default function PriceCalculator() {
             </div>
           )}
 
+          {currentStep === 3 && (
+            <div className="max-w-2xl mx-auto">
+              <form onSubmit={handleLocationSubmit} className="space-y-6">
+                <div>
+                  <label className="block text-gray-300 mb-2 text-lg font-semibold">
+                    Festplats Adress
+                  </label>
+                  <input
+                    type="text"
+                    name="location"
+                    value={formData.location}
+                    onChange={handleFormChange}
+                    placeholder="Ange fullständig adress"
+                    className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#00ff97]"
+                    required
+                  />
+                </div>
+                {error && <div className="text-red-500">{error}</div>}
+                {distanceInfo.distance > 0 && (
+                  <div className="bg-black/50 border border-[#00ff97]/20 rounded-lg p-4">
+                    <div className="text-green-500 mb-2">
+                      Avstånd från Malmö: {distanceInfo.distance.toFixed(1)} km
+                    </div>
+                    <div className="text-gray-400">
+                      Resekostnad:{' '}
+                      {Math.round(distanceInfo.distance / 10) * distanceInfo.pricePerKm} kr
+                      <span className="text-sm ml-2">
+                        ({Math.round(distanceInfo.distance / 10)} mil)
+                      </span>
+                    </div>
+                  </div>
+                )}
+                <button
+                  type="submit"
+                  className="w-full px-6 py-2 bg-gradient-to-r from-[#79f1a4] to-[#0e5cad] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(121,241,164,0.5)]"
+                >
+                  Beräkna Avstånd
+                </button>
+              </form>
+            </div>
+          )}
+
           {currentStep === 4 && (
             <div>
               <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-6">
                 {submitSuccess ? (
-                  <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-6 text-center">
-                    <div className="text-green-500 text-2xl mb-2">Tack för din förfrågan!</div>
+                  <div className="bg-[#00ff97]/10 border border-[#00ff97]/20 rounded-lg p-6 text-center">
+                    <div className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent text-2xl mb-2">
+                      Tack för din förfrågan!
+                    </div>
                     <p className="text-gray-300">
                       Vi har skickat en bekräftelse till din e-postadress. Vi återkommer till dig
                       inom 24 timmar med en detaljerad offert.
@@ -795,7 +860,7 @@ export default function PriceCalculator() {
                     <button
                       type="button"
                       onClick={() => setSubmitSuccess(false)}
-                      className="mt-4 px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-300"
+                      className="mt-4 px-6 py-2 bg-gradient-to-r from-[#79f1a4] to-[#0e5cad] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(121,241,164,0.5)]"
                     >
                       Skicka en ny förfrågan
                     </button>
@@ -809,7 +874,7 @@ export default function PriceCalculator() {
                         name="name"
                         value={formData.name}
                         onChange={handleFormChange}
-                        className="w-full bg-gray-800 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
+                        className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#00ff97]"
                         required
                       />
                     </div>
@@ -822,7 +887,7 @@ export default function PriceCalculator() {
                         name="email"
                         value={formData.email}
                         onChange={handleFormChange}
-                        className="w-full bg-gray-800 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
+                        className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#00ff97]"
                         required
                       />
                     </div>
@@ -835,7 +900,7 @@ export default function PriceCalculator() {
                         name="phone"
                         value={formData.phone}
                         onChange={handleFormChange}
-                        className="w-full bg-gray-800 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
+                        className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#00ff97]"
                         required
                       />
                     </div>
@@ -848,7 +913,7 @@ export default function PriceCalculator() {
                         name="date"
                         value={formData.date}
                         onChange={handleFormChange}
-                        className="w-full bg-gray-800 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
+                        className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#00ff97]"
                         required
                       />
                     </div>
@@ -861,7 +926,7 @@ export default function PriceCalculator() {
                         name="location"
                         value={formData.location}
                         onChange={handleFormChange}
-                        className="w-full bg-gray-800 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
+                        className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#00ff97]"
                         required
                       />
                     </div>
@@ -874,7 +939,7 @@ export default function PriceCalculator() {
                         value={formData.message}
                         onChange={handleFormChange}
                         rows={4}
-                        className="w-full bg-gray-800 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
+                        className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#00ff97]"
                         placeholder="Berätta gärna mer om din fest och eventuella önskemål..."
                       />
                     </div>
@@ -882,7 +947,7 @@ export default function PriceCalculator() {
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className={`w-full px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors duration-300 ${
+                      className={`w-full px-6 py-3 bg-gradient-to-r from-[#79f1a4] to-[#0e5cad] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(121,241,164,0.5)] ${
                         isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
                       }`}
                     >
@@ -907,14 +972,14 @@ export default function PriceCalculator() {
             {currentStep < 4 ? (
               <button
                 onClick={handleNext}
-                className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-300 ml-auto"
+                className="px-6 py-2 bg-gradient-to-r from-[#79f1a4] to-[#0e5cad] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(121,241,164,0.5)] ml-auto"
               >
                 Nästa
               </button>
             ) : (
               <button
                 onClick={handleSubmit}
-                className="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors duration-300 ml-auto"
+                className="px-6 py-2 bg-gradient-to-r from-[#79f1a4] to-[#0e5cad] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(121,241,164,0.5)] ml-auto"
               >
                 Skicka Förfrågan
               </button>
@@ -922,6 +987,6 @@ export default function PriceCalculator() {
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 }

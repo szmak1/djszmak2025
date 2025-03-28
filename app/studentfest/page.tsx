@@ -1,11 +1,17 @@
-import HeroVideo from '@/app/components/HeroVideo'
-import TextWithImage from '@/app/components/TextWithImage'
-import Divider from '@/app/components/Divider'
+import HeroVideo from '@/app/components/HeroVideo';
+import TextWithImage from '@/app/components/TextWithImage';
+import Divider from '@/app/components/Divider';
 
 export default function Studentfest() {
   return (
     <div>
-      <HeroVideo />
+      <HeroVideo
+        title="Perfekt DJ för Er Studentfest"
+        subtitle="Skapa en legendarisk studentfest med professionell DJ-underhållning"
+        buttonText="Boka DJ för Studentfest"
+        buttonLink="/kontakt"
+        videoSrc="/videos/studentfest.mp4"
+      />
       <Divider />
       <TextWithImage
         title="DJ till studentfest"
@@ -17,5 +23,5 @@ export default function Studentfest() {
         buttonLink="/kontakt"
       />
     </div>
-  )
-} 
+  );
+}

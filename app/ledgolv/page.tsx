@@ -1,11 +1,17 @@
-import HeroVideo from '@/app/components/HeroVideo'
-import TextWithImage from '@/app/components/TextWithImage'
-import Divider from '@/app/components/Divider'
+import HeroVideo from '@/app/components/HeroVideo';
+import TextWithImage from '@/app/components/TextWithImage';
+import Divider from '@/app/components/Divider';
 
 export default function Ledgolv() {
   return (
     <div>
-      <HeroVideo />
+      <HeroVideo
+        title="Transformera Er Dansgolv med LEDGOLV"
+        subtitle="Skapa en spektakulär ljusshow som får era gäster att dansa på ett hav av ljus"
+        buttonText="Boka LEDGOLV"
+        buttonLink="/kontakt"
+        videoSrc="/videos/LEDGolv.mp4"
+      />
       <Divider />
       <TextWithImage
         title="LEDGOLV - Dansgolv med ljuseffekter"
@@ -17,5 +23,5 @@ export default function Ledgolv() {
         buttonLink="/kontakt"
       />
     </div>
-  )
-} 
+  );
+}
