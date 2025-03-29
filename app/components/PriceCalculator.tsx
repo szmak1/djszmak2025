@@ -464,6 +464,137 @@ export default function PriceCalculator({
 
   return (
     <div id="pricecalculator" className="w-full py-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Service',
+            name: 'DJ Service Malmö',
+            description:
+              'Professionella DJ-tjänster i Malmö. Vi erbjuder skräddarsydda DJ-paket för bröllop, födelsedagar, studentfester och företagsevent. Boka din DJ för festen idag!',
+            provider: {
+              '@type': 'Organization',
+              name: 'DJ Service Malmö',
+              areaServed: 'Malmö och omnejd',
+              url: 'https://djszmak.se',
+            },
+            offers: [
+              {
+                '@type': 'Offer',
+                name: 'DJ till Bröllopsfest',
+                price: '7500',
+                priceCurrency: 'SEK',
+                description:
+                  'Perfekt för er stora dag med professionell DJ-tjänst. Inkluderar 4 timmars speltid, professionell utrustning och skräddarsydd spellista.',
+                availability: 'https://schema.org/InStock',
+              },
+              {
+                '@type': 'Offer',
+                name: 'DJ till Födelsedagsfest',
+                price: '6500',
+                priceCurrency: 'SEK',
+                description:
+                  'Gör dagen extra speciell med professionell DJ-tjänst. Inkluderar 4 timmars speltid och skräddarsydd spellista.',
+                availability: 'https://schema.org/InStock',
+              },
+              {
+                '@type': 'Offer',
+                name: 'DJ till Studentfest',
+                price: '6000',
+                priceCurrency: 'SEK',
+                description:
+                  'Fira studenten i stil med professionell DJ-tjänst. Inkluderar 4 timmars speltid och skräddarsydd spellista.',
+                availability: 'https://schema.org/InStock',
+              },
+              {
+                '@type': 'Offer',
+                name: 'DJ till Företagsfest',
+                price: '7000',
+                priceCurrency: 'SEK',
+                description:
+                  'Professionell underhållning för företagsevent. Inkluderar 4 timmars speltid och skräddarsydd spellista.',
+                availability: 'https://schema.org/InStock',
+              },
+              {
+                '@type': 'Offer',
+                name: 'DJ till Nattklubbsgig',
+                price: '5500',
+                priceCurrency: 'SEK',
+                description:
+                  'Perfekt för nattklubbsupplevelsen med professionell DJ-tjänst. Inkluderar 4 timmars speltid och skräddarsydd spellista.',
+                availability: 'https://schema.org/InStock',
+              },
+            ],
+            additionalProperty: [
+              {
+                '@type': 'PropertyValue',
+                name: 'Inkluderade timmar',
+                value: '4 timmar',
+              },
+              {
+                '@type': 'PropertyValue',
+                name: 'Extra timme',
+                value: '500-1000 kr/tim',
+              },
+              {
+                '@type': 'PropertyValue',
+                name: 'Inkluderade tjänster',
+                value: 'Professionell DJ-utrustning, Skräddarsydd spellista, Planeringsmöte',
+              },
+            ],
+            areaServed: {
+              '@type': 'City',
+              name: 'Malmö',
+              containedInPlace: {
+                '@type': 'State',
+                name: 'Skåne',
+              },
+            },
+            serviceType: 'DJ-tjänst',
+            hasOfferCatalog: {
+              '@type': 'OfferCatalog',
+              name: 'DJ-tillbehör',
+              itemListElement: [
+                {
+                  '@type': 'Offer',
+                  itemOffered: {
+                    '@type': 'Service',
+                    name: 'Ljudsystem',
+                    price: '1500',
+                    priceCurrency: 'SEK',
+                    description:
+                      'Professionellt ljudsystem för upp till 150 personer. Inkluderar Yamaha-ljudsystem med front-högtalare och subwoofers.',
+                  },
+                },
+                {
+                  '@type': 'Offer',
+                  itemOffered: {
+                    '@type': 'Service',
+                    name: 'Discoljus',
+                    price: '1000',
+                    priceCurrency: 'SEK',
+                    description:
+                      'LED-Discoljus som går i takt med musik. DJ styr ljuset live för bästa effekt.',
+                  },
+                },
+                {
+                  '@type': 'Offer',
+                  itemOffered: {
+                    '@type': 'Service',
+                    name: 'Trådlös Mikrofon',
+                    price: '800',
+                    priceCurrency: 'SEK',
+                    description:
+                      'Perfekt för tal och karaoke. Inkluderar 2 st mikrofoner med hög ljudkvalitet.',
+                  },
+                },
+              ],
+            },
+            inLanguage: 'sv-SE',
+          }),
+        }}
+      />
       <div className="container px-0">
         <h2 className="text-2xl md:text-5xl font-heading font-bold text-[#00ff97] text-center mb-4 md:mb-6">
           Skapa Ditt DJ-paket
@@ -587,7 +718,7 @@ export default function PriceCalculator({
                     {currentStep === 3 && (
                       <>
                         <h3 className="text-base md:text-xl font-heading font-semibold text-white">
-                          Beräkna Resekostnad
+                          Beräkna Transport
                         </h3>
                         <p className="text-xs text-gray-400">
                           Ange adressen till din festplats för att beräkna resekostnaden från Malmö
