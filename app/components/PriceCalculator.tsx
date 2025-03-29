@@ -219,8 +219,8 @@ export default function PriceCalculator({
       description: 'Lägg till extra tjänster för att förbättra din fest',
     },
     step3: {
-      title: 'Beräkna Avstånd',
-      description: 'Ange adress för att beräkna avstånd från Malmö',
+      title: 'Beräkna Resekostnad',
+      description: 'Ange adressen till din festplats för att beräkna resekostnaden från Malmö',
     },
     step4: {
       title: 'Kontaktinformation',
@@ -434,556 +434,631 @@ export default function PriceCalculator({
   const { features, excludedFeatures } = getSelectedFeatures();
 
   return (
-    <div id="pricecalculator" className="w-full py-16 ">
+    <div id="pricecalculator" className="w-full py-16">
       <div className="container mx-auto px-4">
-        <h2 className="text-4xl md:text-5xl font-heading font-bold text-white text-center mb-6">
+        <h2 className="text-2xl md:text-5xl font-heading font-bold text-white text-center mb-4 md:mb-6">
           Skapa Ditt DJ-paket
         </h2>
-        <div className="max-w-4xl mx-auto text-center mb-12">
-          <p className="text-xl text-gray-300 mb-4">
+        <div className="max-w-4xl mx-auto text-center mb-8 md:mb-12">
+          <p className="text-base md:text-xl text-gray-300 mb-4">
             Få en skräddarsydd offert för din fest genom att fylla i formuläret nedan. Vi erbjuder
             professionella DJ-tjänster för alla typer av evenemang.
           </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-gray-400">
-            <div className="bg-black/50 border border-[#00ff97]/20 p-4 rounded-lg">
-              <div className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent text-2xl mb-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 text-gray-400">
+            <div className="bg-black/50 border border-[#00ff97]/20 p-3 md:p-4 rounded-lg">
+              <div className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent text-lg md:text-2xl mb-1 md:mb-2">
                 1
               </div>
-              <p className="font-semibold text-white mb-2">{steps.step1.title}</p>
-              <p className="text-sm">{steps.step1.description}</p>
+              <p className="font-semibold text-white text-sm md:text-base mb-1 md:mb-2">
+                {steps.step1.title}
+              </p>
+              <p className="text-xs md:text-sm">{steps.step1.description}</p>
             </div>
-            <div className="bg-black/50 border border-[#00ff97]/20 p-4 rounded-lg">
-              <div className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent text-2xl mb-2">
+            <div className="bg-black/50 border border-[#00ff97]/20 p-3 md:p-4 rounded-lg">
+              <div className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent text-lg md:text-2xl mb-1 md:mb-2">
                 2
               </div>
-              <p className="font-semibold text-white mb-2">{steps.step2.title}</p>
-              <p className="text-sm">{steps.step2.description}</p>
+              <p className="font-semibold text-white text-sm md:text-base mb-1 md:mb-2">
+                {steps.step2.title}
+              </p>
             </div>
-            <div className="bg-black/50 border border-[#00ff97]/20 p-4 rounded-lg">
-              <div className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent text-2xl mb-2">
+            <div className="bg-black/50 border border-[#00ff97]/20 p-3 md:p-4 rounded-lg">
+              <div className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent text-lg md:text-2xl mb-1 md:mb-2">
                 3
               </div>
-              <p className="font-semibold text-white mb-2">{steps.step3.title}</p>
-              <p className="text-sm">{steps.step3.description}</p>
+              <p className="font-semibold text-white text-sm md:text-base mb-1 md:mb-2">
+                {steps.step3.title}
+              </p>
+              <p className="text-xs md:text-sm">{steps.step3.description}</p>
             </div>
-            <div className="bg-black/50 border border-[#00ff97]/20 p-4 rounded-lg">
-              <div className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent text-2xl mb-2">
+            <div className="bg-black/50 border border-[#00ff97]/20 p-3 md:p-4 rounded-lg">
+              <div className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent text-lg md:text-2xl mb-1 md:mb-2">
                 4
               </div>
-              <p className="font-semibold text-white mb-2">{steps.step4.title}</p>
-              <p className="text-sm">{steps.step4.description}</p>
+              <p className="font-semibold text-white text-sm md:text-base mb-1 md:mb-2">
+                {steps.step4.title}
+              </p>
+              <p className="text-xs md:text-sm">{steps.step4.description}</p>
             </div>
           </div>
-          <div className="mt-8 text-gray-300">
-            <p className="mb-2">✓ Få svar inom 24 timmar</p>
-            <p className="mb-2">✓ Gratis offert</p>
-            <p className="mb-2">✓ Inga bindande avtal</p>
+          <div className="mt-6 md:mt-8 text-gray-300 text-sm md:text-base">
+            <p className="mb-1 md:mb-2">✓ Få svar inom 24 timmar</p>
+            <p className="mb-1 md:mb-2">✓ Gratis offert</p>
+            <p className="mb-1 md:mb-2">✓ Inga bindande avtal</p>
             <p>✓ Skräddarsydda paket för ditt evenemang</p>
           </div>
         </div>
 
         {/* Progress Steps */}
-        <div className="flex justify-center mb-12">
-          <div className="flex items-center">
-            {[1, 2, 3, 4].map(step => (
-              <div key={step} className="flex items-center">
-                <div
-                  className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                    currentStep >= step
-                      ? 'bg-gradient-to-r from-[#00ff97] to-[#007ed4] text-white'
-                      : 'bg-gray-700 text-gray-400'
-                  }`}
-                >
-                  {step}
-                </div>
-                {step < 4 && (
+        <div
+          className={`${
+            currentStep > 1
+              ? 'fixed top-0 left-0 right-0 z-50 bg-black/95 backdrop-blur-sm py-2 md:py-4'
+              : 'mb-12'
+          }`}
+        >
+          <div className="container mx-auto px-4">
+            <div className="flex items-center justify-center">
+              {[1, 2, 3, 4].map(step => (
+                <div key={step} className="flex items-center">
                   <div
-                    className={`w-20 h-1 mx-2 ${
+                    className={`w-6 h-6 md:w-10 md:h-10 rounded-full flex items-center justify-center text-xs md:text-base ${
                       currentStep >= step
-                        ? 'bg-gradient-to-r from-[#00ff97] to-[#007ed4]'
-                        : 'bg-gray-700'
+                        ? 'bg-gradient-to-r from-[#00ff97] to-[#007ed4] text-white'
+                        : 'bg-gray-700 text-gray-400'
                     }`}
-                  />
-                )}
-              </div>
-            ))}
+                  >
+                    {step}
+                  </div>
+                  {step < 4 && (
+                    <div
+                      className={`w-6 md:w-20 h-1 mx-1 md:mx-2 ${
+                        currentStep >= step
+                          ? 'bg-gradient-to-r from-[#00ff97] to-[#007ed4]'
+                          : 'bg-gray-700'
+                      }`}
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
         {/* Step Content */}
-        <div className="bg-gray-900 rounded-lg p-8">
-          {/* Price Summary and Step Title in same row */}
-          <div className="flex justify-between items-center mb-8">
-            <div>
-              {currentStep === 1 && (
-                <>
-                  <h3 className="text-2xl font-heading font-semibold text-white mb-2">
-                    Välj Festtyp
-                  </h3>
-                  <p className="text-gray-400">Välj en festtyp för att fortsätta</p>
-                </>
-              )}
-              {currentStep === 2 && (
-                <>
-                  <h3 className="text-2xl font-heading font-semibold text-white mb-2">
-                    Välj Extra Tjänster
-                  </h3>
-                  <p className="text-gray-400">
-                    Lägg till extra tjänster för att förbättra din fest
-                  </p>
-                </>
-              )}
-              {currentStep === 3 && (
-                <>
-                  <h3 className="text-2xl font-heading font-semibold text-white mb-2">
-                    Beräkna Avstånd
-                  </h3>
-                  <p className="text-gray-400">Ange adress för att beräkna avstånd från Malmö</p>
-                </>
-              )}
-              {currentStep === 4 && (
-                <>
-                  <h3 className="text-2xl font-heading font-semibold text-white mb-2">
-                    Kontaktinformation
-                  </h3>
-                  <p className="text-gray-400">
-                    Fyll i dina uppgifter för att skicka din förfrågan
-                  </p>
-                </>
-              )}
-            </div>
-            <div className="text-right">
-              <h3 className="text-xl font-heading font-semibold text-white mb-2">Totalt Pris</h3>
-              <div className="text-3xl font-bold bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent">
-                {calculateTotal().toLocaleString('sv-SE')} kr
-              </div>
-            </div>
-          </div>
-
-          {currentStep === 1 && (
-            <div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {partyTypes.map(party => {
-                  const Icon = party.icon;
-                  const isSelected = selectedParty === party.id;
-                  const isVisible = !selectedParty || isSelected;
-
-                  if (!isVisible) return null;
-
-                  return (
-                    <div
-                      key={party.id}
-                      className={`bg-black/50 border border-[#00ff97]/20 rounded-lg p-6 cursor-pointer transition-all duration-300 ${
-                        isSelected
-                          ? 'ring-2 ring-[#00ff97] shadow-lg scale-105'
-                          : 'hover:shadow-md hover:scale-102'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="relative w-12 h-12 flex items-center justify-center bg-[#00ff97]/10 rounded-lg">
-                          <Icon className="w-6 h-6 text-[#00ff97]" />
-                        </div>
-                        <div className="text-right">
-                          <h4 className="text-xl font-heading font-semibold text-white">
-                            {party.name}
-                          </h4>
-                          <p className="text-gray-400 text-sm">{party.description}</p>
-                        </div>
-                      </div>
-                      <div className="text-2xl font-bold bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent mb-2">
-                        {party.basePrice.toLocaleString('sv-SE')} kr
-                        {extraHours > 0 && (
-                          <span className="text-lg text-gray-400 ml-2">
-                            + {extraHours * party.extraHourRate} kr
-                          </span>
-                        )}
-                      </div>
-                      {isSelected ? (
-                        <div className="mt-4">
-                          <div className="text-sm text-green-500 mb-2 flex items-center">
-                            <svg
-                              className="w-5 h-5 mr-2"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M5 13l4 4L19 7"
-                              />
-                            </svg>
-                            {party.includedHours + extraHours} timmar DJ ({party.includedHours}{' '}
-                            timmar ingår + {extraHours} extra timmar)
-                          </div>
-                          <ul className="space-y-1.5 mb-4">
-                            {party.baseFeatures.map((feature, index) => (
-                              <li key={index} className="flex items-center text-green-500 text-sm">
-                                <svg
-                                  className="w-5 h-5 mr-2"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M5 13l4 4L19 7"
-                                  />
-                                </svg>
-                                {feature}
-                              </li>
-                            ))}
-                          </ul>
-                          <div className="text-sm text-gray-400 mb-4">
-                            Extra DJ speltid per timme:{' '}
-                            {party.extraHourRate.toLocaleString('sv-SE')} kr
-                          </div>
-                          <div className="flex items-center justify-between mb-4">
-                            <span className="text-gray-300">Extra DJ speltid:</span>
-                            <div className="flex items-center space-x-4">
-                              <button
-                                onClick={e => {
-                                  e.stopPropagation();
-                                  handleExtraHoursChange(extraHours - 1);
-                                }}
-                                className="w-8 h-8 rounded-full bg-gray-700 text-white flex items-center justify-center hover:bg-gray-600"
-                              >
-                                -
-                              </button>
-                              <span className="text-white font-semibold">{extraHours}</span>
-                              <button
-                                onClick={e => {
-                                  e.stopPropagation();
-                                  handleExtraHoursChange(extraHours + 1);
-                                }}
-                                className="w-8 h-8 rounded-full bg-gray-700 text-white flex items-center justify-center hover:bg-gray-600"
-                              >
-                                +
-                              </button>
-                            </div>
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center text-green-500">
-                              <svg
-                                className="w-5 h-5 mr-2"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M5 13l4 4L19 7"
-                                />
-                              </svg>
-                              Vald
-                            </div>
-                            <button
-                              onClick={() => handlePartySelect(party.id)}
-                              className="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-300"
-                            >
-                              Avbryt
-                            </button>
+        <div className={`${currentStep > 1 ? 'fixed inset-0 z-40 bg-black pt-16 md:pt-20' : ''}`}>
+          <div className={`${currentStep > 1 ? 'h-full flex flex-col' : ''}`}>
+            {/* Price Summary and Step Title */}
+            <div
+              className={`${
+                currentStep > 1
+                  ? 'fixed top-12 md:top-16 left-0 right-0 z-40 bg-black/95 backdrop-blur-sm py-1 md:py-2'
+                  : ''
+              }`}
+            >
+              <div className="container mx-auto px-4">
+                <div className="flex flex-col justify-between items-start items-center gap-1 md:gap-2">
+                  <div>
+                    {currentStep === 1 && (
+                      <>
+                        <h3 className="text-base md:text-xl font-heading font-semibold text-white">
+                          Välj Festtyp
+                        </h3>
+                        <p className="text-xs text-gray-400">Välj en festtyp för att fortsätta</p>
+                      </>
+                    )}
+                    {currentStep === 2 && (
+                      <>
+                        <div className="w-full flex justify-center items-center">
+                          <div className="text-center">
+                            <h3 className="text-sm md:text-xl font-heading font-semibold text-[#00ff97]">
+                              Välj tillägg
+                            </h3>
                           </div>
                         </div>
-                      ) : (
-                        <div className="flex justify-end mt-4">
-                          <button
-                            onClick={() => handlePartySelect(party.id)}
-                            className="px-6 py-2 bg-gradient-to-r from-[#79f1a4] to-[#0e5cad] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(121,241,164,0.5)]"
-                          >
-                            Välj
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {currentStep === 2 && (
-            <div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
-                {addons.map(addon => {
-                  const Icon = addon.icon;
-                  const isSelected = selectedAddons.includes(addon.id);
-                  return (
-                    <div
-                      key={addon.id}
-                      className={`bg-black/50 border border-[#00ff97]/20 rounded-lg p-6 transition-all duration-300 ${
-                        isSelected ? 'ring-2 ring-[#00ff97] shadow-lg scale-105' : 'hover:shadow-md'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="relative w-12 h-12 flex items-center justify-center bg-[#00ff97]/10 rounded-lg">
-                          <Icon className="w-6 h-6 text-[#00ff97]" />
-                        </div>
-                        <div className="text-right">
-                          <h4 className="text-xl font-heading font-semibold text-white">
-                            {addon.name}
-                          </h4>
-                          <p className="text-gray-400 text-sm">{addon.description}</p>
-                        </div>
-                      </div>
-                      <div className="text-2xl font-bold bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent mb-4">
-                        {addon.price.toLocaleString('sv-SE')} kr
-                      </div>
-                      {isSelected ? (
-                        <>
-                          <div className="mt-4">
-                            <ul className="space-y-2">
-                              {addon.features.map((feature, index) => (
-                                <li
-                                  key={index}
-                                  className="flex items-center text-green-500 text-sm"
-                                >
-                                  <svg
-                                    className="w-5 h-5 mr-2"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                  >
-                                    <path
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      strokeWidth={2}
-                                      d="M5 13l4 4L19 7"
-                                    />
-                                  </svg>
-                                  {feature}
-                                </li>
-                              ))}
-                            </ul>
-                            <div className="flex items-center text-green-500 mt-4">
-                              <svg
-                                className="w-5 h-5 mr-2"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M5 13l4 4L19 7"
-                                />
-                              </svg>
-                              Vald
-                            </div>
-                          </div>
-                          <div className="flex justify-end mt-4">
-                            <button
-                              onClick={() => toggleAddon(addon.id)}
-                              className="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-300"
-                            >
-                              Avbryt
-                            </button>
-                          </div>
-                        </>
-                      ) : (
-                        <div className="flex justify-end mt-4">
-                          <button
-                            onClick={() => toggleAddon(addon.id)}
-                            className="px-6 py-2 bg-gradient-to-r from-[#79f1a4] to-[#0e5cad] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(121,241,164,0.5)]"
-                          >
-                            Välj
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {currentStep === 3 && (
-            <div className="max-w-2xl mx-auto">
-              <form onSubmit={handleLocationSubmit} className="space-y-6">
-                <div>
-                  <label className="block text-gray-300 mb-2 text-lg font-semibold">
-                    Festplats Adress
-                  </label>
-                  <input
-                    type="text"
-                    name="location"
-                    value={formData.location}
-                    onChange={handleFormChange}
-                    placeholder="Ange fullständig adress"
-                    className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#00ff97]"
-                    required
-                  />
+                      </>
+                    )}
+                    {currentStep === 3 && (
+                      <>
+                        <h3 className="text-base md:text-xl font-heading font-semibold text-white">
+                          Beräkna Resekostnad
+                        </h3>
+                        <p className="text-xs text-gray-400">
+                          Ange adressen till din festplats för att beräkna resekostnaden från Malmö
+                        </p>
+                      </>
+                    )}
+                    {currentStep === 4 && (
+                      <>
+                        <h3 className="text-base md:text-xl font-heading font-semibold text-white">
+                          Kontaktinformation
+                        </h3>
+                        <p className="text-xs text-gray-400">
+                          Fyll i dina uppgifter för att skicka din förfrågan
+                        </p>
+                      </>
+                    )}
+                  </div>
                 </div>
-                {error && <div className="text-red-500">{error}</div>}
-                {distanceInfo.distance > 0 && (
-                  <div className="bg-black/50 border border-[#00ff97]/20 rounded-lg p-4">
-                    <div className="text-green-500 mb-2">
-                      Avstånd från Malmö: {distanceInfo.distance.toFixed(1)} km
+              </div>
+            </div>
+
+            {/* Main Content */}
+            <div
+              className={`${
+                currentStep > 1 ? 'flex-1 overflow-y-auto pt-14 md:pt-24 pb-20 md:pb-24' : ''
+              }`}
+            >
+              <div className="container mx-auto px-2 md:px-4">
+                <div className={`rounded-lg ${currentStep > 1 ? 'animate-fade-in' : ''}`}>
+                  {currentStep === 1 && (
+                    <div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {partyTypes.map(party => {
+                          const Icon = party.icon;
+                          const isSelected = selectedParty === party.id;
+                          const isVisible = !selectedParty || isSelected;
+
+                          if (!isVisible) return null;
+
+                          return (
+                            <div
+                              key={party.id}
+                              onClick={() => handlePartySelect(party.id)}
+                              className={`bg-black/50 border border-[#00ff97]/20 rounded-lg p-6 cursor-pointer transition-all duration-300 ${
+                                isSelected
+                                  ? 'ring-2 ring-[#00ff97] shadow-lg scale-105'
+                                  : 'hover:shadow-md hover:scale-102'
+                              }`}
+                            >
+                              <div className="flex items-center justify-between mb-4">
+                                <div className="relative w-12 h-12 flex items-center justify-center bg-[#00ff97]/10 rounded-lg">
+                                  <Icon className="w-6 h-6 text-[#00ff97]" />
+                                </div>
+                                <div className="text-right">
+                                  <h4 className="text-xl font-heading font-semibold text-white">
+                                    {party.name}
+                                  </h4>
+                                  <p className="text-gray-400 text-sm">{party.description}</p>
+                                </div>
+                              </div>
+                              <div className="text-2xl font-bold bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent mb-2">
+                                {party.basePrice.toLocaleString('sv-SE')} kr
+                                {extraHours > 0 && (
+                                  <span className="text-lg text-gray-400 ml-2">
+                                    + {extraHours * party.extraHourRate} kr
+                                  </span>
+                                )}
+                              </div>
+                              {isSelected ? (
+                                <div className="mt-4">
+                                  <div className="text-sm text-green-500 mb-2 flex items-center">
+                                    <svg
+                                      className="w-5 h-5 mr-2"
+                                      fill="none"
+                                      stroke="currentColor"
+                                      viewBox="0 0 24 24"
+                                    >
+                                      <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M5 13l4 4L19 7"
+                                      />
+                                    </svg>
+                                    {party.includedHours + extraHours} timmar DJ (
+                                    {party.includedHours} timmar ingår + {extraHours} extra timmar)
+                                  </div>
+                                  <ul className="space-y-1.5 mb-4">
+                                    {party.baseFeatures.map((feature, index) => (
+                                      <li
+                                        key={index}
+                                        className="flex items-center text-green-500 text-sm"
+                                      >
+                                        <svg
+                                          className="w-5 h-5 mr-2"
+                                          fill="none"
+                                          stroke="currentColor"
+                                          viewBox="0 0 24 24"
+                                        >
+                                          <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M5 13l4 4L19 7"
+                                          />
+                                        </svg>
+                                        {feature}
+                                      </li>
+                                    ))}
+                                  </ul>
+                                  <div className="text-sm text-gray-400 mb-4">
+                                    Extra DJ speltid per timme:{' '}
+                                    {party.extraHourRate.toLocaleString('sv-SE')} kr
+                                  </div>
+                                  <div className="flex items-center justify-between mb-4">
+                                    <span className="text-gray-300">Extra DJ speltid:</span>
+                                    <div className="flex items-center space-x-4">
+                                      <button
+                                        onClick={e => {
+                                          e.stopPropagation();
+                                          handleExtraHoursChange(extraHours - 1);
+                                        }}
+                                        className="w-8 h-8 rounded-full bg-gray-700 text-white flex items-center justify-center hover:bg-gray-600"
+                                      >
+                                        -
+                                      </button>
+                                      <span className="text-white font-semibold">{extraHours}</span>
+                                      <button
+                                        onClick={e => {
+                                          e.stopPropagation();
+                                          handleExtraHoursChange(extraHours + 1);
+                                        }}
+                                        className="w-8 h-8 rounded-full bg-gray-700 text-white flex items-center justify-center hover:bg-gray-600"
+                                      >
+                                        +
+                                      </button>
+                                    </div>
+                                  </div>
+                                  <div className="flex items-center justify-between">
+                                    <div className="flex items-center text-green-500">
+                                      <svg
+                                        className="w-5 h-5 mr-2"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                      >
+                                        <path
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
+                                          strokeWidth={2}
+                                          d="M5 13l4 4L19 7"
+                                        />
+                                      </svg>
+                                      Vald
+                                    </div>
+                                    <button
+                                      onClick={e => {
+                                        e.stopPropagation();
+                                        handlePartySelect(party.id);
+                                      }}
+                                      className="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-300"
+                                    >
+                                      Avbryt
+                                    </button>
+                                  </div>
+                                </div>
+                              ) : (
+                                <div className="flex justify-end mt-4">
+                                  <button
+                                    onClick={e => {
+                                      e.stopPropagation();
+                                      handlePartySelect(party.id);
+                                    }}
+                                    className="px-6 py-2 bg-gradient-to-r from-[#79f1a4] to-[#0e5cad] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(121,241,164,0.5)]"
+                                  >
+                                    Välj
+                                  </button>
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
-                    <div className="text-gray-400">
-                      Resekostnad:{' '}
-                      {Math.round(distanceInfo.distance / 10) * distanceInfo.pricePerKm} kr
-                      <span className="text-sm ml-2">
-                        ({Math.round(distanceInfo.distance / 10)} mil)
-                      </span>
+                  )}
+
+                  {currentStep === 2 && (
+                    <div className="h-full">
+                      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-6">
+                        {addons.map(addon => {
+                          const Icon = addon.icon;
+                          const isSelected = selectedAddons.includes(addon.id);
+                          return (
+                            <div
+                              key={addon.id}
+                              className={`bg-black/50 border border-[#00ff97]/20 rounded-lg p-3 md:p-6 transition-all duration-300 flex flex-col md:min-h-[200px] ${
+                                isSelected
+                                  ? 'ring-2 ring-[#00ff97] shadow-lg scale-105'
+                                  : 'hover:shadow-md'
+                              }`}
+                            >
+                              <div className="flex items-center justify-between mb-2 md:mb-4">
+                                <div className="relative w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-[#00ff97]/10 rounded-lg">
+                                  <Icon className="w-5 h-5 md:w-6 md:h-6 text-[#00ff97]" />
+                                </div>
+                                <div className="text-right">
+                                  <h4 className="text-[14px] md:text-xl font-heading font-semibold text-white leading-tight">
+                                    {addon.name}
+                                  </h4>
+                                  <p className="hidden md:block text-sm text-gray-400 leading-tight">
+                                    {addon.description}
+                                  </p>
+                                </div>
+                              </div>
+                              {isSelected ? (
+                                <>
+                                  <div className="flex-grow">
+                                    <ul className="space-y-2 md:space-y-2">
+                                      {addon.features.map((feature, index) => (
+                                        <li
+                                          key={index}
+                                          className="flex items-start text-[14px] md:text-sm text-green-500 leading-tight"
+                                        >
+                                          <svg
+                                            className="w-5 h-5 md:w-5 md:h-5 mr-2 md:mr-2 mt-0.5 shrink-0"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                          >
+                                            <path
+                                              strokeLinecap="round"
+                                              strokeLinejoin="round"
+                                              strokeWidth={2}
+                                              d="M5 13l4 4L19 7"
+                                            />
+                                          </svg>
+                                          {feature}
+                                        </li>
+                                      ))}
+                                    </ul>
+                                    <div className="flex items-center text-green-500 mt-2 md:mt-4">
+                                      <svg
+                                        className="w-5 h-5 md:w-5 md:h-5 mr-2 md:mr-2"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                      >
+                                        <path
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
+                                          strokeWidth={2}
+                                          d="M5 13l4 4L19 7"
+                                        />
+                                      </svg>
+                                      Vald
+                                    </div>
+                                  </div>
+                                  <div className="flex justify-end mt-2 md:mt-4">
+                                    <button
+                                      onClick={() => toggleAddon(addon.id)}
+                                      className="px-4 md:px-6 py-2 md:py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-300 text-[14px] md:text-base"
+                                    >
+                                      Avbryt
+                                    </button>
+                                  </div>
+                                </>
+                              ) : (
+                                <div className="flex items-center justify-between mt-auto">
+                                  <div className="text-lg md:text-2xl font-bold bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent">
+                                    {addon.price.toLocaleString('sv-SE')} kr
+                                  </div>
+                                  <button
+                                    onClick={() => toggleAddon(addon.id)}
+                                    className="px-4 md:px-6 py-2 md:py-2 bg-[#00ff97] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(0,255,151,0.5)] text-[14px] md:text-base"
+                                  >
+                                    Välj
+                                  </button>
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {currentStep === 3 && (
+                    <div className="max-w-2xl mx-auto">
+                      <form onSubmit={handleLocationSubmit} className="space-y-6">
+                        <div>
+                          <label className="block text-gray-300 mb-2 text-lg font-semibold">
+                            Festplats Adress
+                          </label>
+                          <input
+                            type="text"
+                            name="location"
+                            value={formData.location}
+                            onChange={handleFormChange}
+                            placeholder="Ange fullständig adress"
+                            className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#00ff97]"
+                            required
+                          />
+                        </div>
+                        {error && <div className="text-red-500">{error}</div>}
+                        {distanceInfo.distance > 0 && (
+                          <div className="bg-black/50 border border-[#00ff97]/20 rounded-lg p-4">
+                            <div className="text-green-500 mb-2">
+                              Avstånd från Malmö: {distanceInfo.distance.toFixed(1)} km
+                            </div>
+                            <div className="text-gray-400">
+                              Resekostnad:{' '}
+                              {Math.round(distanceInfo.distance / 10) * distanceInfo.pricePerKm} kr
+                              <span className="text-sm ml-2">
+                                ({Math.round(distanceInfo.distance / 10)} mil)
+                              </span>
+                            </div>
+                          </div>
+                        )}
+                        <button
+                          type="submit"
+                          className="w-full px-6 py-2 bg-gradient-to-r from-[#79f1a4] to-[#0e5cad] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(121,241,164,0.5)]"
+                        >
+                          Beräkna Avstånd
+                        </button>
+                      </form>
+                    </div>
+                  )}
+
+                  {currentStep === 4 && (
+                    <div>
+                      <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-6">
+                        {submitSuccess ? (
+                          <div className="bg-[#00ff97]/10 border border-[#00ff97]/20 rounded-lg p-6 text-center">
+                            <div className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent text-2xl mb-2">
+                              Tack för din förfrågan!
+                            </div>
+                            <p className="text-gray-300">
+                              Vi har skickat en bekräftelse till din e-postadress. Vi återkommer
+                              till dig inom 24 timmar med en detaljerad offert.
+                            </p>
+                            <button
+                              type="button"
+                              onClick={() => setSubmitSuccess(false)}
+                              className="mt-4 px-6 py-2 bg-gradient-to-r from-[#79f1a4] to-[#0e5cad] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(121,241,164,0.5)]"
+                            >
+                              Skicka en ny förfrågan
+                            </button>
+                          </div>
+                        ) : (
+                          <>
+                            <div>
+                              <label className="block text-gray-300 mb-2 text-lg font-semibold">
+                                Namn
+                              </label>
+                              <input
+                                type="text"
+                                name="name"
+                                value={formData.name}
+                                onChange={handleFormChange}
+                                className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#00ff97]"
+                                required
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-gray-300 mb-2 text-lg font-semibold">
+                                E-post
+                              </label>
+                              <input
+                                type="email"
+                                name="email"
+                                value={formData.email}
+                                onChange={handleFormChange}
+                                className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#00ff97]"
+                                required
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-gray-300 mb-2 text-lg font-semibold">
+                                Telefon
+                              </label>
+                              <input
+                                type="tel"
+                                name="phone"
+                                value={formData.phone}
+                                onChange={handleFormChange}
+                                className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#00ff97]"
+                                required
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-gray-300 mb-2 text-lg font-semibold">
+                                Datum
+                              </label>
+                              <input
+                                type="date"
+                                name="date"
+                                value={formData.date}
+                                onChange={handleFormChange}
+                                className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#00ff97]"
+                                required
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-gray-300 mb-2 text-lg font-semibold">
+                                Plats
+                              </label>
+                              <input
+                                type="text"
+                                name="location"
+                                value={formData.location}
+                                onChange={handleFormChange}
+                                className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#00ff97]"
+                                required
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-gray-300 mb-2 text-lg font-semibold">
+                                Meddelande
+                              </label>
+                              <textarea
+                                name="message"
+                                value={formData.message}
+                                onChange={handleFormChange}
+                                rows={4}
+                                className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#00ff97]"
+                                placeholder="Berätta gärna mer om din fest och eventuella önskemål..."
+                              />
+                            </div>
+                            {submitError && (
+                              <div className="text-red-500 text-center">{submitError}</div>
+                            )}
+                            <button
+                              type="submit"
+                              disabled={isSubmitting}
+                              className={`w-full px-6 py-3 bg-gradient-to-r from-[#79f1a4] to-[#0e5cad] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(121,241,164,0.5)] ${
+                                isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+                              }`}
+                            >
+                              {isSubmitting ? 'Skickar förfrågan...' : 'Skicka Förfrågan'}
+                            </button>
+                          </>
+                        )}
+                      </form>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Navigation Buttons */}
+            <div
+              className={`${
+                currentStep > 1
+                  ? 'fixed bottom-0 left-0 right-0 z-40 bg-black/95 backdrop-blur-sm py-2 md:py-4'
+                  : 'mt-8'
+              }`}
+            >
+              <div className="container mx-auto px-4">
+                <div className="grid grid-cols-3 items-center">
+                  <div className="flex justify-start">
+                    {currentStep > 1 && (
+                      <button
+                        onClick={() => setCurrentStep(prev => prev - 1)}
+                        className="px-4 md:px-6 py-1.5 md:py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors duration-300 text-sm md:text-base"
+                      >
+                        Tillbaka
+                      </button>
+                    )}
+                  </div>
+                  <div className="text-center">
+                    <h3 className="text-sm md:text-lg font-heading font-semibold text-white">
+                      Totalt Pris
+                    </h3>
+                    <div className="text-lg md:text-2xl font-bold bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent">
+                      {calculateTotal().toLocaleString('sv-SE')} kr
                     </div>
                   </div>
-                )}
-                <button
-                  type="submit"
-                  className="w-full px-6 py-2 bg-gradient-to-r from-[#79f1a4] to-[#0e5cad] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(121,241,164,0.5)]"
-                >
-                  Beräkna Avstånd
-                </button>
-              </form>
-            </div>
-          )}
-
-          {currentStep === 4 && (
-            <div>
-              <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-6">
-                {submitSuccess ? (
-                  <div className="bg-[#00ff97]/10 border border-[#00ff97]/20 rounded-lg p-6 text-center">
-                    <div className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent text-2xl mb-2">
-                      Tack för din förfrågan!
-                    </div>
-                    <p className="text-gray-300">
-                      Vi har skickat en bekräftelse till din e-postadress. Vi återkommer till dig
-                      inom 24 timmar med en detaljerad offert.
-                    </p>
-                    <button
-                      type="button"
-                      onClick={() => setSubmitSuccess(false)}
-                      className="mt-4 px-6 py-2 bg-gradient-to-r from-[#79f1a4] to-[#0e5cad] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(121,241,164,0.5)]"
-                    >
-                      Skicka en ny förfrågan
-                    </button>
+                  <div className="flex justify-end">
+                    {currentStep < 4 ? (
+                      <button
+                        onClick={handleNext}
+                        className="px-4 md:px-6 py-1.5 md:py-2 bg-gradient-to-r from-[#79f1a4] to-[#0e5cad] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(121,241,164,0.5)] text-sm md:text-base"
+                      >
+                        Nästa
+                      </button>
+                    ) : (
+                      <button
+                        onClick={handleSubmit}
+                        className="px-4 md:px-6 py-1.5 md:py-2 bg-gradient-to-r from-[#79f1a4] to-[#0e5cad] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(121,241,164,0.5)] text-sm md:text-base"
+                      >
+                        Skicka Förfrågan
+                      </button>
+                    )}
                   </div>
-                ) : (
-                  <>
-                    <div>
-                      <label className="block text-gray-300 mb-2 text-lg font-semibold">Namn</label>
-                      <input
-                        type="text"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleFormChange}
-                        className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#00ff97]"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-gray-300 mb-2 text-lg font-semibold">
-                        E-post
-                      </label>
-                      <input
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleFormChange}
-                        className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#00ff97]"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-gray-300 mb-2 text-lg font-semibold">
-                        Telefon
-                      </label>
-                      <input
-                        type="tel"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleFormChange}
-                        className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#00ff97]"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-gray-300 mb-2 text-lg font-semibold">
-                        Datum
-                      </label>
-                      <input
-                        type="date"
-                        name="date"
-                        value={formData.date}
-                        onChange={handleFormChange}
-                        className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#00ff97]"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-gray-300 mb-2 text-lg font-semibold">
-                        Plats
-                      </label>
-                      <input
-                        type="text"
-                        name="location"
-                        value={formData.location}
-                        onChange={handleFormChange}
-                        className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#00ff97]"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-gray-300 mb-2 text-lg font-semibold">
-                        Meddelande
-                      </label>
-                      <textarea
-                        name="message"
-                        value={formData.message}
-                        onChange={handleFormChange}
-                        rows={4}
-                        className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#00ff97]"
-                        placeholder="Berätta gärna mer om din fest och eventuella önskemål..."
-                      />
-                    </div>
-                    {submitError && <div className="text-red-500 text-center">{submitError}</div>}
-                    <button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className={`w-full px-6 py-3 bg-gradient-to-r from-[#79f1a4] to-[#0e5cad] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(121,241,164,0.5)] ${
-                        isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
-                      }`}
-                    >
-                      {isSubmitting ? 'Skickar förfrågan...' : 'Skicka Förfrågan'}
-                    </button>
-                  </>
-                )}
-              </form>
+                </div>
+              </div>
             </div>
-          )}
-
-          {/* Navigation Buttons */}
-          <div className="flex justify-between mt-8">
-            {currentStep > 1 && (
-              <button
-                onClick={() => setCurrentStep(prev => prev - 1)}
-                className="px-6 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors duration-300"
-              >
-                Tillbaka
-              </button>
-            )}
-            {currentStep < 4 ? (
-              <button
-                onClick={handleNext}
-                className="px-6 py-2 bg-gradient-to-r from-[#79f1a4] to-[#0e5cad] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(121,241,164,0.5)] ml-auto"
-              >
-                Nästa
-              </button>
-            ) : (
-              <button
-                onClick={handleSubmit}
-                className="px-6 py-2 bg-gradient-to-r from-[#79f1a4] to-[#0e5cad] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(121,241,164,0.5)] ml-auto"
-              >
-                Skicka Förfrågan
-              </button>
-            )}
           </div>
         </div>
       </div>

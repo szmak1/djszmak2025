@@ -31,6 +31,26 @@ export const metadata: Metadata = {
 
 const faqItems = [
   {
+    question: 'Kan man boka DJ Szmak i Skåne?',
+    answer:
+      'Ja, DJ Szmak är verksam i hela Skåne och erbjuder DJ-tjänster för alla typer av evenemang. Med central belägenhet i Malmö kan vi enkelt ta oss till alla hörn av Skåne för att göra din fest perfekt.',
+  },
+  {
+    question: 'Hur bokar man DJ Szmak?',
+    answer:
+      'Du kan enkelt boka DJ Szmak genom att använda vår prisräknare på hemsidan. Fyll i dina uppgifter och få en skräddarsydd offert inom 24 timmar. Vi erbjuder en enkel och smidig bokningsprocess utan bindande avtal.',
+  },
+  {
+    question: 'Transport och resekostnader',
+    answer:
+      'Vi erbjuder DJ-tjänster i hela Skåne med resekostnad på 100 kr per mil (10 km) från Malmö. Priset inkluderar all transport och uppsättning av utrustning. Vi är verksamma i hela Skåne och kan ta oss till alla hörn av regionen för att göra din fest perfekt.',
+  },
+  {
+    question: 'När ska man boka?',
+    answer:
+      'Vi rekommenderar att man bokar så tidigt som möjligt, särskilt för bröllop och större evenemang. Populära datum kan vara uppbokade flera månader i förväg. Kontakta oss gärna så snart du har bestämt datum för ditt evenemang.',
+  },
+  {
     question: 'Extra speltid, går det att lösa?',
     answer:
       'Önskar ni fler speltimmar än vad det ingår i DJ paketet tillkommer det 1000kr per ny påbörjad timme.',
@@ -46,24 +66,9 @@ const faqItems = [
       'Innan bröllopsfesten kan ni skicka över en spellista via Spotify/Youtube med låtar ni vill ha. Detta främst för att jag ska få en uppfattning om vad för slags låtar ni gillar.',
   },
   {
-    question: 'Hur bokar jag DJ i Skåne?',
-    answer: [
-      'DJ Skåne till bröllopsfest kan bokas på 3 olika sätt:',
-      'Via formuläret djszmak.se/kontakt',
-      'Via mejl till info@djszmak.se',
-      'Via telefon till 070-88 290 77',
-      'Efter att ni skickat in förfrågan så får ni en offert/förslag av informationen ni har angett i kontakt formuläret via mejl. Det är viktigt att ni verkligen läser igenom denna offert/förslag som ni får. Känns allt ok kan ni därefter lägga en deposition på 1000kr för att din fest ska bli 100% bokad. Resterande belopp faktureras via Frilans Finans efter spelningen. Ni behöver även signera en uppdragsoffert från Frilans Finans som jag skickar till er.',
-    ],
-  },
-  {
     question: 'Förskott/Deposition',
     answer:
       'Förskottet på 1000kr är ej återbetalningsbar. Detta är ett skydd för både mig och er. Blir djszmak sjuk eller kan inte vara eran DJ så betalas depositionen tillbaka. Om denna deposition inte är betald är ni inte bokade till 100%. Inga tider "hålls så länge" utan en deposition behövs för att ni ska vara säkra på att det valda datumet är bokad för er.',
-  },
-  {
-    question: 'Transport - och resekostnad',
-    answer:
-      'Transport och resekostnad som tillkommer vid körning utanför Malmö stad. 25kr per mil till den önskade destinationen inom Skåne.',
   },
   {
     question: 'När kommer och monteras utrustningen?',
