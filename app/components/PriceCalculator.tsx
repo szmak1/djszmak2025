@@ -215,7 +215,7 @@ export default function PriceCalculator({
     null
   );
 
-  const defaultStepDescriptions = {
+  const steps = {
     step1: {
       title: 'Välj Festtyp',
     },
@@ -229,8 +229,6 @@ export default function PriceCalculator({
       title: 'Kontaktinformation',
     },
   };
-
-  const steps = stepDescriptions || defaultStepDescriptions;
 
   useEffect(() => {
     if (currentStep > 1) {
@@ -480,37 +478,25 @@ export default function PriceCalculator({
               <div className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent text-base md:text-2xl mb-1">
                 1
               </div>
-              <p className="font-semibold text-white text-xs md:text-base mb-1">
-                {steps.step1.title}
-              </p>
-              <p className="text-[10px] md:text-sm">{steps.step1.description}</p>
+              <p className="font-semibold text-white text-xs md:text-base">{steps.step1.title}</p>
             </div>
             <div className="bg-black/50 border border-[#00ff97]/20 p-2 md:p-4 rounded-lg">
               <div className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent text-base md:text-2xl mb-1">
                 2
               </div>
-              <p className="font-semibold text-white text-xs md:text-base mb-1">
-                {steps.step2.title}
-              </p>
-              <p className="text-[10px] md:text-sm">{steps.step2.description}</p>
+              <p className="font-semibold text-white text-xs md:text-base">{steps.step2.title}</p>
             </div>
             <div className="bg-black/50 border border-[#00ff97]/20 p-2 md:p-4 rounded-lg">
               <div className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent text-base md:text-2xl mb-1">
                 3
               </div>
-              <p className="font-semibold text-white text-xs md:text-base mb-1">
-                {steps.step3.title}
-              </p>
-              <p className="text-[10px] md:text-sm">{steps.step3.description}</p>
+              <p className="font-semibold text-white text-xs md:text-base">{steps.step3.title}</p>
             </div>
             <div className="bg-black/50 border border-[#00ff97]/20 p-2 md:p-4 rounded-lg">
               <div className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent text-base md:text-2xl mb-1">
                 4
               </div>
-              <p className="font-semibold text-white text-xs md:text-base mb-1">
-                {steps.step4.title}
-              </p>
-              <p className="text-[10px] md:text-sm">{steps.step4.description}</p>
+              <p className="font-semibold text-white text-xs md:text-base">{steps.step4.title}</p>
             </div>
           </div>
           <div className="mt-6 md:mt-8 text-gray-300 text-sm md:text-base">
