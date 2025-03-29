@@ -218,19 +218,15 @@ export default function PriceCalculator({
   const defaultStepDescriptions = {
     step1: {
       title: 'Välj Festtyp',
-      description: 'Välj den festtyp som passar ditt evenemang bäst',
     },
     step2: {
       title: 'Välj Extra Tjänster',
-      description: 'Lägg till extra tjänster för att förbättra din fest',
     },
     step3: {
-      title: 'Beräkna Resekostnad',
-      description: 'Ange adressen till din festplats för att beräkna resekostnaden från Malmö',
+      title: 'Beräkna Transport',
     },
     step4: {
       title: 'Kontaktinformation',
-      description: 'Fyll i dina uppgifter för att skicka din förfrågan',
     },
   };
 
@@ -470,8 +466,8 @@ export default function PriceCalculator({
 
   return (
     <div id="pricecalculator" className="w-full py-16">
-      <div className="container mx-auto px-4">
-        <h2 className="text-2xl md:text-5xl font-heading font-bold text-white text-center mb-4 md:mb-6">
+      <div className="container px-0">
+        <h2 className="text-2xl md:text-5xl font-heading font-bold text-[#00ff97] text-center mb-4 md:mb-6">
           Skapa Ditt DJ-paket
         </h2>
         <div className="max-w-4xl mx-auto text-center mb-8 md:mb-12">
@@ -479,48 +475,49 @@ export default function PriceCalculator({
             Få en skräddarsydd offert för din fest genom att fylla i formuläret nedan. Vi erbjuder
             professionella DJ-tjänster för alla typer av evenemang.
           </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 text-gray-400">
-            <div className="bg-black/50 border border-[#00ff97]/20 p-3 md:p-4 rounded-lg">
-              <div className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent text-lg md:text-2xl mb-1 md:mb-2">
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-2 md:gap-6 text-gray-400">
+            <div className="bg-black/50 border border-[#00ff97]/20 p-2 md:p-4 rounded-lg">
+              <div className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent text-base md:text-2xl mb-1">
                 1
               </div>
-              <p className="font-semibold text-white text-sm md:text-base mb-1 md:mb-2">
+              <p className="font-semibold text-white text-xs md:text-base mb-1">
                 {steps.step1.title}
               </p>
-              <p className="text-xs md:text-sm">{steps.step1.description}</p>
+              <p className="text-[10px] md:text-sm">{steps.step1.description}</p>
             </div>
-            <div className="bg-black/50 border border-[#00ff97]/20 p-3 md:p-4 rounded-lg">
-              <div className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent text-lg md:text-2xl mb-1 md:mb-2">
+            <div className="bg-black/50 border border-[#00ff97]/20 p-2 md:p-4 rounded-lg">
+              <div className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent text-base md:text-2xl mb-1">
                 2
               </div>
-              <p className="font-semibold text-white text-sm md:text-base mb-1 md:mb-2">
+              <p className="font-semibold text-white text-xs md:text-base mb-1">
                 {steps.step2.title}
               </p>
+              <p className="text-[10px] md:text-sm">{steps.step2.description}</p>
             </div>
-            <div className="bg-black/50 border border-[#00ff97]/20 p-3 md:p-4 rounded-lg">
-              <div className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent text-lg md:text-2xl mb-1 md:mb-2">
+            <div className="bg-black/50 border border-[#00ff97]/20 p-2 md:p-4 rounded-lg">
+              <div className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent text-base md:text-2xl mb-1">
                 3
               </div>
-              <p className="font-semibold text-white text-sm md:text-base mb-1 md:mb-2">
+              <p className="font-semibold text-white text-xs md:text-base mb-1">
                 {steps.step3.title}
               </p>
-              <p className="text-xs md:text-sm">{steps.step3.description}</p>
+              <p className="text-[10px] md:text-sm">{steps.step3.description}</p>
             </div>
-            <div className="bg-black/50 border border-[#00ff97]/20 p-3 md:p-4 rounded-lg">
-              <div className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent text-lg md:text-2xl mb-1 md:mb-2">
+            <div className="bg-black/50 border border-[#00ff97]/20 p-2 md:p-4 rounded-lg">
+              <div className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent text-base md:text-2xl mb-1">
                 4
               </div>
-              <p className="font-semibold text-white text-sm md:text-base mb-1 md:mb-2">
+              <p className="font-semibold text-white text-xs md:text-base mb-1">
                 {steps.step4.title}
               </p>
-              <p className="text-xs md:text-sm">{steps.step4.description}</p>
+              <p className="text-[10px] md:text-sm">{steps.step4.description}</p>
             </div>
           </div>
           <div className="mt-6 md:mt-8 text-gray-300 text-sm md:text-base">
             <p className="mb-1 md:mb-2">✓ Få svar inom 24 timmar</p>
             <p className="mb-1 md:mb-2">✓ Gratis offert</p>
             <p className="mb-1 md:mb-2">✓ Inga bindande avtal</p>
-            <p>✓ Skräddarsydda paket för ditt evenemang</p>
+            <p className="mb-1 md:mb-2">✓ Skräddarsydda paket för ditt evenemang</p>
           </div>
         </div>
 
@@ -670,23 +667,24 @@ export default function PriceCalculator({
                               {isSelected ? (
                                 <>
                                   <div>
-                                    <ul className="space-y-1.5 md:space-y-2">
+                                    <ul className="space-y-0.5">
                                       {party.baseFeatures.map((feature, index) => (
                                         <li
                                           key={index}
-                                          className="flex items-start text-[12px] md:text-sm text-white leading-tight"
+                                          className="flex items-center gap-1 text-[14px] md:text-xs text-gray-400"
                                         >
                                           <svg
-                                            className="w-4 h-4 md:w-5 md:h-5 mr-1.5 md:mr-2 mt-0.5 shrink-0 text-[#00ff97]"
-                                            fill="none"
-                                            stroke="currentColor"
+                                            className="w-3 h-3 md:w-4 md:h-4 shrink-0 text-[#00ff97]"
                                             viewBox="0 0 24 24"
+                                            fill="none"
+                                            xmlns="http://www.w3.org/2000/svg"
                                           >
                                             <path
+                                              d="M20 6L9 17L4 12"
+                                              stroke="currentColor"
+                                              strokeWidth="2"
                                               strokeLinecap="round"
                                               strokeLinejoin="round"
-                                              strokeWidth={2}
-                                              d="M5 13l4 4L19 7"
                                             />
                                           </svg>
                                           {feature}
@@ -804,23 +802,24 @@ export default function PriceCalculator({
                               {isSelected ? (
                                 <>
                                   <div>
-                                    <ul className="space-y-1.5 md:space-y-2">
+                                    <ul className="space-y-0.5">
                                       {addon.features.map((feature, index) => (
                                         <li
                                           key={index}
-                                          className="flex items-start text-[12px] md:text-sm text-white leading-tight"
+                                          className="flex items-center gap-1 text-[14px] md:text-xs text-gray-400"
                                         >
                                           <svg
-                                            className="w-4 h-4 md:w-5 md:h-5 mr-1.5 md:mr-2 mt-0.5 shrink-0 text-[#00ff97]"
-                                            fill="none"
-                                            stroke="currentColor"
+                                            className="w-3 h-3 md:w-4 md:h-4 shrink-0 text-[#00ff97]"
                                             viewBox="0 0 24 24"
+                                            fill="none"
+                                            xmlns="http://www.w3.org/2000/svg"
                                           >
                                             <path
+                                              d="M20 6L9 17L4 12"
+                                              stroke="currentColor"
+                                              strokeWidth="2"
                                               strokeLinecap="round"
                                               strokeLinejoin="round"
-                                              strokeWidth={2}
-                                              d="M5 13l4 4L19 7"
                                             />
                                           </svg>
                                           {feature}
@@ -866,162 +865,167 @@ export default function PriceCalculator({
                   )}
 
                   {currentStep === 3 && (
-                    <div className="max-w-2xl mx-auto">
-                      <form onSubmit={handleLocationSubmit} className="space-y-6">
-                        <div>
-                          <label className="block text-gray-300 mb-2 text-lg font-semibold">
-                            Festplats Adress
-                          </label>
-                          <input
-                            type="text"
-                            name="location"
-                            value={formData.location}
-                            onChange={handleFormChange}
-                            placeholder="Ange fullständig adress"
-                            className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#00ff97]"
-                            required
-                          />
-                        </div>
-                        {error && <div className="text-red-500">{error}</div>}
-                        {distanceInfo.distance > 0 && (
-                          <div className="bg-black/50 border border-[#00ff97]/20 rounded-lg p-4">
-                            <div className="text-green-500 mb-2">
-                              Avstånd från Malmö: {distanceInfo.distance.toFixed(1)} km
-                            </div>
-                            <div className="text-gray-400">
-                              Resekostnad:{' '}
-                              {Math.round(distanceInfo.distance / 10) * distanceInfo.pricePerKm} kr
-                              <span className="text-sm ml-2">
-                                ({Math.round(distanceInfo.distance / 10)} mil)
-                              </span>
-                            </div>
+                    <div className="h-full flex items-center justify-center">
+                      <div className="max-w-2xl mx-auto px-2 md:px-4 w-full">
+                        <form onSubmit={handleLocationSubmit} className="space-y-4 md:space-y-6">
+                          <div>
+                            <label className="block text-gray-300 mb-1.5 md:mb-2 text-base md:text-lg font-semibold text-center">
+                              Festplats Adress
+                            </label>
+                            <input
+                              type="text"
+                              name="location"
+                              value={formData.location}
+                              onChange={handleFormChange}
+                              placeholder="Ange fullständig adress"
+                              className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-3 md:px-4 py-2 text-sm md:text-base focus:ring-2 focus:ring-[#00ff97]"
+                              required
+                            />
                           </div>
-                        )}
-                        <button
-                          type="submit"
-                          className="w-full px-6 py-2 bg-gradient-to-r from-[#79f1a4] to-[#0e5cad] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(121,241,164,0.5)]"
-                        >
-                          Beräkna Avstånd
-                        </button>
-                      </form>
+                          {error && (
+                            <div className="text-red-500 text-sm md:text-base text-center">
+                              {error}
+                            </div>
+                          )}
+                          {distanceInfo.distance > 0 && (
+                            <div className="bg-black/50 border border-[#00ff97]/20 rounded-lg p-3 md:p-4">
+                              <div className="text-green-500 mb-1.5 md:mb-2 text-sm md:text-base text-center">
+                                Avstånd från Malmö: {distanceInfo.distance.toFixed(1)} km
+                              </div>
+                              <div className="text-gray-400 text-sm md:text-base text-center">
+                                Resekostnad:{' '}
+                                {Math.round(distanceInfo.distance / 10) * distanceInfo.pricePerKm}{' '}
+                                kr
+                                <span className="text-xs md:text-sm ml-2">
+                                  ({Math.round(distanceInfo.distance / 10)} mil)
+                                </span>
+                              </div>
+                            </div>
+                          )}
+                          <button
+                            type="submit"
+                            className="w-full px-4 md:px-6 py-2 bg-gradient-to-r from-[#79f1a4] to-[#0e5cad] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(121,241,164,0.5)] text-sm md:text-base font-semibold"
+                          >
+                            Beräkna Avstånd
+                          </button>
+                        </form>
+                      </div>
                     </div>
                   )}
 
                   {currentStep === 4 && (
-                    <div>
-                      <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-6">
-                        {submitSuccess ? (
-                          <div className="bg-[#00ff97]/10 border border-[#00ff97]/20 rounded-lg p-6 text-center">
-                            <div className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent text-2xl mb-2">
-                              Tack för din förfrågan!
+                    <div className="h-full flex items-center justify-center">
+                      <div className="max-w-2xl mx-auto px-2 md:px-4 w-full">
+                        <form onSubmit={handleSubmit} className="space-y-3 md:space-y-6">
+                          {submitSuccess ? (
+                            <div className="bg-[#00ff97]/10 border border-[#00ff97]/20 rounded-lg p-4 md:p-6 text-center">
+                              <div className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent text-xl md:text-2xl mb-2">
+                                Tack för din förfrågan!
+                              </div>
+                              <p className="text-gray-300 text-sm md:text-base">
+                                Vi har skickat en bekräftelse till din e-postadress. Vi återkommer
+                                till dig inom 24 timmar med en detaljerad offert.
+                              </p>
+                              <button
+                                type="button"
+                                onClick={() => setSubmitSuccess(false)}
+                                className="mt-4 px-4 md:px-6 py-2 bg-gradient-to-r from-[#79f1a4] to-[#0e5cad] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(121,241,164,0.5)] text-sm md:text-base"
+                              >
+                                Skicka en ny förfrågan
+                              </button>
                             </div>
-                            <p className="text-gray-300">
-                              Vi har skickat en bekräftelse till din e-postadress. Vi återkommer
-                              till dig inom 24 timmar med en detaljerad offert.
-                            </p>
-                            <button
-                              type="button"
-                              onClick={() => setSubmitSuccess(false)}
-                              className="mt-4 px-6 py-2 bg-gradient-to-r from-[#79f1a4] to-[#0e5cad] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(121,241,164,0.5)]"
-                            >
-                              Skicka en ny förfrågan
-                            </button>
-                          </div>
-                        ) : (
-                          <>
-                            <div>
-                              <label className="block text-gray-300 mb-2 text-lg font-semibold">
-                                Namn
-                              </label>
-                              <input
-                                type="text"
-                                name="name"
-                                value={formData.name}
-                                onChange={handleFormChange}
-                                className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#00ff97]"
-                                required
-                              />
-                            </div>
-                            <div>
-                              <label className="block text-gray-300 mb-2 text-lg font-semibold">
-                                E-post
-                              </label>
-                              <input
-                                type="email"
-                                name="email"
-                                value={formData.email}
-                                onChange={handleFormChange}
-                                className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#00ff97]"
-                                required
-                              />
-                            </div>
-                            <div>
-                              <label className="block text-gray-300 mb-2 text-lg font-semibold">
-                                Telefon
-                              </label>
-                              <input
-                                type="tel"
-                                name="phone"
-                                value={formData.phone}
-                                onChange={handleFormChange}
-                                className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#00ff97]"
-                                required
-                              />
-                            </div>
-                            <div>
-                              <label className="block text-gray-300 mb-2 text-lg font-semibold">
-                                Datum
-                              </label>
-                              <input
-                                type="date"
-                                name="date"
-                                value={formData.date}
-                                onChange={handleFormChange}
-                                className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#00ff97]"
-                                required
-                              />
-                            </div>
-                            <div>
-                              <label className="block text-gray-300 mb-2 text-lg font-semibold">
-                                Plats
-                              </label>
-                              <input
-                                type="text"
-                                name="location"
-                                value={formData.location}
-                                onChange={handleFormChange}
-                                className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#00ff97]"
-                                required
-                              />
-                            </div>
-                            <div>
-                              <label className="block text-gray-300 mb-2 text-lg font-semibold">
-                                Meddelande
-                              </label>
-                              <textarea
-                                name="message"
-                                value={formData.message}
-                                onChange={handleFormChange}
-                                rows={4}
-                                className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#00ff97]"
-                                placeholder="Berätta gärna mer om din fest och eventuella önskemål..."
-                              />
-                            </div>
-                            {submitError && (
-                              <div className="text-red-500 text-center">{submitError}</div>
-                            )}
-                            <button
-                              type="submit"
-                              disabled={isSubmitting}
-                              className={`w-full px-6 py-3 bg-gradient-to-r from-[#79f1a4] to-[#0e5cad] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(121,241,164,0.5)] ${
-                                isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
-                              }`}
-                            >
-                              {isSubmitting ? 'Skickar förfrågan...' : 'Skicka Förfrågan'}
-                            </button>
-                          </>
-                        )}
-                      </form>
+                          ) : (
+                            <>
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-6">
+                                <div>
+                                  <label className="block text-gray-300 mb-1.5 md:mb-2 text-sm md:text-lg font-semibold">
+                                    Namn
+                                  </label>
+                                  <input
+                                    type="text"
+                                    name="name"
+                                    value={formData.name}
+                                    onChange={handleFormChange}
+                                    className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-3 md:px-4 py-2 text-sm md:text-base focus:ring-2 focus:ring-[#00ff97]"
+                                    required
+                                  />
+                                </div>
+                                <div>
+                                  <label className="block text-gray-300 mb-1.5 md:mb-2 text-sm md:text-lg font-semibold">
+                                    E-post
+                                  </label>
+                                  <input
+                                    type="email"
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={handleFormChange}
+                                    className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-3 md:px-4 py-2 text-sm md:text-base focus:ring-2 focus:ring-[#00ff97]"
+                                    required
+                                  />
+                                </div>
+                                <div>
+                                  <label className="block text-gray-300 mb-1.5 md:mb-2 text-sm md:text-lg font-semibold">
+                                    Telefon
+                                  </label>
+                                  <input
+                                    type="tel"
+                                    name="phone"
+                                    value={formData.phone}
+                                    onChange={handleFormChange}
+                                    className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-3 md:px-4 py-2 text-sm md:text-base focus:ring-2 focus:ring-[#00ff97]"
+                                    required
+                                  />
+                                </div>
+                                <div>
+                                  <label className="block text-gray-300 mb-1.5 md:mb-2 text-sm md:text-lg font-semibold">
+                                    Datum
+                                  </label>
+                                  <input
+                                    type="date"
+                                    name="date"
+                                    value={formData.date}
+                                    onChange={handleFormChange}
+                                    min={new Date().toISOString().split('T')[0]}
+                                    className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-3 md:px-4 py-2 text-sm md:text-base focus:ring-2 focus:ring-[#00ff97] [color-scheme:dark]"
+                                    required
+                                  />
+                                </div>
+                              </div>
+                              <div className="mt-3 md:mt-6">
+                                <label className="block text-gray-300 mb-1.5 md:mb-2 text-sm md:text-lg font-semibold">
+                                  Plats
+                                </label>
+                                <input
+                                  type="text"
+                                  name="location"
+                                  value={formData.location}
+                                  onChange={handleFormChange}
+                                  className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-3 md:px-4 py-2 text-sm md:text-base focus:ring-2 focus:ring-[#00ff97]"
+                                  required
+                                />
+                              </div>
+                              <div className="mt-3 md:mt-6">
+                                <label className="block text-gray-300 mb-1.5 md:mb-2 text-sm md:text-lg font-semibold">
+                                  Meddelande
+                                </label>
+                                <textarea
+                                  name="message"
+                                  value={formData.message}
+                                  onChange={handleFormChange}
+                                  rows={3}
+                                  className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-3 md:px-4 py-2 text-sm md:text-base focus:ring-2 focus:ring-[#00ff97]"
+                                  placeholder="Berätta gärna mer om din fest och eventuella önskemål..."
+                                />
+                              </div>
+                              {submitError && (
+                                <div className="text-red-500 text-sm md:text-base text-center">
+                                  {submitError}
+                                </div>
+                              )}
+                            </>
+                          )}
+                        </form>
+                      </div>
                     </div>
                   )}
                 </div>
