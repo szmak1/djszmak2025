@@ -12,7 +12,6 @@ interface VideoSectionProps {
 export default function VideoSection({
   videoHeading,
   videoTitle,
-  videoTitleColor = 'text-pink-500',
   videoDescription,
 }: VideoSectionProps) {
   const [isHovered, setIsHovered] = useState(false);
@@ -45,22 +44,22 @@ export default function VideoSection({
   }, []);
 
   return (
-    <section className="pb-10 pt-16">
+    <section className="py-8 md:pb-10 md:pt-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="lg:text-center">
-          <p className="text-base font-semibold tracking-wide uppercase bg-gradient-to-r from-blue-500 to-purple-600 text-transparent bg-clip-text">
+        <div className="text-center">
+          <p className="text-sm md:text-base font-semibold tracking-wide uppercase bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] text-transparent bg-clip-text mb-2">
             {videoHeading}
           </p>
-          <h2 className="text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl">
+          <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold tracking-tight text-white mb-8 md:mb-12">
             {videoTitle}
           </h2>
         </div>
 
         <div className="relative">
-          <div className="relative bg-opacity-75 py-20 px-6 sm:py-20 sm:px-12 lg:px-16">
+          <div className="relative py-4 md:py-8 px-0 md:px-6">
             <div className="relative max-w-3xl mx-auto flex flex-col items-center text-center">
               <div
-                className="w-full relative group"
+                className="w-full relative group rounded-lg overflow-hidden shadow-lg"
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
               >
@@ -82,7 +81,7 @@ export default function VideoSection({
               </div>
               {videoDescription && (
                 <div
-                  className="mt-8 text-xl text-white bg-gray-800 rounded-lg p-8 flex flex-col justify-center items-center text-left shadow-lg hover:shadow-xl transition-shadow duration-300"
+                  className="mt-4 md:mt-8 text-base md:text-xl text-white bg-black/50 backdrop-blur-sm rounded-lg p-4 md:p-8 flex flex-col justify-center items-center text-left shadow-lg hover:shadow-xl transition-shadow duration-300 border border-[#00ff97]/20"
                   dangerouslySetInnerHTML={{ __html: videoDescription }}
                 />
               )}

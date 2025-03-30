@@ -52,7 +52,7 @@ export default function TextWithImage({
             {buttonText && buttonLink && (
               <Link
                 href={buttonLink}
-                className="font-heading inline-block bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] text-white px-6 py-3 text-sm rounded-lg font-semibold hover:scale-105 transition-all duration-200 shadow-lg max-w-[200px] text-center hover:shadow-[#00ff97]/20"
+                className="!font-heading inline-block !bg-gradient-to-r !from-[#00ff97] !via-[#00daa8] !to-[#007ed4] !text-black px-8 py-4 rounded-lg font-bold text-lg hover:scale-105 transition-all duration-200 animate-fade-in-delay-2 shadow-lg hover:shadow-[#00ff97]/20"
               >
                 {buttonText}
               </Link>

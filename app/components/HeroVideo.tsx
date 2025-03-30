@@ -44,7 +44,7 @@ export default function HeroVideo({
       </video>
 
       {/* Dark Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/65 to-black/80 z-10"></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/60 to-black/60 z-10"></div>
 
       {/* Content */}
       <div className="relative z-20 h-full flex flex-col items-center justify-center">

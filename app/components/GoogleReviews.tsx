@@ -31,6 +31,9 @@ export default function GoogleReviews() {
   const [isAnimating, setIsAnimating] = useState(false);
   const [googleReviewsUrl, setGoogleReviewsUrl] = useState<string>('');
   const [isMobile, setIsMobile] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
 
   // Number of reviews to show per slide based on screen size
   const reviewsPerSlide = {
@@ -91,14 +94,55 @@ export default function GoogleReviews() {
     if (isAnimating) return;
     setIsAnimating(true);
     setCurrentSlide(current => (current + 1) % getMaxSlides());
-    setTimeout(() => setIsAnimating(false), 500);
+    setTimeout(() => setIsAnimating(false), 700);
   };
 
   const prevSlide = () => {
     if (isAnimating) return;
     setIsAnimating(true);
     setCurrentSlide(current => (current - 1 + getMaxSlides()) % getMaxSlides());
-    setTimeout(() => setIsAnimating(false), 500);
+    setTimeout(() => setIsAnimating(false), 700);
+  };
+
+  // Touch and mouse event handlers
+  const handleDragStart = (
+    e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>
+  ) => {
+    setIsDragging(true);
+    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+    setStartX(clientX);
+  };
+
+  const handleDragEnd = () => {
+    setIsDragging(false);
+  };
+
+  const handleDragMove = (
+    e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>
+  ) => {
+    if (!isDragging) return;
+    e.preventDefault();
+
+    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+    const diff = startX - clientX;
+
+    if (Math.abs(diff) > 50) {
+      // Add a smooth transition when dragging
+      const slider = e.currentTarget;
+      slider.style.transition = 'transform 700ms cubic-bezier(0.4, 0, 0.2, 1)';
+
+      if (diff > 0) {
+        nextSlide();
+      } else {
+        prevSlide();
+      }
+      setIsDragging(false);
+
+      // Reset the transition after the animation
+      setTimeout(() => {
+        slider.style.transition = '';
+      }, 700);
+    }
   };
 
   const renderStars = (rating: number) => {
@@ -186,10 +230,18 @@ export default function GoogleReviews() {
           {/* Reviews Slider */}
           <div className="overflow-hidden">
             <div
-              className="flex transition-transform duration-500 ease-out"
+              className="flex transition-all duration-700 ease-in-out will-change-transform"
               style={{
                 transform: `translateX(-${currentSlide * 100}%)`,
+                touchAction: 'pan-y pinch-zoom',
               }}
+              onMouseDown={handleDragStart}
+              onMouseUp={handleDragEnd}
+              onMouseLeave={handleDragEnd}
+              onMouseMove={handleDragMove}
+              onTouchStart={handleDragStart}
+              onTouchEnd={handleDragEnd}
+              onTouchMove={handleDragMove}
             >
               {Array.from({ length: getMaxSlides() }).map((_, slideIndex) => (
                 <div
@@ -206,30 +258,30 @@ export default function GoogleReviews() {
                         key={index}
                         className="group border border-[#00ff97]/20 rounded-lg bg-black/50 hover:border-[#00ff97]/40 transition-all duration-300"
                       >
-                        <div className="p-6">
-                          <div className="flex items-start space-x-4">
+                        <div className="p-3 md:p-6">
+                          <div className="flex items-start space-x-3 md:space-x-4">
                             <Image
                               src={review.profile_photo_url || '/default-avatar.png'}
                               alt={review.author_name}
-                              width={48}
-                              height={48}
-                              className="w-12 h-12 rounded-full ring-2 ring-[#00ff97]/20"
+                              width={40}
+                              height={40}
+                              className="w-8 h-8 md:w-12 md:h-12 rounded-full ring-2 ring-[#00ff97]/20"
                             />
                             <div className="flex-1 min-w-0">
-                              <h3 className="text-lg font-semibold text-white truncate group-hover:text-[#00ff97] transition-colors">
+                              <h3 className="text-sm md:text-lg font-semibold text-white truncate group-hover:text-[#00ff97] transition-colors">
                                 {review.author_name}
                               </h3>
-                              <div className="flex items-center gap-2 mt-1 mb-3">
+                              <div className="flex items-center gap-1 md:gap-2 mt-0.5 md:mt-1 mb-2 md:mb-3">
                                 <div className="flex">{renderStars(review.rating)}</div>
-                                <span className="text-gray-400 text-sm">
+                                <span className="text-gray-400 text-xs md:text-sm">
                                   {formatDate(review.time)}
                                 </span>
                               </div>
-                              <p className="text-gray-300 leading-relaxed line-clamp-4">
-                                {review.text}
-                              </p>
                             </div>
                           </div>
+                          <p className="text-gray-300 text-xs md:text-base leading-relaxed line-clamp-3 md:line-clamp-4 ">
+                            {review.text}
+                          </p>
                         </div>
                       </div>
                     ))}
@@ -244,14 +296,14 @@ export default function GoogleReviews() {
             className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 md:-translate-x-8 bg-black/80 hover:bg-[#00ff97]/10 text-[#00ff97] p-3 rounded-full shadow-lg backdrop-blur-sm transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-[#00ff97] border border-[#00ff97]/20"
             aria-label="Previous reviews"
           >
-            <FaChevronLeft className="w-4 h-4" />
+            <FaChevronLeft className="w-2 h-2 md:w-4 md:h-4" />
           </button>
           <button
             onClick={nextSlide}
             className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 md:translate-x-8 bg-black/80 hover:bg-[#00ff97]/10 text-[#00ff97] p-3 rounded-full shadow-lg backdrop-blur-sm transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-[#00ff97] border border-[#00ff97]/20"
             aria-label="Next reviews"
           >
-            <FaChevronRight className="w-4 h-4" />
+            <FaChevronRight className="w-2 h-2 md:w-4 md:h-4" />
           </button>
 
           {/* Navigation Dots */}
@@ -263,7 +315,7 @@ export default function GoogleReviews() {
                   if (!isAnimating) {
                     setIsAnimating(true);
                     setCurrentSlide(index);
-                    setTimeout(() => setIsAnimating(false), 500);
+                    setTimeout(() => setIsAnimating(false), 700);
                   }
                 }}
                 className={`h-2.5 rounded-full transition-all duration-300 ${

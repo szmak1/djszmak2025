@@ -708,8 +708,10 @@ export default function PriceCalculator({
                       <>
                         <div className="w-full flex justify-center items-center">
                           <div className="text-center">
-                            <h3 className="text-sm md:text-xl font-heading font-semibold text-[#00ff97]">
-                              Välj tillägg för festen
+                            <h3 className="font-heading text-4xl md:text-6xl font-extrabold tracking-tight">
+                              <span className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent">
+                                Välj tillägg för festen
+                              </span>
                             </h3>
                           </div>
                         </div>
@@ -761,7 +763,7 @@ export default function PriceCalculator({
                           return (
                             <div
                               key={party.id}
-                              onClick={() => handlePartySelect(party.id)}
+                              onClick={() => !isSelected && handlePartySelect(party.id)}
                               className={`bg-black/50 border border-[#00ff97]/20 rounded-lg p-3 md:p-6 transition-all duration-300 ${
                                 isSelected
                                   ? 'ring-2 ring-[#00ff97] shadow-lg h-auto col-span-2 md:col-span-2 lg:col-span-3 max-w-xl w-full'
@@ -786,25 +788,23 @@ export default function PriceCalculator({
                                   <div>
                                     <ul className="space-y-0.5">
                                       {party.baseFeatures.map((feature, index) => (
-                                        <li
-                                          key={index}
-                                          className="flex items-center gap-1 text-[14px] md:text-xs text-gray-400"
-                                        >
+                                        <li key={index} className="flex items-center gap-2">
                                           <svg
-                                            className="w-3 h-3 md:w-4 md:h-4 shrink-0 text-[#00ff97]"
-                                            viewBox="0 0 24 24"
+                                            className="w-4 h-4 md:w-5 md:h-5 text-green-500 shrink-0"
                                             fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
                                           >
                                             <path
-                                              d="M20 6L9 17L4 12"
-                                              stroke="currentColor"
-                                              strokeWidth="2"
                                               strokeLinecap="round"
                                               strokeLinejoin="round"
+                                              strokeWidth={2}
+                                              d="M5 13l4 4L19 7"
                                             />
                                           </svg>
-                                          {feature}
+                                          <span className="text-xs md:text-sm lg:text-base text-gray-300">
+                                            {feature}
+                                          </span>
                                         </li>
                                       ))}
                                     </ul>
@@ -921,25 +921,23 @@ export default function PriceCalculator({
                                   <div>
                                     <ul className="space-y-0.5">
                                       {addon.features.map((feature, index) => (
-                                        <li
-                                          key={index}
-                                          className="flex items-center gap-1 text-[14px] md:text-xs text-gray-400"
-                                        >
+                                        <li key={index} className="flex items-center gap-2">
                                           <svg
-                                            className="w-3 h-3 md:w-4 md:h-4 shrink-0 text-[#00ff97]"
-                                            viewBox="0 0 24 24"
+                                            className="w-4 h-4 md:w-5 md:h-5 text-green-500 shrink-0"
                                             fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
                                           >
                                             <path
-                                              d="M20 6L9 17L4 12"
-                                              stroke="currentColor"
-                                              strokeWidth="2"
                                               strokeLinecap="round"
                                               strokeLinejoin="round"
+                                              strokeWidth={2}
+                                              d="M5 13l4 4L19 7"
                                             />
                                           </svg>
-                                          {feature}
+                                          <span className="text-xs md:text-sm lg:text-base text-gray-300">
+                                            {feature}
+                                          </span>
                                         </li>
                                       ))}
                                     </ul>

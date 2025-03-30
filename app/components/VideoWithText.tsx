@@ -74,7 +74,7 @@ export default function VideoWithText({
             {buttonText && buttonLink && (
               <Link
                 href={buttonLink}
-                className="font-heading inline-block bg-gradient-to-r from-blue-500 to-purple-600 text-white px-3 py-2 text-sm rounded-lg font-semibold hover:scale-105 transition-transform duration-200 shadow-lg max-w-[200px] text-center"
+                className="font-heading inline-block bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] text-black px-8 py-4 rounded-lg font-bold text-lg hover:scale-105 transition-all duration-200 animate-fade-in-delay-2 shadow-lg hover:shadow-[#00ff97]/20 self-start text-center max-w-[200px]"
               >
                 {buttonText}
               </Link>
