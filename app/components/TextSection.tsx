@@ -1,4 +1,6 @@
 import React from 'react';
+import DividerWave from './DividerWave';
+import DividerWaveTop from './DividerWaveTop';
 
 interface TextSectionProps {
   title: string;
@@ -9,27 +11,35 @@ export default function TextSection({ title, description }: TextSectionProps) {
   const paragraphs = description.split('\n\n').filter(p => p.trim());
 
   return (
-    <section className="py-20">
-      <div className="container mx-auto px-4">
-        <div className="border border-[#00ff97]/20 rounded-lg bg-black/50 p-8">
+    <div className="relative w-full">
+      <div className="w-screen relative left-[50%] right-[50%] mx-[-50vw]">
+        <div className="absolute top-0 left-0 w-full">
+          <DividerWave />
+        </div>
+      </div>
+      <section className="w-screen relative left-[50%] right-[50%] mx-[-50vw] bg-[#00ff97] py-20">
+        <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold mb-6 tracking-tight">
-              <span className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent">
-                {title}
-              </span>
+              <span className="text-black">{title}</span>
             </h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] mx-auto rounded-full mb-8" />
+            <div className="w-24 h-1 bg-black mx-auto rounded-full mb-8" />
           </div>
 
           <div className="space-y-12 max-w-5xl mx-auto">
             {paragraphs.map((paragraph, index) => (
-              <p key={index} className="font-sans text-lg text-gray-300 leading-relaxed">
+              <p key={index} className="font-sans text-lg text-black leading-relaxed">
                 {paragraph.trim()}
               </p>
             ))}
           </div>
         </div>
+      </section>
+      <div className="w-screen relative left-[50%] right-[50%] mx-[-50vw]">
+        <div className="absolute bottom-0 left-0 w-full">
+          <DividerWaveTop />
+        </div>
       </div>
-    </section>
+    </div>
   );
 }

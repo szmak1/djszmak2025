@@ -9,23 +9,33 @@ import GoogleReviews from '@/app/components/GoogleReviews';
 import PriceCalculator from '@/app/components/PriceCalculator';
 
 export const metadata: Metadata = {
-  title: 'DJ till Bröllopsfest | Professionell DJ-underhållning i Skåne',
+  title: 'DJ till bröllop med ljud, ljus & LEDGOLV i Skåne | Malmö | Helsingborg + mer',
   description:
-    'Boka en erfaren DJ för er bröllopsfest i Skåne. Med många års erfarenhet skapar jag den perfekta stämningen för er speciella dag. Professionell DJ-entertainment som får alla att dansa.',
+    'Boka DJ till bröllop enkelt i Skåne. Planeringsmöte ingår alltid till all DJ paket för bröllopsfester. Erfaren DJ som fyller dansgolvet. Professionell DJ-underhållning med ljud, ljus & LEDGOLV för er bröllopsfest. Skapa en magisk stämning med vårt interaktiva LED-golv.',
   keywords:
-    'DJ bröllopsfest, bröllops DJ Skåne, DJ till bröllop, bröllopsfest DJ, professionell DJ bröllop, DJ-underhållning bröllop',
+    'DJ bröllopsfest, bröllops DJ Skåne, DJ till bröllop Malmö, DJ till bröllop Helsingborg, bröllopsfest DJ, professionell DJ bröllop, DJ-underhållning bröllop, DJ med LEDGOLV, DJ med ljud och ljus, bröllops DJ med planeringsmöte, DJ som fyller dansgolvet, DJ till bröllop i Skåne, DJ till bröllop med ljud och ljus, LEDGOLV bröllop, LED-golv till bröllop, interaktivt LED-golv bröllop',
   openGraph: {
-    title: 'DJ till Bröllopsfest | Professionell DJ-underhållning i Skåne',
+    title: 'DJ till bröllop med ljud, ljus & LEDGOLV i Skåne | Malmö | Helsingborg + mer',
     description:
-      'Boka en erfaren DJ för er bröllopsfest i Skåne. Med många års erfarenhet skapar jag den perfekta stämningen för er speciella dag.',
+      'Boka DJ till bröllop enkelt i Skåne. Planeringsmöte ingår alltid till all DJ paket för bröllopsfester. Erfaren DJ som fyller dansgolvet. Skapa en magisk stämning med vårt interaktiva LED-golv.',
     images: [
       {
         url: '/images/bröllopsfest.webp',
         width: 1200,
         height: 630,
-        alt: 'DJ till bröllopsfest i Skåne',
+        alt: 'DJ till bröllopsfest i Skåne med ljud, ljus & LEDGOLV',
       },
     ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'DJ till bröllop med ljud, ljus & LEDGOLV i Skåne | Malmö | Helsingborg + mer',
+    description:
+      'Boka DJ till bröllop enkelt i Skåne. Planeringsmöte ingår alltid till all DJ paket för bröllopsfester. Erfaren DJ som fyller dansgolvet. Skapa en magisk stämning med vårt interaktiva LED-golv.',
+    images: ['/images/bröllopsfest.webp'],
+  },
+  alternates: {
+    canonical: 'https://djszmak.se/brollopsfest',
   },
 };
 
@@ -117,16 +127,17 @@ export default function Bröllopsfest() {
         videoSrc="/videos/brollopsfest.mp4"
       />
       <Divider />
-      <TextSection
-        title="Lång erfarenhet som DJ Skåne och stor kompetens säkrar DJ till bröllop"
-        description="Jag har många års erfarenhet som bröllops DJ i Skåne. Under åren har jag haft äran att få vara med och skapa stämning för bröllopsparet och gästerna under bröllopets viktigaste timmar – festen. Jag kommer att med all min kompetens och skicklighet rocka ditt bröllop och fylla dansgolvet. Tillsammans med er skapar vi minnen som varar en livstid."
-      />
+
       <TextWithImage
         title="Bröllops DJ Skåne med respekt för schemat"
         description="Ett bröllop med tillhörande fest är ofta en välplanerad tillställning. Planering, schema, hålltider och tajming måste klaffa, och det är något jag har full respekt för. Därför stämmer jag alltid av i god tid vad som gäller, hur önskemålen ser ut och framför allt – vilken musik vill ni dansa ut er stora dag till. Tillsammans med er skräddarsyr vi er bröllopsfest till ett oförglömligt minne – både för er och för gästerna."
         imageSrc="/images/bröllopsfest.webp"
         imageAlt="DJ med respekt för bröllopsschema"
         imagePosition="right"
+      />
+      <TextSection
+        title="Lång erfarenhet som DJ Skåne och stor kompetens säkrar DJ till bröllop"
+        description="Jag har många års erfarenhet som bröllops DJ i Skåne. Under åren har jag haft äran att få vara med och skapa stämning för bröllopsparet och gästerna under bröllopets viktigaste timmar – festen. Jag kommer att med all min kompetens och skicklighet rocka ditt bröllop och fylla dansgolvet. Tillsammans med er skapar vi minnen som varar en livstid."
       />
       <TextWithImage
         title="Massivt musikbibliotek till er bröllopsfest"

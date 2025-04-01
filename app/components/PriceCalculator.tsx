@@ -696,10 +696,12 @@ export default function PriceCalculator({
                       <>
                         <div className="text-center mb-6 md:mb-8">
                           <h3 className="text-base md:text-xl font-heading font-semibold text-white mb-1">
-                            Välj Festtyp
+                            {selectedParty ? 'Lägg till extra DJ timmar' : 'Välj Festtyp'}
                           </h3>
                           <p className="text-xs md:text-sm text-gray-400">
-                            Välj en festtyp för att fortsätta
+                            {selectedParty
+                              ? 'Välj hur många extra timmar du vill ha med DJ:n'
+                              : 'Välj en festtyp för att fortsätta'}
                           </p>
                         </div>
                       </>
@@ -719,12 +721,19 @@ export default function PriceCalculator({
                     )}
                     {currentStep === 3 && (
                       <>
-                        <h3 className="text-base md:text-xl font-heading font-semibold text-white">
-                          Beräkna Transport
-                        </h3>
-                        <p className="text-xs text-gray-400">
-                          Ange adressen till din festplats för att beräkna resekostnaden från Malmö
-                        </p>
+                        <div className="w-full flex justify-center items-center">
+                          <div className="text-center">
+                            <h3 className="font-heading text-4xl md:text-6xl font-extrabold tracking-tight">
+                              <span className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent">
+                                Beräkna Transport
+                              </span>
+                            </h3>
+                            <p className="text-gray-400 text-sm md:text-base mt-2">
+                              Ange adressen till din festplats för att beräkna resekostnaden från
+                              Malmö
+                            </p>
+                          </div>
+                        </div>
                       </>
                     )}
                     {currentStep === 4 && (
@@ -980,50 +989,55 @@ export default function PriceCalculator({
                   )}
 
                   {currentStep === 3 && (
-                    <div className="h-full flex items-center justify-center">
-                      <div className="max-w-2xl mx-auto px-2 md:px-4 w-full">
-                        <form onSubmit={handleLocationSubmit} className="space-y-4 md:space-y-6">
-                          <div>
-                            <label className="block text-gray-300 mb-1.5 md:mb-2 text-base md:text-lg font-semibold text-center">
-                              Festplats Adress
-                            </label>
-                            <input
-                              type="text"
-                              name="location"
-                              value={formData.location}
-                              onChange={handleFormChange}
-                              placeholder="Ange fullständig adress"
-                              className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-3 md:px-4 py-2 text-sm md:text-base focus:ring-2 focus:ring-[#00ff97]"
-                              required
-                            />
-                          </div>
-                          {error && (
-                            <div className="text-red-500 text-sm md:text-base text-center">
-                              {error}
-                            </div>
-                          )}
-                          {distanceInfo.distance > 0 && (
-                            <div className="bg-black/50 border border-[#00ff97]/20 rounded-lg p-3 md:p-4">
-                              <div className="text-green-500 mb-1.5 md:mb-2 text-sm md:text-base text-center">
-                                Avstånd från Malmö: {distanceInfo.distance.toFixed(1)} km
-                              </div>
-                              <div className="text-gray-400 text-sm md:text-base text-center">
-                                Resekostnad:{' '}
-                                {Math.round(distanceInfo.distance / 10) * distanceInfo.pricePerKm}{' '}
-                                kr
-                                <span className="text-xs md:text-sm ml-2">
-                                  ({Math.round(distanceInfo.distance / 10)} mil)
-                                </span>
-                              </div>
-                            </div>
-                          )}
-                          <button
-                            type="submit"
-                            className="w-full px-4 md:px-6 py-2 bg-gradient-to-r from-[#79f1a4] to-[#0e5cad] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(121,241,164,0.5)] text-sm md:text-base font-semibold"
+                    <div className="min-h-[calc(100vh-300px)] flex items-center justify-center">
+                      <div className="w-full max-w-2xl mx-auto px-2 md:px-4">
+                        <div className="flex flex-col items-center justify-center gap-8 md:gap-12">
+                          <form
+                            onSubmit={handleLocationSubmit}
+                            className="w-full flex flex-col items-center gap-6 md:gap-8"
                           >
-                            Beräkna Avstånd
-                          </button>
-                        </form>
+                            <div className="w-full max-w-md">
+                              <label className="block text-gray-300 mb-2 md:mb-3 text-base md:text-lg font-semibold">
+                                Festplats Adress
+                              </label>
+                              <input
+                                type="text"
+                                name="location"
+                                value={formData.location}
+                                onChange={handleFormChange}
+                                placeholder="Ange fullständig adress"
+                                className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-4 md:px-6 py-3 md:py-4 text-base md:text-lg focus:ring-2 focus:ring-[#00ff97] text-center"
+                                required
+                              />
+                            </div>
+                            {error && (
+                              <div className="text-red-500 text-sm md:text-base text-center">
+                                {error}
+                              </div>
+                            )}
+                            {distanceInfo.distance > 0 && (
+                              <div className="bg-black/50 border border-[#00ff97]/20 rounded-lg p-4 md:p-6 w-full max-w-md">
+                                <div className="text-green-500 mb-2 md:mb-3 text-base md:text-lg text-center">
+                                  Avstånd från Malmö: {distanceInfo.distance.toFixed(1)} km
+                                </div>
+                                <div className="text-gray-400 text-base md:text-lg text-center">
+                                  Resekostnad:{' '}
+                                  {Math.round(distanceInfo.distance / 10) * distanceInfo.pricePerKm}{' '}
+                                  kr
+                                  <span className="text-sm md:text-base ml-2">
+                                    ({Math.round(distanceInfo.distance / 10)} mil)
+                                  </span>
+                                </div>
+                              </div>
+                            )}
+                            <button
+                              type="submit"
+                              className="w-full max-w-md px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-[#79f1a4] to-[#0e5cad] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(121,241,164,0.5)] text-base md:text-lg font-semibold"
+                            >
+                              Beräkna Avstånd
+                            </button>
+                          </form>
+                        </div>
                       </div>
                     </div>
                   )}
@@ -1151,51 +1165,55 @@ export default function PriceCalculator({
             <div
               className={`${
                 currentStep > 1
-                  ? 'fixed bottom-0 left-0 right-0 z-40 bg-black/95 backdrop-blur-sm py-2 md:py-4'
-                  : 'mt-8'
+                  ? 'fixed bottom-0 left-0 right-0 z-40 bg-black/95 backdrop-blur-sm py-4 md:py-8'
+                  : 'mt-12'
               }`}
             >
               <div className="container mx-auto px-4">
-                <div className="grid grid-cols-3 items-center">
-                  <div className="flex justify-start">
-                    {currentStep > 1 && (
-                      <button
-                        onClick={() => setCurrentStep(prev => prev - 1)}
-                        className="px-4 md:px-6 py-1.5 md:py-2 bg-red-500 text-[#0a0a0a] rounded-lg hover:bg-red-600 transition-colors duration-300 text-sm md:text-base font-bold"
-                      >
-                        Tillbaka
-                      </button>
-                    )}
-                  </div>
-                  <div className="text-center">
-                    <h3 className="text-sm md:text-lg font-heading font-semibold text-white">
-                      Totalt Pris
-                    </h3>
-                    <div
-                      className={`text-lg md:text-2xl font-bold bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent ${
-                        priceAnimation ? 'animate-price-float' : ''
-                      }`}
+                <div className="flex items-center justify-center gap-8 md:gap-12">
+                  {(currentStep > 1 || selectedParty) && (
+                    <button
+                      onClick={() => {
+                        if (currentStep === 1) {
+                          setSelectedParty('');
+                        } else {
+                          setCurrentStep(prev => prev - 1);
+                        }
+                      }}
+                      className="px-8 md:px-10 py-3 md:py-4 bg-red-500 text-[#0a0a0a] rounded-lg hover:bg-red-600 transition-colors duration-300 text-sm md:text-base font-bold"
                     >
-                      {calculateTotal().toLocaleString('sv-SE')} kr
+                      Tillbaka
+                    </button>
+                  )}
+                  {selectedParty && (
+                    <div className="text-center">
+                      <h3 className="text-sm md:text-lg font-heading font-semibold text-white mb-2 md:mb-3">
+                        Totalt Pris
+                      </h3>
+                      <div
+                        className={`text-xl md:text-3xl font-bold bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent ${
+                          priceAnimation ? 'animate-price-float' : ''
+                        }`}
+                      >
+                        {calculateTotal().toLocaleString('sv-SE')} kr
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex justify-end">
-                    {currentStep < 4 ? (
-                      <button
-                        onClick={handleNext}
-                        className="px-4 md:px-6 py-1.5 md:py-2 bg-[#00ff97] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(0,255,151,0.5)] text-sm md:text-base font-bold"
-                      >
-                        Nästa
-                      </button>
-                    ) : (
-                      <button
-                        onClick={handleSubmit}
-                        className="px-4 md:px-6 py-1.5 md:py-2 bg-[#00ff97] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(0,255,151,0.5)] text-sm md:text-base font-bold"
-                      >
-                        Skicka Förfrågan
-                      </button>
-                    )}
-                  </div>
+                  )}
+                  {currentStep < 4 && (currentStep > 1 || selectedParty) ? (
+                    <button
+                      onClick={handleNext}
+                      className="px-8 md:px-10 py-3 md:py-4 bg-[#00ff97] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(0,255,151,0.5)] text-sm md:text-base font-bold"
+                    >
+                      Nästa
+                    </button>
+                  ) : currentStep === 4 ? (
+                    <button
+                      onClick={handleSubmit}
+                      className="px-8 md:px-10 py-3 md:py-4 bg-[#00ff97] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(0,255,151,0.5)] text-sm md:text-base font-bold"
+                    >
+                      Skicka
+                    </button>
+                  ) : null}
                 </div>
               </div>
             </div>

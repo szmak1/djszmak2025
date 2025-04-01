@@ -28,7 +28,7 @@ const navigation = {
 
 export default function Footer() {
   return (
-    <footer className="bg-[#0a0a0a] border-t border-gray-800">
+    <footer className="bg-[#00ff97] text-black">
       <div className="container mx-auto px-4 py-8 md:py-12">
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 text-center">
@@ -36,7 +36,7 @@ export default function Footer() {
           <div className="space-y-4 flex flex-col items-center">
             <Link href="/" className="inline-block">
               <Image
-                src="/logos/logo.svg"
+                src="/logos/logo-black.svg"
                 alt="DJ Szmak Logo"
                 width={150}
                 height={40}
@@ -48,7 +48,7 @@ export default function Footer() {
                 <a
                   key={item.name}
                   href={item.href}
-                  className="text-gray-400 hover:text-[#00ff97] transition-colors duration-200"
+                  className="text-gray-800 hover:text-[#007ed4] transition-colors duration-200"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -61,13 +61,13 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-white">Tjänster</h3>
+            <h3 className="text-lg font-semibold text-black">Tjänster</h3>
             <ul className="space-y-2">
               {navigation.main.map(item => (
                 <li key={item.name}>
                   <Link
                     href={item.href}
-                    className="text-gray-400 hover:text-[#00ff97] transition-colors duration-200 text-sm block py-1"
+                    className="text-gray-800 hover:text-[#007ed4] transition-colors duration-200 text-sm block py-1"
                   >
                     {item.name}
                   </Link>
@@ -78,12 +78,12 @@ export default function Footer() {
 
           {/* Contact Info */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-white">Kontakt</h3>
+            <h3 className="text-lg font-semibold text-black">Kontakt</h3>
             <ul className="space-y-3">
               <li>
                 <a
                   href="tel:+46701234567"
-                  className="flex items-center justify-center gap-2 text-gray-400 hover:text-[#00ff97] transition-colors duration-200 text-sm"
+                  className="flex items-center justify-center gap-2 text-gray-800 hover:text-[#007ed4] transition-colors duration-200 text-sm"
                 >
                   <FaPhone className="h-4 w-4 flex-shrink-0" />
                   <span>+46 70 123 45 67</span>
@@ -92,13 +92,13 @@ export default function Footer() {
               <li>
                 <a
                   href="mailto:info@djszmak.se"
-                  className="flex items-center justify-center gap-2 text-gray-400 hover:text-[#00ff97] transition-colors duration-200 text-sm"
+                  className="flex items-center justify-center gap-2 text-gray-800 hover:text-[#007ed4] transition-colors duration-200 text-sm"
                 >
                   <FaEnvelope className="h-4 w-4 flex-shrink-0" />
                   <span>info@djszmak.se</span>
                 </a>
               </li>
-              <li className="flex items-center justify-center gap-2 text-gray-400 text-sm">
+              <li className="flex items-center justify-center gap-2 text-gray-800 text-sm">
                 <FaClock className="h-4 w-4 flex-shrink-0" />
                 <span>24/7 Bokning</span>
               </li>
@@ -107,8 +107,8 @@ export default function Footer() {
 
           {/* Area Served */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-white">Område</h3>
-            <p className="text-sm text-gray-400 mx-auto max-w-xs">
+            <h3 className="text-lg font-semibold text-black">Område</h3>
+            <p className="text-sm text-gray-800 mx-auto max-w-xs">
               Vi erbjuder professionella DJ-tjänster i hela Skåne med fokus på Malmö, Lund,
               Helsingborg, och omkringliggande områden.
             </p>
@@ -118,19 +118,19 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="mt-12 pt-8 border-t border-gray-800 text-center">
           <div className="flex flex-col items-center gap-4">
-            <p className="text-sm text-gray-400">
+            <p className="text-sm text-gray-800">
               &copy; {new Date().getFullYear()} DJ Szmak. Alla rättigheter förbehållna.
             </p>
             <div className="flex gap-4">
               <Link
                 href="/privacy"
-                className="text-sm text-gray-400 hover:text-[#00ff97] transition-colors duration-200"
+                className="text-sm text-gray-800 hover:text-[#007ed4] transition-colors duration-200"
               >
                 Integritetspolicy
               </Link>
               <Link
                 href="/terms"
-                className="text-sm text-gray-400 hover:text-[#00ff97] transition-colors duration-200"
+                className="text-sm text-gray-800 hover:text-[#007ed4] transition-colors duration-200"
               >
                 Villkor
               </Link>

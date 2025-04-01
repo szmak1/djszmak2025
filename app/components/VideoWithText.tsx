@@ -65,8 +65,10 @@ export default function VideoWithText({
 
           {/* Text Content */}
           <div className="flex flex-col">
-            <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-white">
-              {title}
+            <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
+              <span className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent">
+                {title}
+              </span>
             </h2>
             <p className="font-sans text-lg text-white/90 mb-8 whitespace-pre-line">
               {description}

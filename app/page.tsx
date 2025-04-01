@@ -122,14 +122,6 @@ export default function Home() {
         imagePosition="right"
       />
 
-      {/* DJ Understanding Section */}
-      <TextSection
-        title="DJ i Malmö med förståelse för publiken"
-        description={`Jag använder musiken för att hantera evenemangen, driver den framåt. Delar även in olika typer av låtar i olika sektioner tex. spelar långsammare, tystare låtar i början av festen. Därefter ökar jag sakta tempot som till exempel en jazzigare spår. De tyngre låtar tar jag oftast i slutet. Men som sagt detta beror alltid på hur jag läser av publiken och hur deras humör är. Med min erfarenhet och min analytiska förmåga så ser jag snabbt på deras kroppsspråk hur de reagerar.
-
-Jag anpassar alltid musiken efter festens syfte och min publik, och genom åren har jag arbetat fram en förståelse för hur människor funkar – gamla som unga. Så oavsett om det gäller bröllop, examen, födelsedag eller företagsfest, så hjälper jag er till ett välfyllt dansgolv!`}
-      />
-
       {/* Video with Text Section */}
       <VideoWithText
         title="DJ Skåne för alla syften"
@@ -181,7 +173,13 @@ Tveka inte att ta kontakt med mig med frågor eller förfrågningar!`}
         videoTitle="Upplev magin med LEDGOLV"
         videoDescription="Transformera ditt dansgolv till en spektakulär ljusshow! Vårt LEDGOLV skapar en unik atmosfär som får dina gäster att dansa på ett hav av ljus. Perfekt för bröllop, företagsfester och alla andra tillställningar där du vill skapa något extra speciellt."
       />
+      {/* DJ Understanding Section */}
+      <TextSection
+        title="DJ i Malmö med förståelse för publiken"
+        description={`Jag använder musiken för att hantera evenemangen, driver den framåt. Delar även in olika typer av låtar i olika sektioner tex. spelar långsammare, tystare låtar i början av festen. Därefter ökar jag sakta tempot som till exempel en jazzigare spår. De tyngre låtar tar jag oftast i slutet. Men som sagt detta beror alltid på hur jag läser av publiken och hur deras humör är. Med min erfarenhet och min analytiska förmåga så ser jag snabbt på deras kroppsspråk hur de reagerar.
 
+Jag anpassar alltid musiken efter festens syfte och min publik, och genom åren har jag arbetat fram en förståelse för hur människor funkar – gamla som unga. Så oavsett om det gäller bröllop, examen, födelsedag eller företagsfest, så hjälper jag er till ett välfyllt dansgolv!`}
+      />
       <PriceCalculator />
       <FAQ faqItems={faqItems} />
       <GoogleReviews />

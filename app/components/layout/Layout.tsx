@@ -1,7 +1,13 @@
-import Header from '@/app/components/layout/Header'
-import Footer from '@/app/components/layout/Footer'
+import React from 'react';
+import Header from './Header';
+import Footer from './Footer';
+import DividerCurve from '../DividerCurve';
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+interface LayoutProps {
+  children: React.ReactNode;
+}
+
+export default function Layout({ children }: LayoutProps) {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -10,7 +16,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           {children}
         </div>
       </main>
+      <div className="relative">
+        <DividerCurve className="top-0" />
+      </div>
       <Footer />
     </div>
-  )
-} 
+  );
+}

@@ -9,10 +9,11 @@ interface FAQItem {
 
 interface FAQProps {
   faqItems?: FAQItem[];
+  defaultOpen?: number;
 }
 
-export default function FAQ({ faqItems = [] }: FAQProps) {
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
+export default function FAQ({ faqItems = [], defaultOpen }: FAQProps) {
+  const [openIndex, setOpenIndex] = useState<number | null>(defaultOpen ?? null);
 
   const toggleFAQ = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
