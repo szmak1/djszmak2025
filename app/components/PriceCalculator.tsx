@@ -910,77 +910,93 @@ export default function PriceCalculator({
                                 isSelected
                                   ? 'ring-2 ring-[#00ff97] shadow-lg h-auto'
                                   : 'hover:shadow-[0_0_20px_rgba(0,255,151,0.2)] hover:-translate-y-1 cursor-pointer'
-                              }`}
+                              } ${addon.id === 'ledfloor' ? 'relative overflow-hidden' : ''}`}
                             >
-                              <div className="flex items-center justify-between mb-2 md:mb-4">
-                                <div className="relative w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-[#00ff97]/10 rounded-lg">
-                                  <Icon className="w-5 h-5 md:w-6 md:h-6 text-[#00ff97]" />
-                                </div>
-                                <div className="text-right">
-                                  <h4 className="text-[14px] md:text-xl font-heading font-semibold text-white leading-tight">
-                                    {addon.name}
-                                  </h4>
-                                  <p className="hidden md:block text-sm text-white leading-tight">
-                                    {addon.description}
-                                  </p>
-                                </div>
-                              </div>
-                              {isSelected ? (
+                              {addon.id === 'ledfloor' && (
                                 <>
-                                  <div>
-                                    <ul className="space-y-0.5">
-                                      {addon.features.map((feature, index) => (
-                                        <li key={index} className="flex items-center gap-2">
-                                          <svg
-                                            className="w-4 h-4 md:w-5 md:h-5 text-green-500 shrink-0"
-                                            fill="none"
-                                            viewBox="0 0 24 24"
-                                            stroke="currentColor"
-                                          >
-                                            <path
-                                              strokeLinecap="round"
-                                              strokeLinejoin="round"
-                                              strokeWidth={2}
-                                              d="M5 13l4 4L19 7"
-                                            />
-                                          </svg>
-                                          <span className="text-xs md:text-sm lg:text-base text-gray-300">
-                                            {feature}
-                                          </span>
-                                        </li>
-                                      ))}
-                                    </ul>
+                                  <div className="absolute inset-0 z-0">
+                                    <Image
+                                      src="/images/ledgolv.webp"
+                                      alt="LED Floor"
+                                      fill
+                                      className="object-cover"
+                                      priority
+                                    />
                                   </div>
-                                  <div className="mt-2 md:mt-4 flex justify-end">
-                                    <button
-                                      onClick={e => {
-                                        e.stopPropagation();
-                                        toggleAddon(addon.id);
-                                      }}
-                                      className="px-4 md:px-6 py-2 md:py-2 bg-red-500 text-[#0a0a0a] rounded-lg hover:bg-red-600 transition-colors duration-300 text-[14px] md:text-base font-bold"
-                                    >
-                                      Ångra
-                                    </button>
-                                  </div>
+                                  <div className="absolute inset-0 bg-black/70 z-10" />
                                 </>
-                              ) : (
-                                <div className="mt-2 md:mt-4">
-                                  <div className="flex items-center justify-between">
-                                    <div className="text-lg md:text-2xl font-bold bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent">
-                                      {addon.price.toLocaleString('sv-SE')} kr
-                                    </div>
-                                    <button
-                                      onClick={e => {
-                                        e.stopPropagation();
-                                        toggleAddon(addon.id);
-                                      }}
-                                      className="px-4 md:px-6 py-2 md:py-2 bg-[#00ff97] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(0,255,151,0.5)] text-[14px] md:text-base font-bold"
-                                    >
-                                      Välj
-                                    </button>
+                              )}
+                              <div className="relative z-20">
+                                <div className="flex items-center justify-between mb-2 md:mb-4">
+                                  <div className="relative w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-[#00ff97]/10 rounded-lg">
+                                    <Icon className="w-5 h-5 md:w-6 md:h-6 text-[#00ff97]" />
+                                  </div>
+                                  <div className="text-right">
+                                    <h4 className="text-[14px] md:text-xl font-heading font-semibold text-white leading-tight">
+                                      {addon.name}
+                                    </h4>
+                                    <p className="hidden md:block text-sm text-white leading-tight">
+                                      {addon.description}
+                                    </p>
                                   </div>
                                 </div>
-                              )}
+                                {isSelected ? (
+                                  <>
+                                    <div>
+                                      <ul className="space-y-0.5">
+                                        {addon.features.map((feature, index) => (
+                                          <li key={index} className="flex items-center gap-2">
+                                            <svg
+                                              className="w-4 h-4 md:w-5 md:h-5 text-green-500 shrink-0"
+                                              fill="none"
+                                              viewBox="0 0 24 24"
+                                              stroke="currentColor"
+                                            >
+                                              <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth={2}
+                                                d="M5 13l4 4L19 7"
+                                              />
+                                            </svg>
+                                            <span className="text-xs md:text-sm lg:text-base text-gray-300">
+                                              {feature}
+                                            </span>
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                    <div className="mt-2 md:mt-4 flex justify-end">
+                                      <button
+                                        onClick={e => {
+                                          e.stopPropagation();
+                                          toggleAddon(addon.id);
+                                        }}
+                                        className="px-4 md:px-6 py-2 md:py-2 bg-red-500 text-[#0a0a0a] rounded-lg hover:bg-red-600 transition-colors duration-300 text-[14px] md:text-base font-bold"
+                                      >
+                                        Ångra
+                                      </button>
+                                    </div>
+                                  </>
+                                ) : (
+                                  <div className="mt-2 md:mt-4">
+                                    <div className="flex items-center justify-between">
+                                      <div className="text-lg md:text-2xl font-bold bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent">
+                                        {addon.price.toLocaleString('sv-SE')} kr
+                                      </div>
+                                      <button
+                                        onClick={e => {
+                                          e.stopPropagation();
+                                          toggleAddon(addon.id);
+                                        }}
+                                        className="px-4 md:px-6 py-2 md:py-2 bg-[#00ff97] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(0,255,151,0.5)] text-[14px] md:text-base font-bold"
+                                      >
+                                        Välj
+                                      </button>
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
                             </div>
                           );
                         })}

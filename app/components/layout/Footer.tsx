@@ -123,13 +123,13 @@ export default function Footer() {
             </p>
             <div className="flex gap-4">
               <Link
-                href="/privacy"
+                href="/integritetspolicy"
                 className="text-sm text-gray-800 hover:text-[#007ed4] transition-colors duration-200"
               >
                 Integritetspolicy
               </Link>
               <Link
-                href="/terms"
+                href="/villkor"
                 className="text-sm text-gray-800 hover:text-[#007ed4] transition-colors duration-200"
               >
                 Villkor
