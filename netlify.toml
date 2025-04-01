@@ -10,6 +10,7 @@
   NODE_VERSION = "18"
   NPM_VERSION = "9"
   NEXT_FORCE_EDGE = "true"
+  NEXT_FORMS = "true"
 
 [[redirects]]
   from = "/*"
