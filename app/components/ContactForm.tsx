@@ -18,37 +18,33 @@ export default function ContactForm({ className = '' }: ContactFormProps) {
     setError(null);
 
     try {
-      const formData = new FormData(e.currentTarget);
-      // Add the form name
-      formData.append('form-name', 'contact');
+      // Get form data
+      const form = e.currentTarget;
+      const formData = new FormData(form);
 
-      const response = await fetch('/api/netlify-forms', {
+      // Configure fetch options for Netlify forms
+      const fetchOptions = {
         method: 'POST',
-        body: formData,
-      });
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(formData as any).toString(),
+      };
 
-      let responseData;
-      try {
-        const text = await response.text();
-        try {
-          responseData = JSON.parse(text);
-        } catch (parseError) {
-          console.error('Failed to parse response as JSON:', text);
-          throw new Error(`Server returned invalid response: ${text.substring(0, 100)}`);
-        }
-      } catch (textError) {
-        console.error('Failed to read response text:', textError);
-        throw new Error('Could not read server response');
+      // Submit the form data directly
+      const response = await fetch('/', fetchOptions);
+
+      if (response.ok) {
+        // Form successfully submitted
+        setSubmitSuccess(true);
+        form.reset();
+      } else {
+        // Handle error
+        throw new Error(`Form submission failed: ${response.statusText}`);
       }
-
-      if (!response.ok) {
-        throw new Error(responseData?.error || `Form submission failed (${response.status})`);
-      }
-
-      setSubmitSuccess(true);
     } catch (err) {
       console.error('Form submission error:', err);
-      setError(err instanceof Error ? err.message : 'Something went wrong');
+      setError(
+        err instanceof Error ? err.message : 'Something went wrong with the form submission'
+      );
     } finally {
       setIsSubmitting(false);
     }

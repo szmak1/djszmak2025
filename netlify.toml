@@ -6,10 +6,4 @@
   package = "@netlify/plugin-nextjs"
 
 [functions]
-  node_bundler = "esbuild" 
-
-# This redirect is only needed for form submissions
-[[redirects]]
-  from = "/api/netlify-forms"
-  to = "/.netlify/functions/submission-created"
-  status = 200 
+  node_bundler = "esbuild"
