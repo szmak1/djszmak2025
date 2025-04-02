@@ -10,9 +10,31 @@ interface ContactFormProps {
 export default function ContactForm({ className = '' }: ContactFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     setIsSubmitting(true);
-    // Let the form submit naturally to Netlify
+
+    const form = e.target as HTMLFormElement;
+    const formData = new FormData(form);
+
+    try {
+      const response = await fetch('/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams(formData as any).toString(),
+      });
+
+      if (response.ok) {
+        // Redirect to success page
+        window.location.href = '/success';
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -87,7 +109,6 @@ export default function ContactForm({ className = '' }: ContactFormProps) {
             data-netlify="true"
             data-netlify-honeypot="bot-field"
             onSubmit={handleSubmit}
-            action="/success"
             className="space-y-6"
           >
             <input type="hidden" name="form-name" value="contact" />
