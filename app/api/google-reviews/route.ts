@@ -28,6 +28,15 @@ interface GooglePlacesResponse {
   reviews?: GoogleReview[];
 }
 
+interface ReviewData {
+  rating: number;
+  text: string;
+  time: string;
+  author_name: string;
+  profile_photo_url: string;
+  relative_time_description: string;
+}
+
 export async function GET() {
   try {
     const apiKey = process.env.GOOGLE_MAPS_API_KEY;

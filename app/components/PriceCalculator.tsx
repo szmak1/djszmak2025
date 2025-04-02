@@ -276,8 +276,10 @@ export default function PriceCalculator({
     setError('');
   };
 
-  const handlePartySelect = (partyId: string) => {
-    setSelectedParty(prev => (prev === partyId ? '' : partyId));
+  const handlePartySelect = (party: string) => {
+    setSelectedParty(party);
+    setLastSelectedPrice(calculateTotal());
+    setLastSelectedPosition({ x: 0, y: 0 }); // You can update this with actual position if needed
   };
 
   const toggleAddon = (addonId: string) => {
@@ -315,34 +317,22 @@ export default function PriceCalculator({
 
   const handleAddressSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!distanceInfo.address.trim()) return;
+    if (!distanceInfo.address) return;
 
     try {
-      const response = await fetch('/api/calculate-distance', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          destination: distanceInfo.address,
-        }),
-      });
-
+      const response = await fetch(
+        `/api/geocode?address=${encodeURIComponent(distanceInfo.address)}`
+      );
       const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to calculate distance');
+      if (data.distance) {
+        setDistanceInfo(prev => ({
+          ...prev,
+          distance: data.distance,
+        }));
       }
-
-      // Convert distance from meters to kilometers
-      const distanceInKm = data.distance / 1000;
-      setDistanceInfo(prev => ({
-        ...prev,
-        distance: distanceInKm,
-      }));
     } catch (error) {
       console.error('Error calculating distance:', error);
-      alert('Kunde inte beräkna avståndet. Kontrollera adressen och försök igen.');
     }
   };
 
@@ -381,12 +371,13 @@ export default function PriceCalculator({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
     setIsSubmitting(true);
-    setSubmitError('');
     setSubmitSuccess(false);
+    setSubmitError('');
 
     try {
-      const response = await fetch('/api/quote-request', {
+      const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -398,18 +389,14 @@ export default function PriceCalculator({
           extraHours,
           distance: distanceInfo.distance,
           totalPrice: calculateTotal(),
-          features: getSelectedFeatures().features,
-          excludedFeatures: getSelectedFeatures().excludedFeatures,
         }),
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to send quote request');
+        throw new Error('Failed to send message');
       }
 
       setSubmitSuccess(true);
-      // Reset form
       setFormData({
         name: '',
         email: '',
@@ -418,17 +405,8 @@ export default function PriceCalculator({
         location: '',
         message: '',
       });
-      setSelectedParty(defaultPartyType || ''); // Reset to defaultPartyType if provided, otherwise empty
-      setSelectedAddons([]);
-      setExtraHours(0);
-      setDistanceInfo({
-        address: '',
-        distance: 0,
-        pricePerKm: 100,
-      });
-      setCurrentStep(1);
-    } catch (error) {
-      setSubmitError(error instanceof Error ? error.message : 'Failed to send quote request');
+    } catch (err) {
+      setSubmitError('Failed to send message. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
