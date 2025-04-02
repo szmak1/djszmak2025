@@ -27,9 +27,22 @@ export default function ContactForm({ className = '' }: ContactFormProps) {
         body: formData,
       });
 
+      let responseData;
+      try {
+        const text = await response.text();
+        try {
+          responseData = JSON.parse(text);
+        } catch (parseError) {
+          console.error('Failed to parse response as JSON:', text);
+          throw new Error(`Server returned invalid response: ${text.substring(0, 100)}`);
+        }
+      } catch (textError) {
+        console.error('Failed to read response text:', textError);
+        throw new Error('Could not read server response');
+      }
+
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Form submission failed');
+        throw new Error(responseData?.error || `Form submission failed (${response.status})`);
       }
 
       setSubmitSuccess(true);
