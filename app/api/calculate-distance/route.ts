@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextResponse } from 'next/server';
 
 // Updated coordinates for Hyllie vattenparksgatan 36A, Malmö
