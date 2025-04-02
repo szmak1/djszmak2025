@@ -278,7 +278,8 @@ export default function PriceCalculator({
 
   const handlePartySelect = (party: string) => {
     setSelectedParty(party);
-    setLastSelectedPrice(calculateTotal());
+    const newPrice = calculateTotal();
+    setLastSelectedPrice(newPrice);
     setLastSelectedPosition({ x: 0, y: 0 }); // You can update this with actual position if needed
   };
 
@@ -405,8 +406,9 @@ export default function PriceCalculator({
         location: '',
         message: '',
       });
-    } catch (err) {
+    } catch (error) {
       setSubmitError('Failed to send message. Please try again.');
+      console.error('Form submission error:', error);
     } finally {
       setIsSubmitting(false);
     }
