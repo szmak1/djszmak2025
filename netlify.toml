@@ -1,34 +1,12 @@
 [build]
   command = "npm run build"
-  publish = ".next"
-
-[[plugins]]
-  package = "@netlify/plugin-nextjs"
+  publish = "out"
 
 [build.environment]
-  NEXT_USE_NETLIFY_EDGE = "true"
   NODE_VERSION = "20"
   NPM_VERSION = "10"
 
 [[redirects]]
-  from = "/_next/static/*"
-  to = "/_next/static/:splat"
-  status = 200
-
-[[redirects]]
-  from = "/_next/image/*"
-  to = "/_next/image/:splat"
-  status = 200
-
-[[redirects]]
-  from = "/_next/data/*"
-  to = "/_next/data/:splat"
-  status = 200
-
-[[redirects]]
   from = "/*"
-  to = "/.netlify/functions/server"
-  status = 200
-
-[functions]
-  node_bundler = "esbuild" 
+  to = "/index.html"
+  status = 200 
