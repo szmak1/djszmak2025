@@ -11,7 +11,8 @@ const nextConfig = {
     unoptimized: true,
     domains: ['lh3.googleusercontent.com'],
   },
-  output: 'standalone',
+  output: 'export',
+  trailingSlash: true,
 };
 
 module.exports = nextConfig;
