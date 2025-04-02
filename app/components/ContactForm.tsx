@@ -10,30 +10,8 @@ interface ContactFormProps {
 export default function ContactForm({ className = '' }: ContactFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
     setIsSubmitting(true);
-
-    const form = e.target as HTMLFormElement;
-    const formData = new FormData(form);
-
-    try {
-      const response = await fetch('/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams(formData as any).toString(),
-      });
-
-      if (response.ok) {
-        window.location.href = '/success';
-      }
-    } catch (error) {
-      console.error('Error submitting form:', error);
-    } finally {
-      setIsSubmitting(false);
-    }
   }
 
   return (
@@ -108,6 +86,7 @@ export default function ContactForm({ className = '' }: ContactFormProps) {
             data-netlify="true"
             data-netlify-honeypot="bot-field"
             onSubmit={handleSubmit}
+            action="/thanks"
             className="space-y-6"
           >
             <input type="hidden" name="form-name" value="contact" />
