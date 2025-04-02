@@ -2,7 +2,7 @@ import React from 'react';
 import { Metadata } from 'next';
 import HeroVideo from '@/app/components/HeroVideo';
 import TextSection from '@/app/components/TextSection';
-
+import Divider from '@/app/components/Divider';
 export const metadata: Metadata = {
   title: 'Integritetspolicy | DJ Service Malmö',
   description:
@@ -12,15 +12,15 @@ export const metadata: Metadata = {
 
 export default function Integritetspolicy() {
   return (
-    <main className="min-h-screen bg-black">
+    <div className="min-h-screen">
       <HeroVideo
         title="Integritetspolicy"
         subtitle="Vi tar din integritet på allvar"
         buttonText="Kontakta oss"
         buttonLink="/kontakt"
-        videoSrc="/videos/hero.mp4"
+        videoSrc="/videos/foretagsfest.mp4"
       />
-
+      <Divider />
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-4xl mx-auto">
           <TextSection
@@ -108,6 +108,6 @@ export default function Integritetspolicy() {
           />
         </div>
       </div>
-    </main>
+    </div>
   );
 }
