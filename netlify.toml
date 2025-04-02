@@ -8,11 +8,7 @@
 [functions]
   node_bundler = "esbuild" 
 
-[[redirects]]
-  from = "/*"
-  to = "/.netlify/functions/server"
-  status = 200
-
+# This redirect is only needed for form submissions
 [[redirects]]
   from = "/api/netlify-forms"
   to = "/.netlify/functions/submission-created"
