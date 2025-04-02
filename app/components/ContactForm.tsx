@@ -19,11 +19,16 @@ export default function ContactForm({ className = '' }: ContactFormProps) {
     // Get the form element
     const form = e.target as HTMLFormElement;
 
-    // Submit the form using the browser's native form submission
-    // This will be intercepted by Netlify
+    // Let Netlify handle the form submission
+    const formData = new FormData(form);
+
+    // Submit the form using Netlify's native form handling
     fetch('/', {
       method: 'POST',
-      body: new FormData(form),
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams(formData as any).toString(),
     })
       .then(() => {
         setSubmitSuccess(true);
