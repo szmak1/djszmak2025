@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, FormEvent } from 'react';
 import { FaEnvelope, FaPhone, FaClock } from 'react-icons/fa';
 
 interface ContactFormProps {
@@ -9,6 +9,37 @@ interface ContactFormProps {
 
 export default function ContactForm({ className = '' }: ContactFormProps) {
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setError(null);
+
+    try {
+      const formData = new FormData(e.currentTarget);
+      // Add the form name
+      formData.append('form-name', 'contact');
+
+      const response = await fetch('/api/netlify-forms', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Form submission failed');
+      }
+
+      setSubmitSuccess(true);
+    } catch (err) {
+      console.error('Form submission error:', err);
+      setError(err instanceof Error ? err.message : 'Something went wrong');
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
 
   return (
     <div className={`w-full ${className}`}>
@@ -98,7 +129,7 @@ export default function ContactForm({ className = '' }: ContactFormProps) {
               method="POST"
               data-netlify="true"
               data-netlify-honeypot="bot-field"
-              onSubmit={() => setSubmitSuccess(true)}
+              onSubmit={handleSubmit}
               className="space-y-6"
             >
               <input type="hidden" name="form-name" value="contact" />
@@ -107,6 +138,12 @@ export default function ContactForm({ className = '' }: ContactFormProps) {
                   Don&apos;t fill this out if you&apos;re human: <input name="bot-field" />
                 </label>
               </p>
+
+              {error && (
+                <div className="bg-red-500/10 border border-red-500 text-red-500 rounded-lg p-4 text-sm">
+                  {error}
+                </div>
+              )}
 
               <div>
                 <label className="block text-gray-300 mb-2 font-semibold">Namn</label>
@@ -150,9 +187,12 @@ export default function ContactForm({ className = '' }: ContactFormProps) {
 
               <button
                 type="submit"
-                className="w-full px-6 py-3 bg-[#00ff97] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(0,255,151,0.5)] font-bold"
+                disabled={isSubmitting}
+                className={`w-full px-6 py-3 bg-[#00ff97] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(0,255,151,0.5)] font-bold ${
+                  isSubmitting ? 'opacity-75 cursor-not-allowed' : ''
+                }`}
               >
-                Skicka Meddelande
+                {isSubmitting ? 'Skickar...' : 'Skicka Meddelande'}
               </button>
             </form>
           )}
