@@ -8,8 +8,8 @@ export default function KontaktPage() {
     <div className="min-h-screen">
       {/* Hero Section */}
       <div className="relative h-[60vh] md:h-[70vh] w-full bg-black">
-        <div className="absolute inset-0 bg-gradient-to-b from-black/90 via-black/70 to-black z-10" />
-        <div className="absolute inset-0 flex items-center justify-center z-20">
+        <div className="absolute inset-0 bg-gradient-to-b from-black/90 via-black/70 to-black" />
+        <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center px-4 w-full max-w-4xl mx-auto">
             <h1 className="text-5xl md:text-7xl font-heading font-bold mb-6 animate-fade-in">
               <span className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent">
