@@ -2,6 +2,7 @@
 <html>
   <head>
     <title>Contact Form</title>
+    <meta name="robots" content="noindex" />
   </head>
   <body>
     <!-- This form is never shown to users, it's just for Netlify's form detection -->
@@ -10,6 +11,7 @@
       <input type="email" name="email" />
       <input type="tel" name="phone" />
       <textarea name="message"></textarea>
+      <input type="hidden" name="form-name" value="contact" />
     </form>
   </body>
 </html>
