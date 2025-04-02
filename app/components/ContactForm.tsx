@@ -13,34 +13,12 @@ export default function ContactForm({ className = '' }: ContactFormProps) {
 
   // Simple function to show success message after form submission
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
     setIsSubmitting(true);
-
-    // Get the form element
-    const form = e.target as HTMLFormElement;
-
-    // Let Netlify handle the form submission
-    const formData = new FormData(form);
-
-    // Submit the form using Netlify's native form handling
-    fetch('/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: new URLSearchParams(formData as any).toString(),
-    })
-      .then(() => {
-        setSubmitSuccess(true);
-        setIsSubmitting(false);
-        form.reset();
-      })
-      .catch(() => {
-        // Even if there's an error, we'll show success to the user
-        // since Netlify likely captured the submission anyway
-        setSubmitSuccess(true);
-        setIsSubmitting(false);
-      });
+    // Let the form submit naturally
+    setTimeout(() => {
+      setSubmitSuccess(true);
+      setIsSubmitting(false);
+    }, 1000);
   }
 
   return (
@@ -133,6 +111,7 @@ export default function ContactForm({ className = '' }: ContactFormProps) {
               data-netlify-honeypot="bot-field"
               onSubmit={handleSubmit}
               className="space-y-6"
+              action="/"
             >
               <input type="hidden" name="form-name" value="contact" />
               <p className="hidden">
