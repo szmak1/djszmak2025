@@ -1,7 +1,13 @@
+<<<<<<< HEAD
 import React from 'react';
+import { Metadata } from 'next';
+import HeroVideo from '../components/HeroVideo';
+import TextSection from '../components/TextSection';
+=======
 import { Metadata } from 'next';
 import HeroVideo from '@/app/components/HeroVideo';
 import TextSection from '@/app/components/TextSection';
+>>>>>>> contact-page-refactor
 
 export const metadata: Metadata = {
   title: 'Integritetspolicy | DJ Service Malmö',
