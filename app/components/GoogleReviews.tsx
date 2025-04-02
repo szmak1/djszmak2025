@@ -33,7 +33,6 @@ export default function GoogleReviews() {
   const [isMobile, setIsMobile] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
-  const [scrollLeft, setScrollLeft] = useState(0);
 
   // Number of reviews to show per slide based on screen size
   const reviewsPerSlide = {

@@ -1,5 +1,4 @@
 import ContactForm from '../components/ContactForm';
-import Image from 'next/image';
 import { FaPhone, FaEnvelope } from 'react-icons/fa';
 import Divider from '../components/Divider';
 

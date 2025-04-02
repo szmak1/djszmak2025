@@ -14,13 +14,14 @@ import {
   FaSnowflake,
   FaSquare,
 } from 'react-icons/fa';
+import { IconType } from 'react-icons';
 
 interface PartyType {
   id: string;
   name: string;
   basePrice: number;
   description: string;
-  icon: any;
+  icon: IconType;
   extraHourRate: number;
   includedHours: number;
   baseFeatures: string[];
@@ -31,7 +32,7 @@ interface Addon {
   name: string;
   description: string;
   price: number;
-  icon: any;
+  icon: IconType;
   features: string[];
   excludedFeatures?: string[];
 }
@@ -165,22 +166,10 @@ const addons: Addon[] = [
 interface PriceCalculatorProps {
   defaultPartyType?: string;
   stepDescriptions?: {
-    step1: {
-      title: string;
-      description: string;
-    };
-    step2: {
-      title: string;
-      description: string;
-    };
-    step3: {
-      title: string;
-      description: string;
-    };
-    step4: {
-      title: string;
-      description: string;
-    };
+    step1: { title: string; description: string };
+    step2: { title: string; description: string };
+    step3: { title: string; description: string };
+    step4: { title: string; description: string };
   };
 }
 
@@ -215,7 +204,7 @@ export default function PriceCalculator({
     null
   );
 
-  const steps = {
+  const steps = stepDescriptions || {
     step1: {
       title: 'Välj Festtyp',
     },
