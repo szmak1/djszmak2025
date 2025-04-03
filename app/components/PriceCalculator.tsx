@@ -1132,7 +1132,7 @@ export default function PriceCalculator({
                               <input
                                 type="hidden"
                                 name="distance"
-                                value={distanceInfo.distance.toString()}
+                                value={Math.round(distanceInfo.distance).toString()}
                               />
                               <input
                                 type="hidden"
