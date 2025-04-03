@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import {
   FaGlassCheers,
@@ -205,6 +205,9 @@ export default function PriceCalculator({
     null
   );
 
+  // Add a reference to the form
+  const formRef = useRef<HTMLFormElement>(null);
+
   const steps = stepDescriptions || {
     step1: {
       title: 'Välj Festtyp',
@@ -379,8 +382,9 @@ export default function PriceCalculator({
     setSubmitError('');
 
     // Let Netlify handle the form submission
-    const form = e.target as HTMLFormElement;
-    form.submit();
+    if (formRef.current) {
+      formRef.current.submit();
+    }
   };
 
   const getSelectedFeatures = () => {
@@ -1000,6 +1004,7 @@ export default function PriceCalculator({
                     <div className="h-full flex items-center justify-center">
                       <div className="max-w-2xl mx-auto px-2 md:px-4 w-full">
                         <form
+                          ref={formRef}
                           onSubmit={handleSubmit}
                           className="space-y-3 md:space-y-6"
                           name="price-calculator"
@@ -1202,6 +1207,14 @@ export default function PriceCalculator({
                       className="px-8 md:px-10 py-3 md:py-4 bg-[#00ff97] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(0,255,151,0.5)] text-sm md:text-base font-bold"
                     >
                       Nästa
+                    </button>
+                  ) : currentStep === 4 ? (
+                    <button
+                      onClick={() => formRef.current?.submit()}
+                      disabled={isSubmitting}
+                      className="px-8 md:px-10 py-3 md:py-4 bg-[#00ff97] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(0,255,151,0.5)] text-sm md:text-base font-bold"
+                    >
+                      {isSubmitting ? 'Skickar...' : 'Skicka'}
                     </button>
                   ) : null}
                 </div>
