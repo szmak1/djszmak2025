@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Price Calculator Form</title>
+    <meta name="robots" content="noindex" />
+  </head>
+  <body>
+    <form name="price-calculator" netlify netlify-honeypot="bot-field" action="/thanks">
+      <input type="hidden" name="form-name" value="price-calculator" />
+      <p hidden>
+        <label> Don't fill this out if you're human: <input name="bot-field" /> </label>
+      </p>
+      <input type="text" name="name" />
+      <input type="email" name="email" />
+      <input type="tel" name="phone" />
+      <input type="date" name="date" />
+      <input type="text" name="location" />
+      <textarea name="message"></textarea>
+      <input type="hidden" name="partyType" />
+      <input type="hidden" name="addons" />
+      <input type="hidden" name="extraHours" />
+      <input type="hidden" name="distance" />
+      <input type="hidden" name="totalPrice" />
+    </form>
+  </body>
+</html>

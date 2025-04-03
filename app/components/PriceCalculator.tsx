@@ -378,41 +378,9 @@ export default function PriceCalculator({
     setSubmitSuccess(false);
     setSubmitError('');
 
-    try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...formData,
-          partyType: selectedParty,
-          addons: selectedAddons,
-          extraHours,
-          distance: distanceInfo.distance,
-          totalPrice: calculateTotal(),
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to send message');
-      }
-
-      setSubmitSuccess(true);
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        date: '',
-        location: '',
-        message: '',
-      });
-    } catch (error) {
-      setSubmitError('Failed to send message. Please try again.');
-      console.error('Form submission error:', error);
-    } finally {
-      setIsSubmitting(false);
-    }
+    // Let Netlify handle the form submission
+    const form = e.target as HTMLFormElement;
+    form.submit();
   };
 
   const getSelectedFeatures = () => {
@@ -1031,7 +999,23 @@ export default function PriceCalculator({
                   {currentStep === 4 && (
                     <div className="h-full flex items-center justify-center">
                       <div className="max-w-2xl mx-auto px-2 md:px-4 w-full">
-                        <form onSubmit={handleSubmit} className="space-y-3 md:space-y-6">
+                        <form
+                          onSubmit={handleSubmit}
+                          className="space-y-3 md:space-y-6"
+                          name="price-calculator"
+                          method="POST"
+                          data-netlify="true"
+                          data-netlify-honeypot="bot-field"
+                          action="/thanks"
+                        >
+                          <input type="hidden" name="form-name" value="price-calculator" />
+                          <p hidden>
+                            <label>
+                              Don&apos;t fill this out if you&apos;re human:
+                              <input name="bot-field" />
+                            </label>
+                          </p>
+
                           {submitSuccess ? (
                             <div className="bg-[#00ff97]/10 border border-[#00ff97]/20 rounded-lg p-4 md:p-6 text-center">
                               <div className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent text-xl md:text-2xl mb-2">
@@ -1132,6 +1116,24 @@ export default function PriceCalculator({
                                   placeholder="Berätta gärna mer om din fest och eventuella önskemål..."
                                 />
                               </div>
+                              {/* Add hidden fields for the calculator data */}
+                              <input type="hidden" name="partyType" value={selectedParty} />
+                              <input type="hidden" name="addons" value={selectedAddons.join(',')} />
+                              <input
+                                type="hidden"
+                                name="extraHours"
+                                value={extraHours.toString()}
+                              />
+                              <input
+                                type="hidden"
+                                name="distance"
+                                value={distanceInfo.distance.toString()}
+                              />
+                              <input
+                                type="hidden"
+                                name="totalPrice"
+                                value={calculateTotal().toString()}
+                              />
                               {submitError && (
                                 <div className="text-red-500 text-sm md:text-base text-center">
                                   {submitError}
@@ -1194,7 +1196,7 @@ export default function PriceCalculator({
                     </button>
                   ) : currentStep === 4 ? (
                     <button
-                      onClick={handleSubmit}
+                      type="submit"
                       className="px-8 md:px-10 py-3 md:py-4 bg-[#00ff97] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(0,255,151,0.5)] text-sm md:text-base font-bold"
                     >
                       Skicka
