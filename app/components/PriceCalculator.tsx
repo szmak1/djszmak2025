@@ -1139,6 +1139,15 @@ export default function PriceCalculator({
                                   {submitError}
                                 </div>
                               )}
+                              <div className="flex justify-center mt-6">
+                                <button
+                                  type="submit"
+                                  disabled={isSubmitting}
+                                  className="px-8 md:px-10 py-3 md:py-4 bg-[#00ff97] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(0,255,151,0.5)] text-sm md:text-base font-bold"
+                                >
+                                  {isSubmitting ? 'Skickar...' : 'Skicka'}
+                                </button>
+                              </div>
                             </>
                           )}
                         </form>
@@ -1193,13 +1202,6 @@ export default function PriceCalculator({
                       className="px-8 md:px-10 py-3 md:py-4 bg-[#00ff97] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(0,255,151,0.5)] text-sm md:text-base font-bold"
                     >
                       Nästa
-                    </button>
-                  ) : currentStep === 4 ? (
-                    <button
-                      type="submit"
-                      className="px-8 md:px-10 py-3 md:py-4 bg-[#00ff97] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(0,255,151,0.5)] text-sm md:text-base font-bold"
-                    >
-                      Skicka
                     </button>
                   ) : null}
                 </div>
