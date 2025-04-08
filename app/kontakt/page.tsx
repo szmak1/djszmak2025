@@ -8,7 +8,7 @@ export default function KontaktPage() {
       {/* Hero Section */}
       <div className="relative h-[60vh] md:h-[70vh] w-full bg-black">
         <div className="absolute inset-0 bg-gradient-to-b from-black/90 via-black/70 to-black" />
-        <div className="absolute inset-0 flex items-center justify-center">
+        <div className="absolute inset-0 flex items-center justify-center z-20">
           <div className="text-center px-4 w-full max-w-4xl mx-auto">
             <h1 className="text-5xl md:text-7xl font-heading font-bold mb-6 animate-fade-in">
               <span className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent">
@@ -19,7 +19,7 @@ export default function KontaktPage() {
               Vi är här för att hjälpa dig skapa den perfekta festen. Kontakta oss för en
               skräddarsydd offert eller om du har några frågor.
             </p>
-            <div className="mt-12 flex flex-wrap justify-center gap-4 md:gap-6 animate-fade-in-up">
+            <div className="mt-12 flex flex-wrap justify-center gap-4 md:gap-6 animate-fade-in-up relative z-30">
               <a
                 href="tel:+46701234567"
                 className="flex items-center gap-2 px-8 py-4 bg-[#00ff97] text-black rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(0,255,151,0.5)] font-bold text-lg"

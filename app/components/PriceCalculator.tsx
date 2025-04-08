@@ -973,7 +973,7 @@ export default function PriceCalculator({
                                 {error}
                               </div>
                             )}
-                            {distanceInfo.distance > 0 && (
+                            {distanceInfo.distance > 0 ? (
                               <div className="bg-black/50 border border-[#00ff97]/20 rounded-lg p-4 md:p-6 w-full max-w-md">
                                 <div className="text-green-500 mb-2 md:mb-3 text-base md:text-lg text-center">
                                   Avstånd från Malmö: {distanceInfo.distance.toFixed(1)} km
@@ -986,14 +986,34 @@ export default function PriceCalculator({
                                     ({Math.round(distanceInfo.distance / 10)} mil)
                                   </span>
                                 </div>
+                                <div className="mt-4 flex justify-center">
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setDistanceInfo(prev => ({
+                                        ...prev,
+                                        distance: 0,
+                                        address: '',
+                                      }));
+                                      setFormData(prev => ({
+                                        ...prev,
+                                        location: '',
+                                      }));
+                                    }}
+                                    className="px-4 md:px-6 py-2 md:py-3 bg-red-500 text-[#0a0a0a] rounded-lg hover:bg-red-600 transition-colors duration-300 text-sm md:text-base font-bold"
+                                  >
+                                    Ångra
+                                  </button>
+                                </div>
                               </div>
+                            ) : (
+                              <button
+                                type="submit"
+                                className="w-full max-w-md px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-[#79f1a4] to-[#0e5cad] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(121,241,164,0.5)] text-base md:text-lg font-semibold"
+                              >
+                                Beräkna Transportkostnad
+                              </button>
                             )}
-                            <button
-                              type="submit"
-                              className="w-full max-w-md px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-[#79f1a4] to-[#0e5cad] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(121,241,164,0.5)] text-base md:text-lg font-semibold"
-                            >
-                              Beräkna Avstånd
-                            </button>
                           </form>
                         </div>
                       </div>
@@ -1022,21 +1042,47 @@ export default function PriceCalculator({
                           </p>
 
                           {submitSuccess ? (
-                            <div className="bg-[#00ff97]/10 border border-[#00ff97]/20 rounded-lg p-4 md:p-6 text-center">
-                              <div className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent text-xl md:text-2xl mb-2">
-                                Tack för din förfrågan!
+                            <div className="bg-black/50 border border-[#00ff97]/20 rounded-lg p-8 md:p-12 text-center animate-fade-in">
+                              <div className="relative w-20 h-20 md:w-24 md:h-24 mx-auto mb-6">
+                                <div className="absolute inset-0 bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] rounded-full opacity-20 animate-pulse"></div>
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                  <svg
+                                    className="w-12 h-12 md:w-16 md:h-16 text-[#00ff97]"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M5 13l4 4L19 7"
+                                    />
+                                  </svg>
+                                </div>
                               </div>
-                              <p className="text-gray-300 text-sm md:text-base">
+                              <h3 className="font-heading text-2xl md:text-4xl font-bold bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent mb-4">
+                                Tack för din förfrågan!
+                              </h3>
+                              <p className="text-gray-300 text-base md:text-lg mb-8 max-w-2xl mx-auto">
                                 Vi har skickat en bekräftelse till din e-postadress. Vi återkommer
                                 till dig inom 24 timmar med en detaljerad offert.
                               </p>
-                              <button
-                                type="button"
-                                onClick={() => setSubmitSuccess(false)}
-                                className="mt-4 px-4 md:px-6 py-2 bg-gradient-to-r from-[#79f1a4] to-[#0e5cad] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(121,241,164,0.5)] text-sm md:text-base"
-                              >
-                                Skicka en ny förfrågan
-                              </button>
+                              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                                <button
+                                  type="button"
+                                  onClick={() => setSubmitSuccess(false)}
+                                  className="px-6 py-3 bg-gradient-to-r from-[#00ff97] to-[#00daa8] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(0,255,151,0.5)] font-bold"
+                                >
+                                  Skicka en ny förfrågan
+                                </button>
+                                <a
+                                  href="/"
+                                  className="px-6 py-3 bg-black/50 border border-[#00ff97]/20 text-[#00ff97] rounded-lg hover:scale-105 transition-all duration-300 hover:bg-[#00ff97]/10 font-bold"
+                                >
+                                  Tillbaka till startsidan
+                                </a>
+                              </div>
                             </div>
                           ) : (
                             <>
