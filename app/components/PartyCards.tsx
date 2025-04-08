@@ -45,7 +45,7 @@ const parties = [
 
 export default function PartyCards() {
   return (
-    <section className="py-16 md:py-24 bg-[#0a0a0a] relative top-[-100px] z-[100]">
+    <section className="py-16 md:py-24 bg-[#0a0a0a] relative top-[-100px] z-[10]">
       <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-16 2xl:px-32">
         {/* Title and Description */}
         <div className="text-center mb-12 md:mb-16">
