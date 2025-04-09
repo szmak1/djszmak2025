@@ -16,6 +16,23 @@ import {
   FaSquare,
 } from 'react-icons/fa';
 import { IconType } from 'react-icons';
+import OfferGenerator from './OfferGenerator';
+
+interface OfferData {
+  partyType: string;
+  addons: string[];
+  extraHours: number;
+  distance: number;
+  totalPrice: number;
+  customerInfo: {
+    name: string;
+    email: string;
+    phone: string;
+    date: string;
+    location: string;
+    message: string;
+  };
+}
 
 interface PartyType {
   id: string;
@@ -204,6 +221,8 @@ export default function PriceCalculator({
   const [lastSelectedPosition, setLastSelectedPosition] = useState<{ x: number; y: number } | null>(
     null
   );
+  const [showOffer, setShowOffer] = useState(false);
+  const [offerData, setOfferData] = useState<OfferData | null>(null);
 
   // Add a reference to the form
   const formRef = useRef<HTMLFormElement>(null);
@@ -381,9 +400,24 @@ export default function PriceCalculator({
     setSubmitSuccess(false);
     setSubmitError('');
 
-    // Let Netlify handle the form submission
-    if (formRef.current) {
-      formRef.current.submit();
+    try {
+      const offerData: OfferData = {
+        partyType: selectedParty,
+        addons: selectedAddons,
+        extraHours,
+        distance: distanceInfo.distance,
+        totalPrice: calculateTotal(),
+        customerInfo: formData,
+      };
+
+      setOfferData(offerData);
+      setShowOffer(true);
+      setSubmitSuccess(true);
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      setSubmitError('Ett fel uppstod när formuläret skulle skickas. Försök igen senare.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -403,6 +437,10 @@ export default function PriceCalculator({
   };
 
   const { features, excludedFeatures } = getSelectedFeatures();
+
+  if (showOffer && offerData) {
+    return <OfferGenerator offerData={offerData} />;
+  }
 
   return (
     <div id="pricecalculator" className="w-full py-16">
@@ -1028,179 +1066,116 @@ export default function PriceCalculator({
                           onSubmit={handleSubmit}
                           className="space-y-3 md:space-y-6"
                           name="price-calculator"
-                          method="POST"
-                          data-netlify="true"
-                          data-netlify-honeypot="bot-field"
-                          action="/thanks"
                         >
-                          <input type="hidden" name="form-name" value="price-calculator" />
-                          <p hidden>
-                            <label>
-                              Don&apos;t fill this out if you&apos;re human:
-                              <input name="bot-field" />
-                            </label>
-                          </p>
-
-                          {submitSuccess ? (
-                            <div className="bg-black/50 border border-[#00ff97]/20 rounded-lg p-8 md:p-12 text-center animate-fade-in">
-                              <div className="relative w-20 h-20 md:w-24 md:h-24 mx-auto mb-6">
-                                <div className="absolute inset-0 bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] rounded-full opacity-20 animate-pulse"></div>
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                  <svg
-                                    className="w-12 h-12 md:w-16 md:h-16 text-[#00ff97]"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                  >
-                                    <path
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      strokeWidth={2}
-                                      d="M5 13l4 4L19 7"
-                                    />
-                                  </svg>
-                                </div>
-                              </div>
-                              <h3 className="font-heading text-2xl md:text-4xl font-bold bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent mb-4">
-                                Tack för din förfrågan!
-                              </h3>
-                              <p className="text-gray-300 text-base md:text-lg mb-8 max-w-2xl mx-auto">
-                                Vi har skickat en bekräftelse till din e-postadress. Vi återkommer
-                                till dig inom 24 timmar med en detaljerad offert.
-                              </p>
-                              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                                <button
-                                  type="button"
-                                  onClick={() => setSubmitSuccess(false)}
-                                  className="px-6 py-3 bg-gradient-to-r from-[#00ff97] to-[#00daa8] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(0,255,151,0.5)] font-bold"
-                                >
-                                  Skicka en ny förfrågan
-                                </button>
-                                <a
-                                  href="/"
-                                  className="px-6 py-3 bg-black/50 border border-[#00ff97]/20 text-[#00ff97] rounded-lg hover:scale-105 transition-all duration-300 hover:bg-[#00ff97]/10 font-bold"
-                                >
-                                  Tillbaka till startsidan
-                                </a>
-                              </div>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-6">
+                            <div>
+                              <label className="block text-gray-300 mb-1.5 md:mb-2 text-sm md:text-lg font-semibold">
+                                Namn
+                              </label>
+                              <input
+                                type="text"
+                                name="name"
+                                value={formData.name}
+                                onChange={handleFormChange}
+                                className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-3 md:px-4 py-2 text-sm md:text-base focus:ring-2 focus:ring-[#00ff97]"
+                                required
+                              />
                             </div>
-                          ) : (
-                            <>
-                              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-6">
-                                <div>
-                                  <label className="block text-gray-300 mb-1.5 md:mb-2 text-sm md:text-lg font-semibold">
-                                    Namn
-                                  </label>
-                                  <input
-                                    type="text"
-                                    name="name"
-                                    value={formData.name}
-                                    onChange={handleFormChange}
-                                    className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-3 md:px-4 py-2 text-sm md:text-base focus:ring-2 focus:ring-[#00ff97]"
-                                    required
-                                  />
-                                </div>
-                                <div>
-                                  <label className="block text-gray-300 mb-1.5 md:mb-2 text-sm md:text-lg font-semibold">
-                                    E-post
-                                  </label>
-                                  <input
-                                    type="email"
-                                    name="email"
-                                    value={formData.email}
-                                    onChange={handleFormChange}
-                                    className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-3 md:px-4 py-2 text-sm md:text-base focus:ring-2 focus:ring-[#00ff97]"
-                                    required
-                                  />
-                                </div>
-                                <div>
-                                  <label className="block text-gray-300 mb-1.5 md:mb-2 text-sm md:text-lg font-semibold">
-                                    Telefon
-                                  </label>
-                                  <input
-                                    type="tel"
-                                    name="phone"
-                                    value={formData.phone}
-                                    onChange={handleFormChange}
-                                    className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-3 md:px-4 py-2 text-sm md:text-base focus:ring-2 focus:ring-[#00ff97]"
-                                    required
-                                  />
-                                </div>
-                                <div>
-                                  <label className="block text-gray-300 mb-1.5 md:mb-2 text-sm md:text-lg font-semibold">
-                                    Datum
-                                  </label>
-                                  <input
-                                    type="date"
-                                    name="date"
-                                    value={formData.date}
-                                    onChange={handleFormChange}
-                                    min={new Date().toISOString().split('T')[0]}
-                                    className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-3 md:px-4 py-2 text-sm md:text-base focus:ring-2 focus:ring-[#00ff97] [color-scheme:dark]"
-                                    required
-                                  />
-                                </div>
-                              </div>
-                              <div className="mt-3 md:mt-6">
-                                <label className="block text-gray-300 mb-1.5 md:mb-2 text-sm md:text-lg font-semibold">
-                                  Plats
-                                </label>
-                                <input
-                                  type="text"
-                                  name="location"
-                                  value={formData.location}
-                                  onChange={handleFormChange}
-                                  className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-3 md:px-4 py-2 text-sm md:text-base focus:ring-2 focus:ring-[#00ff97]"
-                                  required
-                                />
-                              </div>
-                              <div className="mt-3 md:mt-6">
-                                <label className="block text-gray-300 mb-1.5 md:mb-2 text-sm md:text-lg font-semibold">
-                                  Meddelande
-                                </label>
-                                <textarea
-                                  name="message"
-                                  value={formData.message}
-                                  onChange={handleFormChange}
-                                  rows={3}
-                                  className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-3 md:px-4 py-2 text-sm md:text-base focus:ring-2 focus:ring-[#00ff97]"
-                                  placeholder="Berätta gärna mer om din fest och eventuella önskemål..."
-                                />
-                              </div>
-                              {/* Add hidden fields for the calculator data */}
-                              <input type="hidden" name="partyType" value={selectedParty} />
-                              <input type="hidden" name="addons" value={selectedAddons.join(',')} />
+                            <div>
+                              <label className="block text-gray-300 mb-1.5 md:mb-2 text-sm md:text-lg font-semibold">
+                                E-post
+                              </label>
                               <input
-                                type="hidden"
-                                name="extraHours"
-                                value={extraHours.toString()}
+                                type="email"
+                                name="email"
+                                value={formData.email}
+                                onChange={handleFormChange}
+                                className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-3 md:px-4 py-2 text-sm md:text-base focus:ring-2 focus:ring-[#00ff97]"
+                                required
                               />
+                            </div>
+                            <div>
+                              <label className="block text-gray-300 mb-1.5 md:mb-2 text-sm md:text-lg font-semibold">
+                                Telefon
+                              </label>
                               <input
-                                type="hidden"
-                                name="distance"
-                                value={Math.round(distanceInfo.distance).toString()}
+                                type="tel"
+                                name="phone"
+                                value={formData.phone}
+                                onChange={handleFormChange}
+                                className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-3 md:px-4 py-2 text-sm md:text-base focus:ring-2 focus:ring-[#00ff97]"
+                                required
                               />
+                            </div>
+                            <div>
+                              <label className="block text-gray-300 mb-1.5 md:mb-2 text-sm md:text-lg font-semibold">
+                                Datum
+                              </label>
                               <input
-                                type="hidden"
-                                name="totalPrice"
-                                value={calculateTotal().toString()}
+                                type="date"
+                                name="date"
+                                value={formData.date}
+                                onChange={handleFormChange}
+                                min={new Date().toISOString().split('T')[0]}
+                                className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-3 md:px-4 py-2 text-sm md:text-base focus:ring-2 focus:ring-[#00ff97] [color-scheme:dark]"
+                                required
                               />
-                              {submitError && (
-                                <div className="text-red-500 text-sm md:text-base text-center">
-                                  {submitError}
-                                </div>
-                              )}
-                              <div className="flex justify-center mt-6">
-                                <button
-                                  type="submit"
-                                  disabled={isSubmitting}
-                                  className="px-8 md:px-10 py-3 md:py-4 bg-[#00ff97] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(0,255,151,0.5)] text-sm md:text-base font-bold"
-                                >
-                                  {isSubmitting ? 'Skickar...' : 'Skicka'}
-                                </button>
-                              </div>
-                            </>
+                            </div>
+                          </div>
+                          <div className="mt-3 md:mt-6">
+                            <label className="block text-gray-300 mb-1.5 md:mb-2 text-sm md:text-lg font-semibold">
+                              Plats
+                            </label>
+                            <input
+                              type="text"
+                              name="location"
+                              value={formData.location}
+                              onChange={handleFormChange}
+                              className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-3 md:px-4 py-2 text-sm md:text-base focus:ring-2 focus:ring-[#00ff97]"
+                              required
+                            />
+                          </div>
+                          <div className="mt-3 md:mt-6">
+                            <label className="block text-gray-300 mb-1.5 md:mb-2 text-sm md:text-lg font-semibold">
+                              Meddelande
+                            </label>
+                            <textarea
+                              name="message"
+                              value={formData.message}
+                              onChange={handleFormChange}
+                              rows={3}
+                              className="w-full bg-black/50 border border-[#00ff97]/20 text-white rounded-lg px-3 md:px-4 py-2 text-sm md:text-base focus:ring-2 focus:ring-[#00ff97]"
+                              placeholder="Berätta gärna mer om din fest och eventuella önskemål..."
+                            />
+                          </div>
+                          {/* Add hidden fields for the calculator data */}
+                          <input type="hidden" name="partyType" value={selectedParty} />
+                          <input type="hidden" name="addons" value={selectedAddons.join(',')} />
+                          <input type="hidden" name="extraHours" value={extraHours.toString()} />
+                          <input
+                            type="hidden"
+                            name="distance"
+                            value={Math.round(distanceInfo.distance).toString()}
+                          />
+                          <input
+                            type="hidden"
+                            name="totalPrice"
+                            value={calculateTotal().toString()}
+                          />
+                          {submitError && (
+                            <div className="text-red-500 text-sm md:text-base text-center">
+                              {submitError}
+                            </div>
                           )}
+                          <div className="flex justify-center mt-6">
+                            <button
+                              type="submit"
+                              disabled={isSubmitting}
+                              className="px-8 md:px-10 py-3 md:py-4 bg-[#00ff97] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(0,255,151,0.5)] text-sm md:text-base font-bold"
+                            >
+                              {isSubmitting ? 'Skickar...' : 'Skicka'}
+                            </button>
+                          </div>
                         </form>
                       </div>
                     </div>
