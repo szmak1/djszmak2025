@@ -8,6 +8,11 @@ import {
   FaGraduationCap,
   FaBriefcase,
   FaMusic,
+  FaLightbulb,
+  FaMicrophone,
+  FaSmog,
+  FaSnowflake,
+  FaSquare,
 } from 'react-icons/fa';
 import { IconType } from 'react-icons';
 import {
@@ -134,7 +139,7 @@ const addons: Addon[] = [
     name: 'Discoljus',
     description: 'LED-Discoljus',
     price: 1000,
-    icon: FaMusic,
+    icon: FaLightbulb,
     features: ['Går i takt med musik', 'DJ styr ljuset live'],
   },
   {
@@ -142,8 +147,37 @@ const addons: Addon[] = [
     name: 'Trådlös Mikrofon',
     description: 'Perfekt för tal och karaoke',
     price: 800,
-    icon: FaMusic,
+    icon: FaMicrophone,
     features: ['2 st mikrofoner', 'Hög ljudkvalitet', 'Enkel att använda'],
+  },
+  {
+    id: 'smoke',
+    name: 'Rökmaskin',
+    description: 'Skapa atmosfär med rök',
+    price: 800,
+    icon: FaSmog,
+    features: ['Professionell rökmaskin', 'Säker att använda', 'Skapar fantastisk atmosfär'],
+  },
+  {
+    id: 'dry-ice',
+    name: 'Dry Ice Maskin',
+    description: 'Spektakulär effekt med torris',
+    price: 1200,
+    icon: FaSnowflake,
+    features: ['Stark effekt', 'Röken stannar på golv nivå'],
+  },
+  {
+    id: 'ledfloor',
+    name: 'LED-golv',
+    description: 'Interaktivt LED-golv',
+    price: 10000,
+    icon: FaSquare,
+    features: [
+      'LedGolv till dansgolvet',
+      'Går i takt med musik',
+      'upp till 24m2',
+      'Planeringsmöte ingår',
+    ],
   },
 ];
 
