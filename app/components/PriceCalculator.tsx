@@ -21,6 +21,7 @@ import OfferGenerator from './OfferGenerator';
 interface OfferData {
   partyType: string;
   addons: string[];
+  addonPrices: { [key: string]: number };
   extraHours: number;
   distance: number;
   totalPrice: number;
@@ -401,9 +402,19 @@ export default function PriceCalculator({
     setSubmitError('');
 
     try {
+      // Create a map of addon prices
+      const addonPrices: { [key: string]: number } = {};
+      selectedAddons.forEach(addonId => {
+        const addon = addons.find(a => a.id === addonId);
+        if (addon) {
+          addonPrices[addonId] = addon.price;
+        }
+      });
+
       const offerData: OfferData = {
         partyType: selectedParty,
         addons: selectedAddons,
+        addonPrices, // Add the addon prices
         extraHours,
         distance: distanceInfo.distance,
         totalPrice: calculateTotal(),

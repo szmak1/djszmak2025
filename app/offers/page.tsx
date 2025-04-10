@@ -9,6 +9,7 @@ interface Offer {
   id: string;
   partyType: string;
   addons: string[];
+  addonPrices: { [key: string]: number };
   extraHours: number;
   distance: number;
   totalPrice: number;

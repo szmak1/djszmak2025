@@ -23,6 +23,7 @@ import { db } from '@/lib/firebase';
 interface OfferData {
   partyType: string;
   addons: string[];
+  addonPrices: { [key: string]: number };
   extraHours: number;
   distance: number;
   totalPrice: number;
@@ -172,6 +173,11 @@ export default function OfferGenerator({ offerData, onSave }: OfferGeneratorProp
     try {
       console.log('Attempting to save offer via transaction...');
 
+      const addonPrices: { [key: string]: number } = {};
+      selectedAddons.forEach(addon => {
+        addonPrices[addon.id] = addon.price;
+      });
+
       const returnedOfferNumber = await runTransaction(db, async transaction => {
         const counterDoc = await transaction.get(counterRef);
         const currentNumber = counterDoc.exists() ? counterDoc.data().count || 0 : 0;
@@ -179,6 +185,7 @@ export default function OfferGenerator({ offerData, onSave }: OfferGeneratorProp
 
         transaction.set(newOfferRef, {
           ...offerData,
+          addonPrices,
           offerNumber: newOfferNumber,
           createdAt: serverTimestamp(),
           status: 'pending',
