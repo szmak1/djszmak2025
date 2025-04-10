@@ -349,8 +349,7 @@ export default function OfferGenerator({ offerData, onSave }: OfferGeneratorProp
         <div className="p-6 border-b">
           <h2 className="text-xl font-semibold mb-4 text-gray-900">Transport</h2>
           <p className="text-gray-900">
-            Avstånd: {offerData.distance.toFixed(1)} km ({Math.round(offerData.distance / 10)} mil á
-            100 kr)
+            Avstånd: {offerData.distance} km ({Math.round(offerData.distance / 10)} mil á 100 kr)
           </p>
           <p className="text-gray-900">
             Transportkostnad: <span className="font-semibold">{formatPrice(transportCost)} kr</span>

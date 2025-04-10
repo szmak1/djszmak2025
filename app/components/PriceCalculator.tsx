@@ -380,8 +380,8 @@ export default function PriceCalculator({
         throw new Error(data.error || 'Failed to calculate distance');
       }
 
-      // Convert distance from meters to kilometers
-      const distanceInKm = data.distance / 1000;
+      // Convert distance from meters to kilometers and round to nearest kilometer
+      const distanceInKm = Math.round(data.distance / 1000);
       setDistanceInfo(prev => ({
         ...prev,
         distance: distanceInKm,
