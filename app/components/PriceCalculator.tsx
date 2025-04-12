@@ -33,6 +33,9 @@ interface OfferData {
     location: string;
     message: string;
   };
+  source: 'djszmak';
+  type: 'dj';
+  website: 'djszmak.se';
 }
 
 interface PartyType {
@@ -414,11 +417,14 @@ export default function PriceCalculator({
       const offerData: OfferData = {
         partyType: selectedParty,
         addons: selectedAddons,
-        addonPrices, // Add the addon prices
+        addonPrices,
         extraHours,
         distance: distanceInfo.distance,
         totalPrice: calculateTotal(),
         customerInfo: formData,
+        source: 'djszmak',
+        type: 'dj',
+        website: 'djszmak.se',
       };
 
       setOfferData(offerData);

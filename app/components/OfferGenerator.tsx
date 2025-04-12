@@ -223,6 +223,9 @@ export default function OfferGenerator({ offerData, onSave }: OfferGeneratorProp
           offerNumber: newOfferNumber,
           createdAt: serverTimestamp(),
           status: 'pending',
+          source: 'djszmak',
+          type: 'dj',
+          website: 'djszmak.se',
         });
 
         transaction.set(counterRef, { count: newOfferNumber }, { merge: !counterDoc.exists() });
