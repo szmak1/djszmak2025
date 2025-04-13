@@ -36,6 +36,9 @@ interface OfferData {
   source: 'djszmak';
   type: 'dj';
   website: 'djszmak.se';
+  partyBasePrice: number;
+  partyExtraHourRate: number;
+  includedHours: number;
 }
 
 interface PartyType {
@@ -414,6 +417,10 @@ export default function PriceCalculator({
         }
       });
 
+      // Get the selected party's base price
+      const selectedPartyType = partyTypes.find(p => p.id === selectedParty);
+      const partyBasePrice = selectedPartyType?.basePrice || 0;
+
       const offerData: OfferData = {
         partyType: selectedParty,
         addons: selectedAddons,
@@ -425,6 +432,9 @@ export default function PriceCalculator({
         source: 'djszmak',
         type: 'dj',
         website: 'djszmak.se',
+        partyBasePrice: partyBasePrice,
+        partyExtraHourRate: selectedPartyType?.extraHourRate || 0,
+        includedHours: selectedPartyType?.includedHours || 0,
       };
 
       setOfferData(offerData);
