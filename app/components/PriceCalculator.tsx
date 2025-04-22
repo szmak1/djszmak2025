@@ -511,7 +511,7 @@ export default function PriceCalculator({
         }
       });
 
-      // Get the selected party's base price
+      // Get the selected party's base price and name
       const selectedPartyType = partyTypes.find(p => p.id === selectedParty);
       const partyBasePrice = selectedPartyType?.basePrice || 0;
 
@@ -527,24 +527,37 @@ export default function PriceCalculator({
       // Update hidden form fields
       if (formRef.current) {
         const form = formRef.current;
-        const elements = form.elements as HTMLFormControlsCollection;
-        (elements.namedItem('partyType') as HTMLInputElement).value = selectedParty;
-        (elements.namedItem('addons') as HTMLInputElement).value = selectedAddons.join(',');
-        (elements.namedItem('extraHours') as HTMLInputElement).value = extraHours.toString();
-        (elements.namedItem('distance') as HTMLInputElement).value = Math.round(
-          distanceInfo.distance
-        ).toString();
-        (elements.namedItem('totalPrice') as HTMLInputElement).value = calculateTotal().toString();
-        (elements.namedItem('transportCost') as HTMLInputElement).value =
-          calculatedTransportCost.toString();
-        if (fixedFeeComponent > 0) {
-          (elements.namedItem('ledFloorTransportFee') as HTMLInputElement).value =
-            fixedFeeComponent.toString();
-        }
-      }
 
-      // Let Netlify handle the form submission
-      formRef.current?.submit();
+        // Create or update hidden input fields
+        const updateHiddenField = (name: string, value: string) => {
+          const input = form.querySelector(`input[name="${name}"]`) as HTMLInputElement;
+          if (input) {
+            input.value = value;
+          }
+        };
+
+        // Update all form fields
+        updateHiddenField('partyType', selectedPartyType?.name || '');
+        updateHiddenField(
+          'addons',
+          selectedAddons
+            .map(id => {
+              const addon = addons.find(a => a.id === id);
+              return addon?.name || '';
+            })
+            .join(', ')
+        );
+        updateHiddenField('extraHours', extraHours.toString());
+        updateHiddenField('distance', Math.round(distanceInfo.distance).toString());
+        updateHiddenField('totalPrice', calculateTotal().toString());
+        updateHiddenField('transportCost', calculatedTransportCost.toString());
+        if (fixedFeeComponent > 0) {
+          updateHiddenField('ledFloorTransportFee', fixedFeeComponent.toString());
+        }
+
+        // Submit the form
+        form.submit();
+      }
     } catch (error) {
       console.error('Error submitting form:', error);
       setSubmitError('Ett fel uppstod när formuläret skulle skickas. Försök igen senare.');
