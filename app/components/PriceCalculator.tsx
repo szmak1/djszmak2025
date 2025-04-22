@@ -14,9 +14,18 @@ import {
   FaSmog,
   FaSnowflake,
   FaSquare,
+  FaMapMarkerAlt,
+  FaRoute,
+  FaCheckCircle,
+  FaChartLine,
+  FaShieldAlt,
 } from 'react-icons/fa';
 import { IconType } from 'react-icons';
 import OfferGenerator from './OfferGenerator';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
+import { PriceSyncService } from '../lib/priceSync';
+import { DocumentData } from 'firebase/firestore';
 
 interface OfferData {
   partyType: string;
@@ -24,6 +33,8 @@ interface OfferData {
   addonPrices: { [key: string]: number };
   extraHours: number;
   distance: number;
+  transportCost: number;
+  ledFloorTransportFee?: number;
   totalPrice: number;
   customerInfo: {
     name: string;
@@ -69,7 +80,7 @@ interface DistanceInfo {
   pricePerKm: number;
 }
 
-const partyTypes: PartyType[] = [
+const defaultPartyTypes: PartyType[] = [
   {
     id: 'wedding',
     name: 'Bröllopsfest',
@@ -127,7 +138,7 @@ const partyTypes: PartyType[] = [
   },
 ];
 
-const addons: Addon[] = [
+const defaultAddons: Addon[] = [
   {
     id: 'sound',
     name: 'Ljudsystem',
@@ -188,6 +199,13 @@ const addons: Addon[] = [
   },
 ];
 
+const defaultTransportConfig = {
+  maximumDistance: 200,
+  pricePerKm: 100,
+  fixedFee: 1200,
+  ledFloorExtra: 1200,
+};
+
 interface PriceCalculatorProps {
   defaultPartyType?: string;
   stepDescriptions?: {
@@ -219,7 +237,7 @@ export default function PriceCalculator({
     location: '',
     message: '',
   });
-  const [error, setError] = useState('');
+  const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState('');
@@ -230,6 +248,10 @@ export default function PriceCalculator({
   );
   const [showOffer, setShowOffer] = useState(false);
   const [offerData, setOfferData] = useState<OfferData | null>(null);
+  const [partyTypes, setPartyTypes] = useState<PartyType[]>(defaultPartyTypes);
+  const [addons, setAddons] = useState<Addon[]>(defaultAddons);
+  const [transportConfig, setTransportConfig] = useState(defaultTransportConfig);
+  const [loading, setLoading] = useState(true);
 
   // Add a reference to the form
   const formRef = useRef<HTMLFormElement>(null);
@@ -261,6 +283,72 @@ export default function PriceCalculator({
     };
   }, [currentStep]);
 
+  useEffect(() => {
+    // Initialize price sync service
+    const priceSync = PriceSyncService.getInstance();
+
+    // Start listening for price updates
+    priceSync.startListening({
+      onUpdate: (data: {
+        partyTypes?: Record<string, DocumentData>;
+        addons?: Record<string, DocumentData>;
+        transport?: DocumentData;
+      }) => {
+        if (data.partyTypes) {
+          const updatedPartyTypes = [...defaultPartyTypes];
+          Object.entries(data.partyTypes).forEach(([id, typeData]) => {
+            const index = updatedPartyTypes.findIndex(pt => pt.id === id);
+            if (index !== -1) {
+              updatedPartyTypes[index] = {
+                ...updatedPartyTypes[index],
+                basePrice: typeData.basePrice,
+                extraHourRate: typeData.extraHourRate,
+                includedHours: typeData.includedHours,
+              };
+            }
+          });
+          setPartyTypes(updatedPartyTypes);
+        }
+
+        if (data.addons) {
+          const updatedAddons = [...defaultAddons];
+          Object.entries(data.addons).forEach(([id, addonData]) => {
+            const index = updatedAddons.findIndex(addon => addon.id === id);
+            if (index !== -1) {
+              updatedAddons[index] = {
+                ...updatedAddons[index],
+                price: addonData.price,
+              };
+            }
+          });
+          setAddons(updatedAddons);
+        }
+
+        if (data.transport) {
+          setTransportConfig({
+            maximumDistance: data.transport.maxDistance,
+            pricePerKm: data.transport.pricePerKm,
+            fixedFee: data.transport.fixedFee || transportConfig.fixedFee,
+            ledFloorExtra: data.transport.ledFloorExtra || transportConfig.ledFloorExtra,
+          });
+          setDistanceInfo(prev => ({
+            ...prev,
+            pricePerKm: data.transport?.pricePerKm ?? prev.pricePerKm,
+          }));
+        }
+      },
+      onError: (error: Error) => {
+        console.error('Error receiving price updates:', error);
+        setError('Failed to receive price updates. Using current values.');
+      },
+    });
+
+    // Cleanup on unmount
+    return () => {
+      priceSync.stopListening();
+    };
+  }, [transportConfig.fixedFee, transportConfig.ledFloorExtra]);
+
   const calculateTotal = () => {
     let total = 0;
 
@@ -272,9 +360,11 @@ export default function PriceCalculator({
       total += extraHours * party.extraHourRate;
     }
 
-    // Add distance cost (per 10 km)
+    // Calculate base transport cost (per mile only)
     const distanceInMil = Math.round(distanceInfo.distance / 10);
-    total += distanceInMil * distanceInfo.pricePerKm;
+    const transportCost = distanceInMil * transportConfig.pricePerKm;
+
+    total += transportCost;
 
     // Add addon prices
     selectedAddons.forEach(addonId => {
@@ -283,6 +373,11 @@ export default function PriceCalculator({
         total += addon.price;
       }
     });
+
+    // Add LED floor fixed transport fee ONLY if distance is calculated
+    if (selectedAddons.includes('ledfloor') && distanceInfo.distance > 0) {
+      total += transportConfig.fixedFee;
+    }
 
     return total;
   };
@@ -404,7 +499,6 @@ export default function PriceCalculator({
     e.preventDefault();
     setError('');
     setIsSubmitting(true);
-    setSubmitSuccess(false);
     setSubmitError('');
 
     try {
@@ -421,29 +515,39 @@ export default function PriceCalculator({
       const selectedPartyType = partyTypes.find(p => p.id === selectedParty);
       const partyBasePrice = selectedPartyType?.basePrice || 0;
 
-      const offerData: OfferData = {
-        partyType: selectedParty,
-        addons: selectedAddons,
-        addonPrices,
-        extraHours,
-        distance: distanceInfo.distance,
-        totalPrice: calculateTotal(),
-        customerInfo: formData,
-        source: 'djszmak',
-        type: 'dj',
-        website: 'djszmak.se',
-        partyBasePrice: partyBasePrice,
-        partyExtraHourRate: selectedPartyType?.extraHourRate || 0,
-        includedHours: selectedPartyType?.includedHours || 0,
-      };
+      // Calculate transport cost components
+      const distanceInMil = Math.round(distanceInfo.distance / 10);
+      const perMileCost = distanceInMil * transportConfig.pricePerKm;
+      const fixedFeeComponent =
+        selectedAddons.includes('ledfloor') && distanceInfo.distance > 0
+          ? transportConfig.fixedFee
+          : 0;
+      const calculatedTransportCost = perMileCost + fixedFeeComponent;
 
-      setOfferData(offerData);
-      setShowOffer(true);
-      setSubmitSuccess(true);
+      // Update hidden form fields
+      if (formRef.current) {
+        const form = formRef.current;
+        const elements = form.elements as HTMLFormControlsCollection;
+        (elements.namedItem('partyType') as HTMLInputElement).value = selectedParty;
+        (elements.namedItem('addons') as HTMLInputElement).value = selectedAddons.join(',');
+        (elements.namedItem('extraHours') as HTMLInputElement).value = extraHours.toString();
+        (elements.namedItem('distance') as HTMLInputElement).value = Math.round(
+          distanceInfo.distance
+        ).toString();
+        (elements.namedItem('totalPrice') as HTMLInputElement).value = calculateTotal().toString();
+        (elements.namedItem('transportCost') as HTMLInputElement).value =
+          calculatedTransportCost.toString();
+        if (fixedFeeComponent > 0) {
+          (elements.namedItem('ledFloorTransportFee') as HTMLInputElement).value =
+            fixedFeeComponent.toString();
+        }
+      }
+
+      // Let Netlify handle the form submission
+      formRef.current?.submit();
     } catch (error) {
       console.error('Error submitting form:', error);
       setSubmitError('Ett fel uppstod när formuläret skulle skickas. Försök igen senare.');
-    } finally {
       setIsSubmitting(false);
     }
   };
@@ -1039,18 +1143,61 @@ export default function PriceCalculator({
                               </div>
                             )}
                             {distanceInfo.distance > 0 ? (
-                              <div className="bg-black/50 border border-[#00ff97]/20 rounded-lg p-4 md:p-6 w-full max-w-md">
-                                <div className="text-green-500 mb-2 md:mb-3 text-base md:text-lg text-center">
-                                  Avstånd från Malmö: {distanceInfo.distance.toFixed(1)} km
+                              <div className="bg-black/50 border border-[#00ff97]/20 rounded-lg p-4 w-full max-w-md">
+                                <h4 className="flex items-center gap-2 text-lg font-semibold text-white mb-3">
+                                  <FaMapMarkerAlt className="text-[#00ff97]" />
+                                  Transportkostnad
+                                </h4>
+                                <div className="space-y-2 mb-3">
+                                  <div className="flex justify-between items-center text-sm text-gray-300">
+                                    <span>Enkel resa:</span>
+                                    <span className="font-medium text-white">
+                                      {distanceInfo.distance.toFixed(1)} km
+                                    </span>
+                                  </div>
+                                  <div className="flex justify-between items-center text-sm text-gray-300">
+                                    <span>Tur och retur:</span>
+                                    <span className="font-medium text-white">
+                                      {(distanceInfo.distance * 2).toFixed(1)} km
+                                    </span>
+                                  </div>
                                 </div>
-                                <div className="text-gray-400 text-base md:text-lg text-center">
-                                  Resekostnad:{' '}
-                                  {Math.round(distanceInfo.distance / 10) * distanceInfo.pricePerKm}{' '}
-                                  kr
-                                  <span className="text-sm md:text-base ml-2">
-                                    ({Math.round(distanceInfo.distance / 10)} mil)
-                                  </span>
+
+                                <div className="border-t border-[#00ff97]/10 pt-3 mb-3">
+                                  <div className="flex justify-between items-center text-sm text-gray-300">
+                                    <span>Rörlig avgift</span>
+                                    <span className="font-medium text-white">
+                                      {(
+                                        Math.round(distanceInfo.distance / 10) *
+                                        transportConfig.pricePerKm
+                                      ).toLocaleString('sv-SE')}{' '}
+                                      kr
+                                    </span>
+                                  </div>
+                                  <div className="text-xs text-gray-400 text-right">
+                                    {Math.round(distanceInfo.distance / 10)} mil ×{' '}
+                                    {transportConfig.pricePerKm} kr/mil
+                                  </div>
                                 </div>
+
+                                <div className="border-t border-[#00ff97]/10 pt-3">
+                                  <div className="flex justify-between items-center text-white">
+                                    <span className="flex items-center gap-2 font-semibold">
+                                      Total transportkostnad:
+                                    </span>
+                                    <span className="font-bold text-lg">
+                                      {(
+                                        Math.round(distanceInfo.distance / 10) *
+                                          transportConfig.pricePerKm +
+                                        (selectedAddons.includes('ledfloor')
+                                          ? transportConfig.fixedFee
+                                          : 0)
+                                      ).toLocaleString('sv-SE')}{' '}
+                                      kr
+                                    </span>
+                                  </div>
+                                </div>
+
                                 <div className="mt-4 flex justify-center">
                                   <button
                                     type="button"
@@ -1093,7 +1240,18 @@ export default function PriceCalculator({
                           onSubmit={handleSubmit}
                           className="space-y-3 md:space-y-6"
                           name="price-calculator"
+                          method="POST"
+                          data-netlify="true"
+                          data-netlify-honeypot="bot-field"
+                          action="/thanks"
                         >
+                          <input type="hidden" name="form-name" value="price-calculator" />
+                          <p hidden>
+                            <label>
+                              Don&apos;t fill this out if you&apos;re human:{' '}
+                              <input name="bot-field" />
+                            </label>
+                          </p>
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-6">
                             <div>
                               <label className="block text-gray-300 mb-1.5 md:mb-2 text-sm md:text-lg font-semibold">
@@ -1176,33 +1334,18 @@ export default function PriceCalculator({
                             />
                           </div>
                           {/* Add hidden fields for the calculator data */}
-                          <input type="hidden" name="partyType" value={selectedParty} />
-                          <input type="hidden" name="addons" value={selectedAddons.join(',')} />
-                          <input type="hidden" name="extraHours" value={extraHours.toString()} />
-                          <input
-                            type="hidden"
-                            name="distance"
-                            value={Math.round(distanceInfo.distance).toString()}
-                          />
-                          <input
-                            type="hidden"
-                            name="totalPrice"
-                            value={calculateTotal().toString()}
-                          />
+                          <input type="hidden" name="partyType" />
+                          <input type="hidden" name="addons" />
+                          <input type="hidden" name="extraHours" />
+                          <input type="hidden" name="distance" />
+                          <input type="hidden" name="totalPrice" />
+                          <input type="hidden" name="transportCost" />
+                          <input type="hidden" name="ledFloorTransportFee" />
                           {submitError && (
                             <div className="text-red-500 text-sm md:text-base text-center">
                               {submitError}
                             </div>
                           )}
-                          <div className="flex justify-center mt-6">
-                            <button
-                              type="submit"
-                              disabled={isSubmitting}
-                              className="px-8 md:px-10 py-3 md:py-4 bg-[#00ff97] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(0,255,151,0.5)] text-sm md:text-base font-bold"
-                            >
-                              {isSubmitting ? 'Skickar...' : 'Skicka'}
-                            </button>
-                          </div>
                         </form>
                       </div>
                     </div>
