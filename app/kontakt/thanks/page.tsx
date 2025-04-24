@@ -14,7 +14,7 @@ const pushToDataLayer = (eventData: object) => {
   window.dataLayer.push(eventData);
 };
 
-export default function ThanksPage() {
+export default function ContactThanksPage() {
   return (
     <div className="bg-[#0a0a0a] min-h-screen flex items-center justify-center p-4">
       <div className="bg-black/50 border border-[#00ff97]/20 rounded-lg p-8 md:p-12 text-center animate-fade-in max-w-2xl w-full">
@@ -40,7 +40,8 @@ export default function ThanksPage() {
           Tack för ditt meddelande!
         </h2>
         <p className="text-gray-300 text-base md:text-lg mb-4">
-          Vi kommer att kontakta dig via e-post inom 24 timmar med en offert.
+          Jag har mottagit ditt meddelande och kommer att svara så snart som möjligt. Vanligtvis
+          svarar jag inom 24 timmar.
         </p>
         <p className="text-gray-300 text-base md:text-lg mb-8">
           Om du har brådskande frågor, ring mig gärna på{' '}

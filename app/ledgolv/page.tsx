@@ -52,6 +52,12 @@ export default function Ledgolv() {
   };
 
   const faqItems = [
+    // transport info
+    {
+      question: 'Vilken är transport- och resekostnaden för LED-golv i Skåne?',
+      answer:
+        'En startavgift på 1 200 kr tillkommer. För sträckor utanför Malmö stad debiteras sedan 100 kr per mil fram till önskad destination inom Skåne.',
+    },
     {
       question: 'Vilka storlekar finns LED-golvet i?',
       answer:

@@ -39,10 +39,10 @@ export default function ContactForm({ className = '' }: ContactFormProps) {
               <div>
                 <h3 className="text-lg font-semibold text-white mb-1">Telefon</h3>
                 <a
-                  href="tel:+46701234567"
+                  href="tel:+46708829077"
                   className="text-gray-400 hover:text-[#00ff97] transition-colors duration-300"
                 >
-                  +46 70 123 45 67
+                  +46 70 88 29 077
                 </a>
               </div>
             </div>
@@ -69,9 +69,9 @@ export default function ContactForm({ className = '' }: ContactFormProps) {
               <div>
                 <h3 className="text-lg font-semibold text-white mb-1">Öppettider</h3>
                 <p className="text-gray-400">
-                  Måndag - Fredag: 09:00 - 18:00
+                  Måndag - Fredag: 09:00 - 21:00
                   <br />
-                  Lördag - Söndag: Stängt
+                  Lördag - Söndag: 14:00 - 20:00
                 </p>
               </div>
             </div>

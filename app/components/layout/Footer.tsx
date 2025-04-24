@@ -86,7 +86,7 @@ export default function Footer() {
                   className="flex items-center justify-center gap-2 text-gray-800 hover:text-[#007ed4] transition-colors duration-200 text-sm"
                 >
                   <FaPhone className="h-4 w-4 flex-shrink-0" />
-                  <span>+46 70 123 45 67</span>
+                  <span>+46 70 882 90 77</span>
                 </a>
               </li>
               <li>

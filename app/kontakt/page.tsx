@@ -21,7 +21,7 @@ export default function KontaktPage() {
             </p>
             <div className="mt-12 flex flex-wrap justify-center gap-4 md:gap-6 animate-fade-in-up relative z-30">
               <a
-                href="tel:+46701234567"
+                href="tel:+46708829077"
                 className="flex items-center gap-2 px-8 py-4 bg-[#00ff97] text-black rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(0,255,151,0.5)] font-bold text-lg"
               >
                 <FaPhone className="w-5 h-5" />

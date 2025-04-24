@@ -11,24 +11,30 @@ import VideoWithText from './components/VideoWithText';
 import Link from 'next/link';
 
 const faqItems = [
+  // priceCalculator
+  {
+    question: 'Hur fungerar prisberäknaren?',
+    answer:
+      'Prisberäknaren är en praktisk funktion som hjälper dig att uppskatta kostnaden för att hyra DJ Szmak till ditt evenemang. Genom att fylla i nödvändiga uppgifter, såsom festtyp, antal gäster och önskemål, kan du få en ungefärlig uppskattning av vad det kommer att kosta att hyra mig till ditt evenemang.',
+  },
   {
     question: 'Går det att boka DJ Szmak som DJ i Skåne?',
     answer: 'DJ Szmak har hela Skåne som arbetsområde.',
   },
   {
-    question: 'Hur bokar jag djszmak?',
+    question: 'Hur bokar jag DJ Szmak?',
     answer: [
-      'DJ Szmak kan bokas på 3 olika sätt som DJ Skåne:',
-      'Via formuläret djszmak.se/kontakt',
-      'Via mejl till info@djszmak.se',
-      'Via telefon till 070-88 290 77',
-      'Efter att ni skickat in förfrågan så får ni en offert/förslag av informationen ni har angett i kontakt formuläret via mejl. Det är viktigt att ni verkligen läser igenom denna offert/förslag som ni får. Känns allt ok kan ni därefter lägga en deposition på 1000kr för att din fest ska bli 100% bokad. Resterande belopp faktureras via Frilans Finans efter spelningen. Ni behöver även signera en uppdragsoffert från Frilans Finans som jag skickar till er.',
+      'DJ Szmak kan bokas på 3 olika sätt:',
+      '1. Via formuläret på djszmak.se/kontakt eller via prisberäknaren på denna sida.',
+      '2. Via mejl till info@djszmak.se',
+      '3. Via telefon till 070-88 290 77',
+      'Efter att ni skickat in förfrågan får ni en offert/förslag baserat på informationen ni angett i kontaktformuläret via mejl. Det är viktigt att ni verkligen läser igenom denna offert/förslag. Känns allt ok kan ni lägga en deposition på 1000kr för att bekräfta bokningen. Resterande belopp faktureras via vår företag LED Dance Floor AB efter spelningen.',
     ],
   },
   {
     question: 'Transport - och resekostnad för DJ i skåne?',
     answer:
-      'Transport och resekostnad tillkommer vid körning utanför Malmö stad. 25kr per mil till den önskade destinationen inom Skåne.',
+      'Transport och resekostnad tillkommer vid körning utanför Malmö stad. 100kr per mil till den önskade destinationen inom Skåne.',
   },
   {
     question: 'När ska man boka?',
@@ -181,7 +187,7 @@ Tveka inte att ta kontakt med mig med frågor eller förfrågningar!`}
 Jag anpassar alltid musiken efter festens syfte och min publik, och genom åren har jag arbetat fram en förståelse för hur människor funkar – gamla som unga. Så oavsett om det gäller bröllop, examen, födelsedag eller företagsfest, så hjälper jag er till ett välfyllt dansgolv!`}
       />
       <PriceCalculator />
-      <FAQ faqItems={faqItems} />
+      <FAQ faqItems={faqItems} defaultOpen={0} />
       <GoogleReviews />
     </div>
   );

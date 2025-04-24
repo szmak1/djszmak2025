@@ -80,11 +80,11 @@ export default function Födelsedagsfest() {
       question: 'Hur bokar jag DJ i Skåne?',
       answer: [
         'DJ Skåne till födelsedagsfest kan bokas på 3 olika sätt:',
-        '• Via formuläret djszmak.se/kontakt',
+        '• Via prisberäknaren på djszmak.se, här finns formulär och prisberäkning.',
+        '• Via kontaktformuläret djszmak.se/kontakt',
         '• Via mejl till info@djszmak.se',
         '• Via telefon till 070-88 290 77',
-        '',
-        'Efter att ni skickat in förfrågan så får ni en offert/förslag av informationen ni har angett i kontakt formuläret via mejl. Det är viktigt att ni verkligen läser igenom denna offert/förslag som ni får. Känns allt ok kan ni därefter lägga en deposition på 1000kr för att din fest ska bli 100% bokad. Resterande belopp faktureras via Frilans Finans efter spelningen. Ni behöver även signera en uppdragsoffert från Frilans Finans som jag skickar till er.',
+        'Efter att ni skickat in förfrågan får ni en offert/förslag baserat på informationen ni angett i kontaktformuläret via mejl. Det är viktigt att ni verkligen läser igenom denna offert/förslag. Känns allt ok kan ni lägga en deposition på 20% av det totala beloppet för att bekräfta bokningen. Resterande belopp faktureras via vår företag LED Dance Floor AB efter spelningen.',
       ],
     },
     {
