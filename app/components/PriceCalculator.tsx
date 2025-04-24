@@ -26,6 +26,7 @@ import { collection, getDocs } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { PriceSyncService } from '../lib/priceSync';
 import { DocumentData } from 'firebase/firestore';
+import { useRouter } from 'next/navigation';
 
 interface OfferData {
   partyType: string;
@@ -220,6 +221,7 @@ export default function PriceCalculator({
   defaultPartyType,
   stepDescriptions,
 }: PriceCalculatorProps) {
+  const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedParty, setSelectedParty] = useState<string>(defaultPartyType || '');
   const [selectedAddons, setSelectedAddons] = useState<string[]>([]);
@@ -501,8 +503,16 @@ export default function PriceCalculator({
     setIsSubmitting(true);
     setSubmitError('');
 
+    // Get the hidden form name
+    const formName = formRef.current?.getAttribute('name');
+    if (!formName) {
+      setSubmitError('Form configuration error. Missing form name.');
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
-      // Create a map of addon prices
+      // Create a map of addon prices (optional, not needed for Netlify submission but kept for potential internal use)
       const addonPrices: { [key: string]: number } = {};
       selectedAddons.forEach(addonId => {
         const addon = addons.find(a => a.id === addonId);
@@ -511,9 +521,14 @@ export default function PriceCalculator({
         }
       });
 
-      // Get the selected party's base price and name
+      // Get selected party details
       const selectedPartyType = partyTypes.find(p => p.id === selectedParty);
-      const partyBasePrice = selectedPartyType?.basePrice || 0;
+      const partyName = selectedPartyType?.name || '';
+
+      // Format selected addons names
+      const addonNames = selectedAddons
+        .map(id => addons.find(a => a.id === id)?.name || '')
+        .join(', ');
 
       // Calculate transport cost components
       const distanceInMil = Math.round(distanceInfo.distance / 10);
@@ -524,43 +539,49 @@ export default function PriceCalculator({
           : 0;
       const calculatedTransportCost = perMileCost + fixedFeeComponent;
 
-      // Update hidden form fields
-      if (formRef.current) {
-        const form = formRef.current;
+      // Prepare form data for submission
+      const formDataToSubmit = new URLSearchParams();
+      formDataToSubmit.append('form-name', formName);
+      formDataToSubmit.append('name', formData.name);
+      formDataToSubmit.append('email', formData.email);
+      formDataToSubmit.append('phone', formData.phone);
+      formDataToSubmit.append('date', formData.date);
+      formDataToSubmit.append('location', formData.location);
+      formDataToSubmit.append('message', formData.message);
+      formDataToSubmit.append('partyType', partyName);
+      formDataToSubmit.append('addons', addonNames);
+      formDataToSubmit.append('extraHours', extraHours.toString());
+      formDataToSubmit.append('distance', Math.round(distanceInfo.distance).toString());
+      formDataToSubmit.append('totalPrice', calculateTotal().toString());
+      formDataToSubmit.append('transportCost', calculatedTransportCost.toString());
+      if (fixedFeeComponent > 0) {
+        formDataToSubmit.append('ledFloorTransportFee', fixedFeeComponent.toString());
+      }
+      // Add honeypot field if needed (check your form attributes)
+      const honeypotName = formRef.current?.getAttribute('data-netlify-honeypot');
+      if (honeypotName) {
+        formDataToSubmit.append(honeypotName, ''); // Keep honeypot empty
+      }
 
-        // Create or update hidden input fields
-        const updateHiddenField = (name: string, value: string) => {
-          const input = form.querySelector(`input[name="${name}"]`) as HTMLInputElement;
-          if (input) {
-            input.value = value;
-          }
-        };
+      // Submit data using fetch
+      const response = await fetch(formRef.current?.getAttribute('action') || '/', {
+        // Use form action or default
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: formDataToSubmit.toString(),
+      });
 
-        // Update all form fields
-        updateHiddenField('partyType', selectedPartyType?.name || '');
-        updateHiddenField(
-          'addons',
-          selectedAddons
-            .map(id => {
-              const addon = addons.find(a => a.id === id);
-              return addon?.name || '';
-            })
-            .join(', ')
-        );
-        updateHiddenField('extraHours', extraHours.toString());
-        updateHiddenField('distance', Math.round(distanceInfo.distance).toString());
-        updateHiddenField('totalPrice', calculateTotal().toString());
-        updateHiddenField('transportCost', calculatedTransportCost.toString());
-        if (fixedFeeComponent > 0) {
-          updateHiddenField('ledFloorTransportFee', fixedFeeComponent.toString());
-        }
-
-        // Submit the form
-        form.submit();
+      if (response.ok) {
+        // Redirect to thanks page on success
+        router.push('/thanks');
+      } else {
+        // Handle submission error
+        throw new Error('Form submission failed');
       }
     } catch (error) {
       console.error('Error submitting form:', error);
       setSubmitError('Ett fel uppstod när formuläret skulle skickas. Försök igen senare.');
+    } finally {
       setIsSubmitting(false);
     }
   };

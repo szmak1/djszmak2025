@@ -135,11 +135,11 @@ Föreställ dig ett dansgolv som pulserar i takt med musiken, visar coola mönst
 
 Från energifyllda danskvällar till exklusiva lounge-event, jag anpassar musiken och stämningen för att matcha din klubbss identitet. Med professionell utrustning och möjlighet till LED-golv kan vi ta upplevelsen till nästa nivå. Boka tidigt för att säkra ditt datum - särskilt under helger går datumen snabbt åt. Kontakta mig redan idag för en skräddarsydd offert till din nattklubb i Skåne."
       />
-      <Divider />
+
       <PriceCalculator defaultPartyType="club" stepDescriptions={stepDescriptions} />
-      <Divider />
+
       <FAQ faqItems={faqItems} defaultOpen={0} />
-      <Divider />
+
       <GoogleReviews />
     </div>
   );

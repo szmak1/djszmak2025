@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import {
   FaGlassCheers,
@@ -196,7 +196,7 @@ export default function OfferGenerator({ offerData, onSave }: OfferGeneratorProp
   const selectedParty = partyTypes.find(p => p.id === offerData.partyType);
   const selectedAddons = addons.filter(a => offerData.addons.includes(a.id));
 
-  const saveOfferToFirebase = async () => {
+  const saveOfferToFirebase = useCallback(async () => {
     if (isSaving || hasSaved) return;
     setIsSaving(true);
     setSaveError(null);
@@ -240,15 +240,13 @@ export default function OfferGenerator({ offerData, onSave }: OfferGeneratorProp
       setOfferNumber(returnedOfferNumber);
       setHasSaved(true);
       if (onSave) onSave(newOfferRef.id);
-
-      window.location.href = '/thanks.html';
     } catch (error) {
       console.error('Error during Firestore transaction:', error);
       setSaveError('Kunde inte spara offerten (transaktionsfel). Försök igen.');
     } finally {
       setIsSaving(false);
     }
-  };
+  }, [offerData, isSaving, hasSaved, onSave, selectedAddons]);
 
   useEffect(() => {
     if (offerData && !hasSaved && !isSaving) {
