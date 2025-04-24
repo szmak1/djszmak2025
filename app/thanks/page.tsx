@@ -3,17 +3,43 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
+// Declare dataLayer type on window
+declare global {
+  interface Window {
+    dataLayer: any[];
+  }
+}
+
+// Helper function to push to dataLayer
+const pushToDataLayer = (eventData: object) => {
+  // Ensure dataLayer exists and is an array
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push(eventData);
+};
+
 export default function ThanksPage() {
   const router = useRouter();
 
   useEffect(() => {
+    // --- Trigger GTM event for thank you page view ---
+    console.log('Pushing thank_you_page_view event to dataLayer (currently commented out)');
+    // Uncomment the line below for production to track conversions in GTM
+    // pushToDataLayer({
+    //   event: 'thank_you_page_view',
+    //   // You can add more data here if needed for GTM, e.g.:
+    //   // page_path: '/thanks',
+    //   // conversion_value: 100, // Example value
+    // });
+    // --------------------------------------------------
+
     // Redirect to home page after 10 seconds
     const timer = setTimeout(() => {
       router.push('/');
     }, 10000);
 
     return () => clearTimeout(timer);
-  }, [router]);
+    // Run only once on component mount
+  }, [router]); // Keep router dependency for the timeout clear
 
   return (
     <div className="bg-[#0a0a0a] min-h-screen flex items-center justify-center p-4">
