@@ -356,10 +356,17 @@ export default function PriceCalculator({
       total += extraHours * party.extraHourRate;
     }
 
-    const distanceInMil = Math.round(distanceInfo.distance / 10);
-    const transportCost = distanceInMil * transportConfig.pricePerKm;
+    // Add distance-based transport cost only if not in Malmö
+    if (!formData.location.toLowerCase().includes('malmö')) {
+      const distanceInMil = Math.round(distanceInfo.distance / 10);
+      const transportCost = distanceInMil * transportConfig.pricePerKm;
+      total += transportCost;
+    }
 
-    total += transportCost;
+    // Add LED floor fixed fee if LED floor is selected, regardless of location
+    if (selectedAddons.includes('ledfloor') && distanceInfo.distance > 0) {
+      total += transportConfig.fixedFee;
+    }
 
     selectedAddons.forEach(addonId => {
       const addon = addons.find(a => a.id === addonId);
@@ -367,10 +374,6 @@ export default function PriceCalculator({
         total += addon.price;
       }
     });
-
-    if (selectedAddons.includes('ledfloor') && distanceInfo.distance > 0) {
-      total += transportConfig.fixedFee;
-    }
 
     return total;
   };
@@ -1187,55 +1190,93 @@ export default function PriceCalculator({
                                   <FaMapMarkerAlt className="text-[#00ff97]" />
                                   Transportkostnad
                                 </h4>
-                                <div className="space-y-2 mb-3">
-                                  <div className="flex justify-between items-center text-sm text-gray-300">
-                                    <span>Enkel resa:</span>
-                                    <span className="font-medium text-white">
-                                      {distanceInfo.distance.toFixed(1)} km
-                                    </span>
+                                {formData.location.toLowerCase().includes('malmö') ? (
+                                  <div>
+                                    <div className="space-y-2 mb-3">
+                                      <div className="flex justify-between items-center text-sm text-gray-300">
+                                        <span>Inom Malmö stad:</span>
+                                        <span className="font-medium text-[#00ff97]">
+                                          0 kr transport
+                                        </span>
+                                      </div>
+                                    </div>
+                                    {selectedAddons.includes('ledfloor') && (
+                                      <div className="border-t border-[#00ff97]/10 pt-3">
+                                        <div className="flex justify-between items-center text-white">
+                                          <span className="flex items-center gap-2 font-semibold">
+                                            LED-golv transportavgift:
+                                          </span>
+                                          <span className="font-bold text-lg">
+                                            {transportConfig.fixedFee.toLocaleString('sv-SE')} kr
+                                          </span>
+                                        </div>
+                                      </div>
+                                    )}
                                   </div>
-                                  <div className="flex justify-between items-center text-sm text-gray-300">
-                                    <span>Tur och retur:</span>
-                                    <span className="font-medium text-white">
-                                      {(distanceInfo.distance * 2).toFixed(1)} km
-                                    </span>
-                                  </div>
-                                </div>
+                                ) : (
+                                  <>
+                                    <div className="space-y-2 mb-3">
+                                      <div className="flex justify-between items-center text-sm text-gray-300">
+                                        <span>Enkel resa:</span>
+                                        <span className="font-medium text-white">
+                                          {distanceInfo.distance.toFixed(1)} km
+                                        </span>
+                                      </div>
+                                      <div className="flex justify-between items-center text-sm text-gray-300">
+                                        <span>Tur och retur:</span>
+                                        <span className="font-medium text-white">
+                                          {(distanceInfo.distance * 2).toFixed(1)} km
+                                        </span>
+                                      </div>
+                                    </div>
 
-                                <div className="border-t border-[#00ff97]/10 pt-3 mb-3">
-                                  <div className="flex justify-between items-center text-sm text-gray-300">
-                                    <span>Rörlig avgift</span>
-                                    <span className="font-medium text-white">
-                                      {(
-                                        Math.round(distanceInfo.distance / 10) *
-                                        transportConfig.pricePerKm
-                                      ).toLocaleString('sv-SE')}{' '}
-                                      kr
-                                    </span>
-                                  </div>
-                                  <div className="text-xs text-gray-400 text-right">
-                                    {Math.round(distanceInfo.distance / 10)} mil ×{' '}
-                                    {transportConfig.pricePerKm} kr/mil
-                                  </div>
-                                </div>
+                                    <div className="border-t border-[#00ff97]/10 pt-3 mb-3">
+                                      <div className="flex justify-between items-center text-sm text-gray-300">
+                                        <span>Rörlig avgift</span>
+                                        <span className="font-medium text-white">
+                                          {(
+                                            Math.round(distanceInfo.distance / 10) *
+                                            transportConfig.pricePerKm
+                                          ).toLocaleString('sv-SE')}{' '}
+                                          kr
+                                        </span>
+                                      </div>
+                                      <div className="text-xs text-gray-400 text-right">
+                                        {Math.round(distanceInfo.distance / 10)} mil ×{' '}
+                                        {transportConfig.pricePerKm} kr/mil
+                                      </div>
+                                    </div>
 
-                                <div className="border-t border-[#00ff97]/10 pt-3">
-                                  <div className="flex justify-between items-center text-white">
-                                    <span className="flex items-center gap-2 font-semibold">
-                                      Total transportkostnad:
-                                    </span>
-                                    <span className="font-bold text-lg">
-                                      {(
-                                        Math.round(distanceInfo.distance / 10) *
-                                          transportConfig.pricePerKm +
-                                        (selectedAddons.includes('ledfloor')
-                                          ? transportConfig.fixedFee
-                                          : 0)
-                                      ).toLocaleString('sv-SE')}{' '}
-                                      kr
-                                    </span>
-                                  </div>
-                                </div>
+                                    {selectedAddons.includes('ledfloor') && (
+                                      <div className="border-t border-[#00ff97]/10 pt-3 mb-3">
+                                        <div className="flex justify-between items-center text-sm text-gray-300">
+                                          <span>LED-golv transportavgift</span>
+                                          <span className="font-medium text-white">
+                                            {transportConfig.fixedFee.toLocaleString('sv-SE')} kr
+                                          </span>
+                                        </div>
+                                      </div>
+                                    )}
+
+                                    <div className="border-t border-[#00ff97]/10 pt-3">
+                                      <div className="flex justify-between items-center text-white">
+                                        <span className="flex items-center gap-2 font-semibold">
+                                          Total transportkostnad:
+                                        </span>
+                                        <span className="font-bold text-lg">
+                                          {(
+                                            Math.round(distanceInfo.distance / 10) *
+                                              transportConfig.pricePerKm +
+                                            (selectedAddons.includes('ledfloor')
+                                              ? transportConfig.fixedFee
+                                              : 0)
+                                          ).toLocaleString('sv-SE')}{' '}
+                                          kr
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </>
+                                )}
 
                                 <div className="mt-4 flex justify-center">
                                   <button
