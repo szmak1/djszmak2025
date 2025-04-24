@@ -21,14 +21,20 @@ import {
   FaShieldAlt,
 } from 'react-icons/fa';
 import { IconType } from 'react-icons';
-import OfferGenerator from './OfferGenerator';
-import { collection, getDocs } from 'firebase/firestore';
+import {
+  collection,
+  getDocs,
+  addDoc,
+  serverTimestamp,
+  doc,
+  runTransaction,
+} from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { PriceSyncService } from '../lib/priceSync';
 import { DocumentData } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 
-interface OfferData {
+interface OfferDataForFirebase {
   partyType: string;
   addons: string[];
   addonPrices: { [key: string]: number };
@@ -51,6 +57,9 @@ interface OfferData {
   partyBasePrice: number;
   partyExtraHourRate: number;
   includedHours: number;
+  offerNumber?: number;
+  createdAt?: any;
+  status?: string;
 }
 
 interface PartyType {
@@ -74,10 +83,9 @@ interface Addon {
   excludedFeatures?: string[];
 }
 
-// Add new interface for distance calculation
 interface DistanceInfo {
   address: string;
-  distance: number; // in kilometers
+  distance: number;
   pricePerKm: number;
 }
 
@@ -229,7 +237,7 @@ export default function PriceCalculator({
   const [distanceInfo, setDistanceInfo] = useState<DistanceInfo>({
     address: '',
     distance: 0,
-    pricePerKm: 100, // Price per 10 km (mil)
+    pricePerKm: 100,
   });
   const [formData, setFormData] = useState({
     name: '',
@@ -241,21 +249,12 @@ export default function PriceCalculator({
   });
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const [priceAnimation, setPriceAnimation] = useState(false);
-  const [lastSelectedPrice, setLastSelectedPrice] = useState<number | null>(null);
-  const [lastSelectedPosition, setLastSelectedPosition] = useState<{ x: number; y: number } | null>(
-    null
-  );
-  const [showOffer, setShowOffer] = useState(false);
-  const [offerData, setOfferData] = useState<OfferData | null>(null);
   const [partyTypes, setPartyTypes] = useState<PartyType[]>(defaultPartyTypes);
   const [addons, setAddons] = useState<Addon[]>(defaultAddons);
   const [transportConfig, setTransportConfig] = useState(defaultTransportConfig);
-  const [loading, setLoading] = useState(true);
 
-  // Add a reference to the form
   const formRef = useRef<HTMLFormElement>(null);
 
   const steps = stepDescriptions || {
@@ -286,10 +285,8 @@ export default function PriceCalculator({
   }, [currentStep]);
 
   useEffect(() => {
-    // Initialize price sync service
     const priceSync = PriceSyncService.getInstance();
 
-    // Start listening for price updates
     priceSync.startListening({
       onUpdate: (data: {
         partyTypes?: Record<string, DocumentData>;
@@ -345,7 +342,6 @@ export default function PriceCalculator({
       },
     });
 
-    // Cleanup on unmount
     return () => {
       priceSync.stopListening();
     };
@@ -354,21 +350,17 @@ export default function PriceCalculator({
   const calculateTotal = () => {
     let total = 0;
 
-    // Add base price for selected party type
     const party = partyTypes.find(p => p.id === selectedParty);
     if (party) {
       total += party.basePrice;
-      // Add extra hours cost
       total += extraHours * party.extraHourRate;
     }
 
-    // Calculate base transport cost (per mile only)
     const distanceInMil = Math.round(distanceInfo.distance / 10);
     const transportCost = distanceInMil * transportConfig.pricePerKm;
 
     total += transportCost;
 
-    // Add addon prices
     selectedAddons.forEach(addonId => {
       const addon = addons.find(a => a.id === addonId);
       if (addon) {
@@ -376,7 +368,6 @@ export default function PriceCalculator({
       }
     });
 
-    // Add LED floor fixed transport fee ONLY if distance is calculated
     if (selectedAddons.includes('ledfloor') && distanceInfo.distance > 0) {
       total += transportConfig.fixedFee;
     }
@@ -391,11 +382,11 @@ export default function PriceCalculator({
     }
     if (currentStep === 3) {
       if (!formData.location.trim()) {
-        setError('Vänligen ange en stad för att beräkna avståndet');
+        setError('Vänligen ange en adress för att beräkna avståndet');
         return;
       }
-      if (!distanceInfo.address) {
-        setError('Vänligen ange en giltig stad');
+      if (distanceInfo.distance <= 0 && formData.location.trim()) {
+        setError('Du måste klicka på "Beräkna Transportkostnad" innan du går vidare.');
         return;
       }
     }
@@ -405,35 +396,19 @@ export default function PriceCalculator({
 
   const handlePartySelect = (party: string) => {
     setSelectedParty(party);
-    const newPrice = calculateTotal();
-    setLastSelectedPrice(newPrice);
-    setLastSelectedPosition({ x: 0, y: 0 }); // You can update this with actual position if needed
   };
 
   const toggleAddon = (addonId: string) => {
-    const addon = addons.find(a => a.id === addonId);
-    if (addon) {
-      const price = addon.price;
-      const element = document.getElementById(`price-${addonId}`);
-      if (element) {
-        const rect = element.getBoundingClientRect();
-        setLastSelectedPosition({ x: rect.left, y: rect.top });
-        setLastSelectedPrice(price);
-      }
-      setPriceAnimation(true);
-      setTimeout(() => setPriceAnimation(false), 600);
-    }
     setSelectedAddons(prev =>
       prev.includes(addonId) ? prev.filter(id => id !== addonId) : [...prev, addonId]
     );
   };
 
   const handleExtraHoursChange = (hours: number) => {
-    // Limit extra hours to 3 (total 7 hours) since 4 hours are included
-    const newHours = Math.min(Math.max(0, hours), 3);
+    const party = partyTypes.find(p => p.id === selectedParty);
+    const maxHours = party ? 10 - party.includedHours : 3;
+    const newHours = Math.min(Math.max(0, hours), maxHours);
     if (newHours !== extraHours) {
-      setPriceAnimation(true);
-      setTimeout(() => setPriceAnimation(false), 600);
       setExtraHours(newHours);
     }
   };
@@ -441,59 +416,33 @@ export default function PriceCalculator({
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleAddressSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!distanceInfo.address) return;
-
-    try {
-      const response = await fetch(
-        `/api/geocode?address=${encodeURIComponent(distanceInfo.address)}`
-      );
-      const data = await response.json();
-
-      if (data.distance) {
-        setDistanceInfo(prev => ({
-          ...prev,
-          distance: data.distance,
-        }));
-      }
-    } catch (error) {
-      console.error('Error calculating distance:', error);
+    if (name === 'location') {
+      setDistanceInfo(prev => ({ ...prev, distance: 0, address: '' }));
+      setError('');
     }
   };
 
   const handleLocationSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.location.trim()) return;
-
+    if (!formData.location.trim()) {
+      setError('Vänligen ange en adress.');
+      return;
+    }
+    setError('');
     try {
       const response = await fetch('/api/calculate-distance', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ destination: formData.location }),
       });
-
       const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to calculate distance');
-      }
-
-      // Convert distance from meters to kilometers and round to nearest kilometer
+      if (!response.ok) throw new Error(data.error || 'Failed to calculate distance');
       const distanceInKm = Math.round(data.distance / 1000);
-      setDistanceInfo(prev => ({
-        ...prev,
-        distance: distanceInKm,
-        address: formData.location,
-      }));
-      setError(''); // Clear any previous errors
-    } catch (error) {
+      setDistanceInfo(prev => ({ ...prev, distance: distanceInKm, address: formData.location }));
+    } catch (error: any) {
       console.error('Error calculating distance:', error);
-      setError('Kunde inte beräkna avståndet. Kontrollera att staden är korrekt och försök igen.');
+      setError(`Kunde inte beräkna avståndet: ${error.message}. Kontrollera adressen.`);
+      setDistanceInfo(prev => ({ ...prev, distance: 0, address: '' }));
     }
   };
 
@@ -503,7 +452,6 @@ export default function PriceCalculator({
     setIsSubmitting(true);
     setSubmitError('');
 
-    // Get the hidden form name
     const formName = formRef.current?.getAttribute('name');
     if (!formName) {
       setSubmitError('Form configuration error. Missing form name.');
@@ -511,26 +459,27 @@ export default function PriceCalculator({
       return;
     }
 
+    let savedOfferId: string | null = null;
+    let savedOfferNumber: number | null = null;
+
     try {
-      // Create a map of addon prices (optional, not needed for Netlify submission but kept for potential internal use)
       const addonPrices: { [key: string]: number } = {};
       selectedAddons.forEach(addonId => {
         const addon = addons.find(a => a.id === addonId);
-        if (addon) {
-          addonPrices[addonId] = addon.price;
-        }
+        if (addon) addonPrices[addonId] = addon.price;
       });
 
-      // Get selected party details
       const selectedPartyType = partyTypes.find(p => p.id === selectedParty);
-      const partyName = selectedPartyType?.name || '';
+      if (!selectedPartyType) throw new Error('Selected party type not found');
 
-      // Format selected addons names
+      const partyName = selectedPartyType.name;
+      const partyBasePrice = selectedPartyType.basePrice;
+      const partyExtraHourRate = selectedPartyType.extraHourRate;
+      const includedHours = selectedPartyType.includedHours;
       const addonNames = selectedAddons
         .map(id => addons.find(a => a.id === id)?.name || '')
         .join(', ');
 
-      // Calculate transport cost components
       const distanceInMil = Math.round(distanceInfo.distance / 10);
       const perMileCost = distanceInMil * transportConfig.pricePerKm;
       const fixedFeeComponent =
@@ -538,8 +487,52 @@ export default function PriceCalculator({
           ? transportConfig.fixedFee
           : 0;
       const calculatedTransportCost = perMileCost + fixedFeeComponent;
+      const finalTotalPrice = calculateTotal();
 
-      // Prepare form data for submission
+      console.log('Preparing to save offer to Firebase...');
+      const counterRef = doc(db, 'metadata', 'offerCounter');
+      const newOfferRef = doc(collection(db, 'offers'));
+
+      const offerDataForFirebase: Omit<
+        OfferDataForFirebase,
+        'offerNumber' | 'createdAt' | 'status'
+      > = {
+        partyType: selectedParty,
+        addons: selectedAddons,
+        addonPrices,
+        extraHours,
+        distance: distanceInfo.distance,
+        transportCost: calculatedTransportCost,
+        totalPrice: finalTotalPrice,
+        customerInfo: { ...formData },
+        source: 'djszmak',
+        type: 'dj',
+        website: 'djszmak.se',
+        partyBasePrice,
+        partyExtraHourRate,
+        includedHours,
+        ...(fixedFeeComponent > 0 && { ledFloorTransportFee: fixedFeeComponent }),
+      };
+
+      savedOfferNumber = await runTransaction(db, async transaction => {
+        const counterDoc = await transaction.get(counterRef);
+        const currentNumber = counterDoc.exists() ? counterDoc.data().count || 0 : 0;
+        const newOfferNumber = currentNumber + 1;
+
+        transaction.set(newOfferRef, {
+          ...offerDataForFirebase,
+          offerNumber: newOfferNumber,
+          createdAt: serverTimestamp(),
+          status: 'pending',
+        });
+        transaction.set(counterRef, { count: newOfferNumber }, { merge: !counterDoc.exists() });
+        return newOfferNumber;
+      });
+
+      savedOfferId = newOfferRef.id;
+      console.log(`Firebase save successful! Offer #${savedOfferNumber}, ID: ${savedOfferId}`);
+
+      console.log('Preparing to submit data to Netlify...');
       const formDataToSubmit = new URLSearchParams();
       formDataToSubmit.append('form-name', formName);
       formDataToSubmit.append('name', formData.name);
@@ -552,35 +545,55 @@ export default function PriceCalculator({
       formDataToSubmit.append('addons', addonNames);
       formDataToSubmit.append('extraHours', extraHours.toString());
       formDataToSubmit.append('distance', Math.round(distanceInfo.distance).toString());
-      formDataToSubmit.append('totalPrice', calculateTotal().toString());
+      formDataToSubmit.append('totalPrice', finalTotalPrice.toString());
       formDataToSubmit.append('transportCost', calculatedTransportCost.toString());
       if (fixedFeeComponent > 0) {
         formDataToSubmit.append('ledFloorTransportFee', fixedFeeComponent.toString());
       }
-      // Add honeypot field if needed (check your form attributes)
-      const honeypotName = formRef.current?.getAttribute('data-netlify-honeypot');
-      if (honeypotName) {
-        formDataToSubmit.append(honeypotName, ''); // Keep honeypot empty
+
+      if (savedOfferId) {
+        formDataToSubmit.append('firebaseOfferId', savedOfferId);
+      }
+      if (savedOfferNumber !== null) {
+        formDataToSubmit.append('offerNumber', savedOfferNumber.toString());
       }
 
-      // Submit data using fetch
+      const honeypotName = formRef.current?.getAttribute('data-netlify-honeypot');
+      if (honeypotName) {
+        formDataToSubmit.append(honeypotName, '');
+      }
+
       const response = await fetch(formRef.current?.getAttribute('action') || '/', {
-        // Use form action or default
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: formDataToSubmit.toString(),
       });
 
       if (response.ok) {
-        // Redirect to thanks page on success
+        console.log('Netlify submission successful.');
         router.push('/thanks');
       } else {
-        // Handle submission error
-        throw new Error('Form submission failed');
+        console.error('Netlify submission failed:', response.status, response.statusText);
+        const responseBody = await response.text();
+        console.error('Netlify response body:', responseBody);
+        setSubmitError(
+          `Offerten sparades (ID: ${savedOfferId}) men kunde inte skickas till Netlify. Försök kontakta oss manuellt.`
+        );
       }
     } catch (error) {
-      console.error('Error submitting form:', error);
-      setSubmitError('Ett fel uppstod när formuläret skulle skickas. Försök igen senare.');
+      console.error('Error during submit process (Firebase or Netlify):', error);
+      setSubmitError(
+        `Ett fel uppstod: ${
+          error instanceof Error ? error.message : String(error)
+        }. Försök igen senare.`
+      );
+      if (savedOfferId) {
+        setSubmitError(
+          `Ett fel uppstod efter att offerten sparats (ID: ${savedOfferId}): ${
+            error instanceof Error ? error.message : String(error)
+          }. Kontakta oss.`
+        );
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -602,10 +615,6 @@ export default function PriceCalculator({
   };
 
   const { features, excludedFeatures } = getSelectedFeatures();
-
-  if (showOffer && offerData) {
-    return <OfferGenerator offerData={offerData} />;
-  }
 
   return (
     <div id="pricecalculator" className="w-full py-16">
@@ -783,7 +792,6 @@ export default function PriceCalculator({
           </div>
         </div>
 
-        {/* Progress Steps */}
         <div
           className={`${
             currentStep > 1
@@ -819,14 +827,12 @@ export default function PriceCalculator({
           </div>
         </div>
 
-        {/* Step Content */}
         <div
           className={`${
             currentStep > 1 ? 'fixed inset-0 z-40 bg-black pt-16 md:pt-20 overflow-hidden' : ''
           }`}
         >
           <div className={`${currentStep > 1 ? 'h-full flex flex-col' : ''}`}>
-            {/* Price Summary and Step Title */}
             <div
               className={`${
                 currentStep > 1
@@ -896,7 +902,6 @@ export default function PriceCalculator({
               </div>
             </div>
 
-            {/* Main Content */}
             <div
               className={`${
                 currentStep > 1 ? 'flex-1 overflow-y-auto pt-14 md:pt-24 pb-20 md:pb-24' : ''
@@ -1367,19 +1372,24 @@ export default function PriceCalculator({
                               placeholder="Berätta gärna mer om din fest och eventuella önskemål..."
                             />
                           </div>
-                          {/* Add hidden fields for the calculator data */}
-                          <input type="hidden" name="partyType" />
-                          <input type="hidden" name="addons" />
-                          <input type="hidden" name="extraHours" />
-                          <input type="hidden" name="distance" />
-                          <input type="hidden" name="totalPrice" />
-                          <input type="hidden" name="transportCost" />
-                          <input type="hidden" name="ledFloorTransportFee" />
-                          {submitError && (
-                            <div className="text-red-500 text-sm md:text-base text-center">
-                              {submitError}
-                            </div>
-                          )}
+                          <div className="mt-4 flex justify-center">
+                            <button
+                              type="submit"
+                              form="price-calculator-form"
+                              onClick={handleSubmit}
+                              disabled={
+                                isSubmitting ||
+                                !formData.name ||
+                                !formData.email ||
+                                !formData.phone ||
+                                !formData.date ||
+                                !formData.location
+                              }
+                              className="px-8 md:px-10 py-3 md:py-4 bg-[#00ff97] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(0,255,151,0.5)] text-sm md:text-base font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                              {isSubmitting ? 'Skickar...' : 'Skicka Förfrågan'}
+                            </button>
+                          </div>
                         </form>
                       </div>
                     </div>
@@ -1388,7 +1398,6 @@ export default function PriceCalculator({
               </div>
             </div>
 
-            {/* Navigation Buttons */}
             <div
               className={`${
                 currentStep > 1
@@ -1435,11 +1444,20 @@ export default function PriceCalculator({
                     </button>
                   ) : currentStep === 4 ? (
                     <button
-                      onClick={() => formRef.current?.submit()}
-                      disabled={isSubmitting}
-                      className="px-8 md:px-10 py-3 md:py-4 bg-[#00ff97] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(0,255,151,0.5)] text-sm md:text-base font-bold"
+                      type="submit"
+                      form="price-calculator-form"
+                      onClick={handleSubmit}
+                      disabled={
+                        isSubmitting ||
+                        !formData.name ||
+                        !formData.email ||
+                        !formData.phone ||
+                        !formData.date ||
+                        !formData.location
+                      }
+                      className="px-8 md:px-10 py-3 md:py-4 bg-[#00ff97] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(0,255,151,0.5)] text-sm md:text-base font-bold disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {isSubmitting ? 'Skickar...' : 'Skicka'}
+                      {isSubmitting ? 'Skickar...' : 'Skicka Förfrågan'}
                     </button>
                   ) : null}
                 </div>
