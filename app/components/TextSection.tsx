@@ -1,7 +1,7 @@
 import React from 'react';
 import DividerWave from './DividerWave';
 import DividerWaveTop from './DividerWaveTop';
-
+import './TextSection.css';
 interface TextSectionProps {
   title: string;
   description: string;
@@ -13,7 +13,7 @@ export default function TextSection({ title, description }: TextSectionProps) {
   return (
     <div className="relative w-full">
       <div className="w-screen relative left-[50%] right-[50%] mx-[-50vw]">
-        <div className="absolute top-0 left-0 w-full">
+        <div className="absolute top-0 left-0 w-full DividerWaveAdjustTop">
           <DividerWave />
         </div>
       </div>
@@ -36,7 +36,7 @@ export default function TextSection({ title, description }: TextSectionProps) {
         </div>
       </section>
       <div className="w-screen relative left-[50%] right-[50%] mx-[-50vw]">
-        <div className="absolute bottom-0 left-0 w-full">
+        <div className="absolute bottom-0 left-0 w-full DividerWaveAdjustBottom">
           <DividerWaveTop />
         </div>
       </div>
