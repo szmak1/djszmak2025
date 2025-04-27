@@ -10,7 +10,7 @@ interface ContactFormProps {
 export default function ContactForm({ className = '' }: ContactFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  function handleSubmit(_e: FormEvent<HTMLFormElement>) {
     setIsSubmitting(true);
   }
 

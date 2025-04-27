@@ -15,14 +15,7 @@ import {
   FaSquare,
 } from 'react-icons/fa';
 import { IconType } from 'react-icons';
-import {
-  collection,
-  addDoc,
-  serverTimestamp,
-  doc,
-  runTransaction,
-  getDoc,
-} from 'firebase/firestore';
+import { collection, serverTimestamp, doc, runTransaction } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
 interface OfferData {

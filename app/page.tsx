@@ -1,14 +1,16 @@
 import HeroVideo from './components/HeroVideo';
 import TextWithImage from './components/TextWithImage';
 import Divider from '@/app/components/Divider';
-import PartyCards from './components/PartyCards';
 import FAQ from './components/FAQ';
-import VideoSection from './components/VideoSection';
-import GoogleReviews from './components/GoogleReviews';
-import PriceCalculator from './components/PriceCalculator';
 import TextSection from './components/TextSection';
 import VideoWithText from './components/VideoWithText';
 import Link from 'next/link';
+import {
+  PriceCalculator,
+  PartyCards,
+  VideoSection,
+  GoogleReviews,
+} from './components/DynamicComponents';
 
 const faqItems = [
   // priceCalculator
@@ -24,11 +26,11 @@ const faqItems = [
   {
     question: 'Hur bokar jag DJ Szmak?',
     answer: [
-      'DJ Szmak kan bokas på 3 olika sätt:',
-      '1. Via formuläret på djszmak.se/kontakt eller via prisberäknaren på denna sida.',
-      '2. Via mejl till info@djszmak.se',
-      '3. Via telefon till 070-88 290 77',
-      'Efter att ni skickat in förfrågan får ni en offert/förslag baserat på informationen ni angett i kontaktformuläret via mejl. Det är viktigt att ni verkligen läser igenom denna offert/förslag. Känns allt ok kan ni lägga en deposition på 1000kr för att bekräfta bokningen. Resterande belopp faktureras via vår företag LED Dance Floor AB efter spelningen.',
+      'DJ Szmak kan bokas på olika sätt:',
+      '• Via formuläret på djszmak.se/kontakt eller via prisberäknaren på denna sida.',
+      '• Via mejl till info@djszmak.se',
+      '• Via telefon till 070-88 290 77',
+      'Efter att ni skickat in förfrågan får ni en offert/förslag baserat på informationen ni angett i kontaktformuläret via mejl. Det är viktigt att ni verkligen läser igenom denna offert/förslag. Känns allt ok kan ni lägga en deposition på 20% av det totala beloppet för att bekräfta bokningen. Resterande belopp faktureras via vår företag LED Dance Floor AB efter spelningen.',
     ],
   },
   {
@@ -154,25 +156,6 @@ Tveka inte att ta kontakt med mig med frågor eller förfrågningar!`}
         imagePosition="right"
         imagePositionY="top"
       />
-
-      {/* First section with djskåne1 */}
-      {/* <TextWithImage
-        title="Professionell DJ-Service"
-        description="Med över 10 års erfarenhet levererar vi högkvalitativ underhållning för alla typer av event. Från intima bröllop till stora företagsfester, vi anpassar musiken efter dina önskemål."
-        imageSrc="/images/djskåne1.webp"
-        imageAlt="DJ Skåne professionell service"
-        buttonText="Läs mer om våra tjänster"
-        buttonLink="/services"
-      /> */}
-
-      {/* Second section with djskåne2 */}
-      {/* <TextWithImage
-        title="Modern Utrustning"
-        description="Vi använder endast den senaste tekniken och högkvalitativ ljudutrustning för att säkerställa den bästa möjliga upplevelsen för dig och dina gäster."
-        imageSrc="/images/djskåne2.webp"
-        imageAlt="DJ Skåne modern utrustning"
-        imagePosition="right"
-      /> */}
 
       <VideoSection
         videoHeading="LEDGOLV"

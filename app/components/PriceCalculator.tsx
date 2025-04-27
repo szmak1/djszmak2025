@@ -233,6 +233,7 @@ export default function PriceCalculator({
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedParty, setSelectedParty] = useState<string>(defaultPartyType || '');
   const [selectedAddons, setSelectedAddons] = useState<string[]>([]);
+  const [expandedAddon, setExpandedAddon] = useState<string | null>(null);
   const [extraHours, setExtraHours] = useState(0);
   const [distanceInfo, setDistanceInfo] = useState<DistanceInfo>({
     address: '',
@@ -402,9 +403,14 @@ export default function PriceCalculator({
   };
 
   const toggleAddon = (addonId: string) => {
-    setSelectedAddons(prev =>
-      prev.includes(addonId) ? prev.filter(id => id !== addonId) : [...prev, addonId]
-    );
+    if (selectedAddons.includes(addonId)) {
+      setSelectedAddons(prev => prev.filter(id => id !== addonId));
+      if (expandedAddon === addonId) {
+        setExpandedAddon(null);
+      }
+    } else {
+      setSelectedAddons(prev => [...prev, addonId]);
+    }
   };
 
   const handleExtraHoursChange = (hours: number) => {
@@ -1055,15 +1061,18 @@ export default function PriceCalculator({
                         {addons.map(addon => {
                           const Icon = addon.icon;
                           const isSelected = selectedAddons.includes(addon.id);
+                          const isExpanded = expandedAddon === addon.id;
                           return (
                             <div
                               key={addon.id}
                               onClick={() => !isSelected && toggleAddon(addon.id)}
-                              className={`bg-black/50 border border-[#00ff97]/20 rounded-lg p-3 md:p-6 transition-all duration-300 ${
+                              className={`bg-black/50 border border-[#00ff97]/20 rounded-lg p-2 md:p-3 lg:p-6 transition-all duration-300 ${
                                 isSelected
-                                  ? 'ring-2 ring-[#00ff97] shadow-lg h-auto'
+                                  ? 'ring-2 ring-[#00ff97] shadow-lg'
                                   : 'hover:shadow-[0_0_20px_rgba(0,255,151,0.2)] hover:-translate-y-1 cursor-pointer'
-                              } ${addon.id === 'ledfloor' ? 'relative overflow-hidden' : ''}`}
+                              } ${addon.id === 'ledfloor' ? 'relative overflow-hidden' : ''} ${
+                                isExpanded ? 'h-auto' : 'h-auto'
+                              }`}
                             >
                               {addon.id === 'ledfloor' && (
                                 <>
@@ -1080,57 +1089,98 @@ export default function PriceCalculator({
                                 </>
                               )}
                               <div className="relative z-20">
-                                <div className="flex items-center justify-between mb-2 md:mb-4">
-                                  <div className="relative w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-[#00ff97]/10 rounded-lg">
-                                    <Icon className="w-5 h-5 md:w-6 md:h-6 text-[#00ff97]" />
+                                <div className="flex items-center justify-between mb-2 md:mb-3 lg:mb-4">
+                                  <div className="relative w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 flex items-center justify-center bg-[#00ff97]/10 rounded-lg">
+                                    <Icon className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 text-[#00ff97]" />
                                   </div>
                                   <div className="text-right">
-                                    <h4 className="text-[14px] md:text-xl font-heading font-semibold text-white leading-tight">
+                                    <h4 className="text-[14px] md:text-base lg:text-xl font-heading font-semibold text-white leading-tight">
                                       {addon.name}
                                     </h4>
-                                    <p className="hidden md:block text-sm text-white leading-tight">
+                                    <p className="hidden md:block text-xs lg:text-sm text-white leading-tight">
                                       {addon.description}
                                     </p>
                                   </div>
                                 </div>
                                 {isSelected ? (
-                                  <>
-                                    <div>
-                                      <ul className="space-y-0.5">
-                                        {addon.features.map((feature, index) => (
-                                          <li key={index} className="flex items-center gap-2">
-                                            <svg
-                                              className="w-4 h-4 md:w-5 md:h-5 text-green-500 shrink-0"
-                                              fill="none"
-                                              viewBox="0 0 24 24"
-                                              stroke="currentColor"
+                                  <div className="mt-2 md:mt-4">
+                                    <div className="flex items-center justify-between">
+                                      <div className="text-lg md:text-2xl font-bold bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent">
+                                        {addon.price.toLocaleString('sv-SE')} kr
+                                      </div>
+                                      <div className="flex items-center gap-2">
+                                        {expandedAddon === addon.id ? (
+                                          <>
+                                            <button
+                                              onClick={e => {
+                                                e.stopPropagation();
+                                                setExpandedAddon(null);
+                                              }}
+                                              className="px-3 md:px-4 py-1.5 md:py-2 bg-[#00ff97] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(0,255,151,0.5)] text-[12px] md:text-sm font-bold"
                                             >
-                                              <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth={2}
-                                                d="M5 13l4 4L19 7"
-                                              />
-                                            </svg>
-                                            <span className="text-xs md:text-sm lg:text-base text-gray-300">
-                                              {feature}
-                                            </span>
-                                          </li>
-                                        ))}
-                                      </ul>
+                                              Stäng Detaljer
+                                            </button>
+                                            <button
+                                              onClick={e => {
+                                                e.stopPropagation();
+                                                toggleAddon(addon.id);
+                                              }}
+                                              className="px-3 md:px-4 py-1.5 md:py-2 bg-red-500 text-[#0a0a0a] rounded-lg hover:bg-red-600 transition-colors duration-300 text-[12px] md:text-sm font-bold"
+                                            >
+                                              Ångra
+                                            </button>
+                                          </>
+                                        ) : (
+                                          <>
+                                            <button
+                                              onClick={e => {
+                                                e.stopPropagation();
+                                                setExpandedAddon(addon.id);
+                                              }}
+                                              className="px-3 md:px-4 py-1.5 md:py-2 bg-[#00ff97] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(0,255,151,0.5)] text-[12px] md:text-sm font-bold"
+                                            >
+                                              Visa Detaljer
+                                            </button>
+                                            <button
+                                              onClick={e => {
+                                                e.stopPropagation();
+                                                toggleAddon(addon.id);
+                                              }}
+                                              className="px-3 md:px-4 py-1.5 md:py-2 bg-red-500 text-[#0a0a0a] rounded-lg hover:bg-red-600 transition-colors duration-300 text-[12px] md:text-sm font-bold"
+                                            >
+                                              Ångra
+                                            </button>
+                                          </>
+                                        )}
+                                      </div>
                                     </div>
-                                    <div className="mt-2 md:mt-4 flex justify-end">
-                                      <button
-                                        onClick={e => {
-                                          e.stopPropagation();
-                                          toggleAddon(addon.id);
-                                        }}
-                                        className="px-4 md:px-6 py-2 md:py-2 bg-red-500 text-[#0a0a0a] rounded-lg hover:bg-red-600 transition-colors duration-300 text-[14px] md:text-base font-bold"
-                                      >
-                                        Ångra
-                                      </button>
-                                    </div>
-                                  </>
+                                    {expandedAddon === addon.id && (
+                                      <div className="mt-4">
+                                        <ul className="space-y-0.5">
+                                          {addon.features.map((feature, index) => (
+                                            <li key={index} className="flex items-center gap-2">
+                                              <svg
+                                                className="w-4 h-4 md:w-5 md:h-5 text-green-500 shrink-0"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                              >
+                                                <path
+                                                  strokeLinecap="round"
+                                                  strokeLinejoin="round"
+                                                  strokeWidth={2}
+                                                  d="M5 13l4 4L19 7"
+                                                />
+                                              </svg>
+                                              <span className="text-xs md:text-sm lg:text-base text-gray-300">
+                                                {feature}
+                                              </span>
+                                            </li>
+                                          ))}
+                                        </ul>
+                                      </div>
+                                    )}
+                                  </div>
                                 ) : (
                                   <div className="mt-2 md:mt-4">
                                     <div className="flex items-center justify-between">

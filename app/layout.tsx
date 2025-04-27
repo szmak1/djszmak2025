@@ -3,6 +3,7 @@ import { Inter, Montserrat } from 'next/font/google';
 import Script from 'next/script';
 import './globals.css';
 import Layout from './components/layout/Layout';
+import { GoogleTagManager } from '@next/third-parties/google';
 
 const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID;
 
@@ -22,34 +23,40 @@ const montserrat = Montserrat({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://djszmak.se'),
-  title: 'DJ Malmö & DJ Skåne med ljud, ljus och DJ-utrustning | DJ Szmak',
+  title: 'DJ Szmak | Professionell DJ i Malmö & Skåne',
   description:
-    'Boka mig som DJ Malmö & DJ Skåne till födelsedagsfest, bröllopsfest, studentfest & företagsfest. Säkra festen med erfaren DJ till festen',
-  keywords:
-    'dj skåne, dj malmö, dj till bröllopsfest, bröllops dj, födelsedagsfest, studentfest, företagsfest',
-  robots: 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
+    'Boka DJ Szmak för bröllop, företagsfester, studentfester och födelsedagsfester i Malmö och Skåne. Professionell DJ med modern utrustning och bred musikrepertoar.',
+  keywords: [
+    'DJ Malmö',
+    'DJ Skåne',
+    'Bröllopsdj',
+    'Företagsfest DJ',
+    'Studentfest DJ',
+    'Födelsedagsfest DJ',
+  ],
+  robots: 'index, follow',
   openGraph: {
-    title: 'DJ i Malmö med ljudsystem, ljus och high-end utrustning, Boka här!',
-    description:
-      'Hyr DJ i Malmö till födelsedagsfest, bröllopsfest, studentfest & företagsfest. Säkra din fest och boka erfaren DJ till festen. Komplett fest - från 5000 kr.',
+    type: 'website',
+    locale: 'sv_SE',
     url: 'https://djszmak.se',
     siteName: 'DJ Szmak',
-    locale: 'sv_SE',
-    type: 'website',
+    title: 'DJ Szmak | Professionell DJ i Malmö & Skåne',
+    description:
+      'Boka DJ Szmak för bröllop, företagsfester, studentfester och födelsedagsfester i Malmö och Skåne.',
     images: [
       {
         url: '/images/share_logoDJszmak.png',
         width: 1200,
-        height: 628,
+        height: 630,
         alt: 'DJ Szmak Logo',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'DJ i Malmö med ljudsystem, ljus och high-end utrustning, Boka här!',
+    title: 'DJ Szmak | Professionell DJ i Malmö & Skåne',
     description:
-      'Hyr DJ i Malmö till födelsedagsfest, bröllopsfest, studentfest & företagsfest. Säkra din fest och boka erfaren DJ till festen.',
+      'Boka DJ Szmak för bröllop, företagsfester, studentfester och födelsedagsfester i Malmö och Skåne.',
     images: ['/images/share_logoDJszmak.png'],
   },
   alternates: {
@@ -85,6 +92,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           ></iframe>
         </noscript>
         <Layout>{children}</Layout>
+        <GoogleTagManager gtmId="GTM-PZGZJF5" />
       </body>
     </html>
   );

@@ -1,13 +1,7 @@
 'use client';
 
-// Declare dataLayer type on window
-declare global {
-  interface Window {
-    dataLayer: any[];
-  }
-}
-
 // Helper function to push to dataLayer
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const pushToDataLayer = (eventData: object) => {
   // Ensure dataLayer exists and is an array
   window.dataLayer = window.dataLayer || [];
