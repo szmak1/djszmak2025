@@ -79,7 +79,7 @@ export default function Födelsedagsfest() {
     {
       question: 'Hur bokar jag DJ i Skåne?',
       answer: [
-        'DJ Skåne till födelsedagsfest kan bokas på 3 olika sätt:',
+        'DJ Skåne till födelsedagsfest kan bokas på olika sätt:',
         '• Via prisberäknaren på djszmak.se, här finns formulär och prisberäkning.',
         '• Via kontaktformuläret djszmak.se/kontakt',
         '• Via mejl till info@djszmak.se',

@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ReactNode } from 'react';
+import { ReactNode, useEffect, useRef } from 'react';
 
 interface HeroVideoProps {
   title: ReactNode;
@@ -18,6 +18,39 @@ export default function HeroVideo({
   buttonLink,
   videoSrc,
 }: HeroVideoProps) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    // Check if mobile device
+    const isMobile = window.innerWidth <= 768;
+
+    // Set video quality based on device
+    if (isMobile) {
+      video.setAttribute('preload', 'metadata');
+    } else {
+      video.setAttribute('preload', 'auto');
+    }
+
+    // Play video when it's ready
+    const playVideo = () => {
+      video.play().catch(error => {
+        console.log('Video play failed:', error);
+      });
+    };
+
+    if (video.readyState >= 2) {
+      playVideo();
+    } else {
+      video.addEventListener('loadedmetadata', playVideo);
+      return () => {
+        video.removeEventListener('loadedmetadata', playVideo);
+      };
+    }
+  }, []);
+
   const scrollToPriceCalculator = (e: React.MouseEvent) => {
     e.preventDefault();
     const element = document.getElementById('pricecalculator');
@@ -33,11 +66,13 @@ export default function HeroVideo({
     <div className="relative h-[80vh] w-screen -ml-[50vw] left-1/2 right-1/2 overflow-hidden bg-black">
       {/* Video Background */}
       <video
+        ref={videoRef}
         autoPlay
         loop
         muted
         playsInline
         className="absolute top-0 left-0 min-h-full w-full object-cover z-0"
+        poster={`${videoSrc.replace('.mp4', '.webp')}`}
       >
         <source src={videoSrc} type="video/mp4" />
         Your browser does not support the video tag.

@@ -164,10 +164,12 @@ Tveka inte att ta kontakt med mig med frågor eller förfrågningar!`}
       />
       {/* DJ Understanding Section */}
       <TextSection
-        title="DJ i Malmö med förståelse för publiken"
-        description={`Jag använder musiken för att hantera evenemangen, driver den framåt. Delar även in olika typer av låtar i olika sektioner tex. spelar långsammare, tystare låtar i början av festen. Därefter ökar jag sakta tempot som till exempel en jazzigare spår. De tyngre låtar tar jag oftast i slutet. Men som sagt detta beror alltid på hur jag läser av publiken och hur deras humör är. Med min erfarenhet och min analytiska förmåga så ser jag snabbt på deras kroppsspråk hur de reagerar.
+        title="DJ i Skåne som skapar oförglömliga fester"
+        description={`Att hyra DJ handlar inte bara om musik – det handlar om att skapa känsla, bygga stämning och förvandla ett rum till ett minne för livet. Jag är en erfaren DJ baserad i Malmö och spelar över hela Skåne, specialiserad på bröllop, studentfester och födelsedagsfester.
 
-Jag anpassar alltid musiken efter festens syfte och min publik, och genom åren har jag arbetat fram en förståelse för hur människor funkar – gamla som unga. Så oavsett om det gäller bröllop, examen, födelsedag eller företagsfest, så hjälper jag er till ett välfyllt dansgolv!`}
+Med ett öra för detaljer och fingertoppskänsla för publikens energi anpassar jag varje spellista efter just er fest. Jag läser av dansgolvet, märker kroppsspråket, ser när det är dags att öka tempot – eller sakta ner för att bygga upp något större. I början väljer jag ofta lugnare, stämningsfulla låtar som får gästerna att landa, mingla och känna sig bekväma. Sedan bygger jag upp intensiteten med taktfullt utvalda spår – tills dansgolvet lyfter.
+
+Varje fest är unik – och det ska musiken också vara. Oavsett om det är ett elegant bröllop på Österlen, en födelsedagsfest i centrala Malmö eller en studentfest i Lund, så levererar jag en musikalisk upplevelse som känns både lyxig och skräddarsydd.`}
       />
       <PriceCalculator />
       <FAQ faqItems={faqItems} defaultOpen={0} />
