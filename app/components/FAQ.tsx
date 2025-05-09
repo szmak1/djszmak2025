@@ -1,10 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, ReactNode } from 'react';
 
 interface FAQItem {
   question: string;
-  answer: string | string[];
+  answer: string | string[] | ReactNode | ReactNode[];
 }
 
 interface FAQProps {
@@ -24,9 +24,9 @@ export default function FAQ({ faqItems = [], defaultOpen }: FAQProps) {
   }
 
   return (
-    <section className="py-20">
+    <section className="py-8 md:py-12">
       <div className="container mx-auto px-4">
-        <h2 className="text-4xl md:text-5xl font-heading font-bold text-center mb-4">
+        <h2 className="font-heading text-4xl md:text-6xl font-extrabold text-center mb-4">
           <span className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent">
             Vanliga Frågor
           </span>
@@ -65,12 +65,22 @@ export default function FAQ({ faqItems = [], defaultOpen }: FAQProps) {
                     <div className="space-y-3 text-gray-300">
                       {item.answer.map((line, i) => (
                         <p key={i} className="text-lg leading-relaxed">
-                          {line}
+                          {typeof line === 'string' ? (
+                            <span dangerouslySetInnerHTML={{ __html: line }} />
+                          ) : (
+                            line
+                          )}
                         </p>
                       ))}
                     </div>
                   ) : (
-                    <p className="text-lg text-gray-300 leading-relaxed">{item.answer}</p>
+                    <p className="text-lg text-gray-300 leading-relaxed">
+                      {typeof item.answer === 'string' ? (
+                        <span dangerouslySetInnerHTML={{ __html: item.answer as string }} />
+                      ) : (
+                        item.answer
+                      )}
+                    </p>
                   )}
                 </div>
               </div>

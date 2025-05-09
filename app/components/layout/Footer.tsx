@@ -118,6 +118,11 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="mt-12 pt-8 border-t border-gray-800 text-center">
           <div className="flex flex-col items-center gap-4">
+            <div className="space-y-1">
+              <p className="text-sm font-medium text-gray-800">Nordic Led Dance Floor AB</p>
+              <p className="text-sm text-gray-800">Org.nr: 559525-1850</p>
+              <p className="text-sm text-gray-800">Godkänd för F-skatt</p>
+            </div>
             <p className="text-sm text-gray-800">
               &copy; {new Date().getFullYear()} DJ Szmak. Alla rättigheter förbehållna.
             </p>

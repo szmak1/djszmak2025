@@ -45,16 +45,16 @@ const parties = [
 
 export default function PartyCards() {
   return (
-    <section className="py-16 md:py-24 bg-[#0a0a0a] relative top-[-100px] z-[10]">
+    <section className="py-16 pb-8 md:py-24 md:pb-8 bg-[#0a0a0a] relative top-[-100px] z-[10]">
       <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-16 2xl:px-32">
         {/* Title and Description */}
         <div className="text-center mb-12 md:mb-16">
           <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent mb-4 max-w-2xl mx-auto">
-            Välj din fest, vilken du än vill ha i Malmö/Skåne
+            Välj din festtyp
           </h2>
           <p className="font-sans text-lg text-white/90 max-w-2xl mx-auto">
-            Oavsett om du ska ha en bröllopsfest, födelsedagsfest eller företagsfest så har vi rätt
-            DJ-entertainment för just din fest.
+            Varje fest har sin egen rytm – välj tillfälle, så ser jag till att dansgolvet i Skåne
+            blir fullt av glädje, energi och minnen.
           </p>
         </div>
 

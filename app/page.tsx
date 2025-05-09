@@ -27,9 +27,9 @@ const faqItems = [
     question: 'Hur bokar jag DJ Szmak?',
     answer: [
       'DJ Szmak kan bokas på olika sätt:',
-      '• Via formuläret på djszmak.se/kontakt eller via prisberäknaren på denna sida.',
-      '• Via mejl till info@djszmak.se',
-      '• Via telefon till 070-88 290 77',
+      '• Via formuläret på <a href="/kontakt" class="text-[#00ff97] hover:text-[#00daa8] underline transition-colors">djszmak.se/kontakt</a> eller via prisberäknaren på denna sida.',
+      '• Via mejl till <a href="mailto:info@djszmak.se" class="text-[#00ff97] hover:text-[#00daa8] underline transition-colors">info@djszmak.se</a>',
+      '• Via telefon till <a href="tel:+46708829077" class="text-[#00ff97] hover:text-[#00daa8] underline transition-colors">070-88 290 77</a>',
       'Efter att ni skickat in förfrågan får ni en offert/förslag baserat på informationen ni angett i kontaktformuläret via mejl. Det är viktigt att ni verkligen läser igenom denna offert/förslag. Känns allt ok kan ni lägga en deposition på 20% av det totala beloppet för att bekräfta bokningen. Resterande belopp faktureras via vår företag LED Dance Floor AB efter spelningen.',
     ],
   },
@@ -115,7 +115,7 @@ export default function Home() {
             typer av evenemang.
           </>
         }
-        buttonText="Boka Din Event Nu"
+        buttonText="Boka ditt event nu"
         buttonLink="#pricecalculator"
         videoSrc="/videos/main-dj.mp4"
       />
@@ -124,7 +124,26 @@ export default function Home() {
       {/* About David Szmak section */}
       <TextWithImage
         title="Musiken är festens puls. DJ:n dess hjärta."
-        description="Jag heter David Szmak och är DJ i Malmö och Skåne med lång erfarenhet från både Sverige och internationellt. Som DJ vet jag att musiken är kärnan, men det är dynamiken, känslan och tajmingen som skapar den perfekta festen. Med känsla för gästerna och dansgolvet skapar vi tillsammans en stämning som blir minnesvärd för alla."
+        description={
+          <>
+            <p className="mb-2">
+              Jag heter David Szmak – professionell DJ i Malmö och Skåne, med många års erfarenhet
+              från både Sverige och internationella scener.
+            </p>
+            <p className="mb-2">
+              För mig handlar DJ-yrket om mer än bara musik. Det handlar om att läsa av rummet,
+              känna energin och bygga upp festen med rätt låt vid rätt tillfälle. Med
+              fingertoppskänsla för både gäster och dansgolv skapar jag stämningar som människor
+              minns – oavsett om det är en bröllopsfest i Skåne, en födelsedagsfest i Malmö eller en
+              exklusiv företagskväll.
+            </p>
+            <p className="mb-2">
+              När du bokar mig får du inte bara en DJ – du får en trygg stämningsskapare, som vet
+              hur man höjer pulsen.
+            </p>
+            <p>Boka mig som DJ i Skåne och säkra festen!</p>
+          </>
+        }
         imageSrc="/images/IMG_1370.webp"
         imageAlt="David Szmak - DJ i Malmö och Skåne"
         imagePosition="right"
@@ -133,11 +152,20 @@ export default function Home() {
       {/* Video with Text Section */}
       <VideoWithText
         title="DJ Skåne för alla syften"
-        description={`Alla DJ:s har olika sätt att jobba på. Någon tar många önskemål från publiken, andra inga alls. Jag har många olika sätt att arbeta på – och jag anpassar alltid dem till festen. Är det bröllop är det viktigt att vara familjär, men är det klubbspelning krävs eventuellt en fastare hand. Jag utvärderar alltid varje låtval i varje stund för att kunna fatta ett så bra beslut som möjligt. Genre, tempo, dynamik, volym – allt måste klaffa!
-
-Vissa kallar det överambition – jag kallar det professionalitet.
-
-Nu kan du hyra den professionaliteten!`}
+        description={
+          <>
+            <p className="mb-2">
+              Alla DJ:s har olika sätt att jobba på. Någon tar många önskemål från publiken, andra
+              inga alls. Jag har många olika sätt att arbeta på – och jag anpassar alltid dem till
+              festen. Är det bröllop är det viktigt att vara familjär, men är det klubbspelning
+              krävs eventuellt en fastare hand. Jag utvärderar alltid varje låtval i varje stund för
+              att kunna fatta ett så bra beslut som möjligt. Genre, tempo, dynamik, volym – allt
+              måste klaffa!
+            </p>
+            <p className="mb-2">Vissa kallar det överambition – jag kallar det professionalitet.</p>
+            <p>Nu kan du hyra den professionaliteten!</p>
+          </>
+        }
         videoSrc="/videos/ledgolv-dans.mp4"
         buttonText="Kontakta mig"
         buttonLink="/contact"
@@ -165,11 +193,29 @@ Tveka inte att ta kontakt med mig med frågor eller förfrågningar!`}
       {/* DJ Understanding Section */}
       <TextSection
         title="DJ i Skåne som skapar oförglömliga fester"
-        description={`Att hyra DJ handlar inte bara om musik – det handlar om att skapa känsla, bygga stämning och förvandla ett rum till ett minne för livet. Jag är en erfaren DJ baserad i Malmö och spelar över hela Skåne, specialiserad på bröllop, studentfester och födelsedagsfester.
-
-Med ett öra för detaljer och fingertoppskänsla för publikens energi anpassar jag varje spellista efter just er fest. Jag läser av dansgolvet, märker kroppsspråket, ser när det är dags att öka tempot – eller sakta ner för att bygga upp något större. I början väljer jag ofta lugnare, stämningsfulla låtar som får gästerna att landa, mingla och känna sig bekväma. Sedan bygger jag upp intensiteten med taktfullt utvalda spår – tills dansgolvet lyfter.
-
-Varje fest är unik – och det ska musiken också vara. Oavsett om det är ett elegant bröllop på Österlen, en födelsedagsfest i centrala Malmö eller en studentfest i Lund, så levererar jag en musikalisk upplevelse som känns både lyxig och skräddarsydd.`}
+        description={
+          <>
+            <p className="font-sans text-lg leading-relaxed mb-2">
+              Att hyra DJ handlar inte bara om musik – det handlar om att skapa känsla, bygga
+              stämning och förvandla ett rum till ett minne för livet. Jag är en erfaren DJ baserad
+              i Malmö och spelar över hela Skåne, specialiserad på bröllop, studentfester och
+              födelsedagsfester.
+            </p>
+            <p className="font-sans text-lg leading-relaxed mb-2">
+              Med ett öra för detaljer och fingertoppskänsla för publikens energi anpassar jag varje
+              spellista efter just er fest. Jag läser av dansgolvet, märker kroppsspråket, ser när
+              det är dags att öka tempot – eller sakta ner för att bygga upp något större. I början
+              väljer jag ofta lugnare, stämningsfulla låtar som får gästerna att landa, mingla och
+              känna sig bekväma. Sedan bygger jag upp intensiteten med taktfullt utvalda spår –
+              tills dansgolvet lyfter.
+            </p>
+            <p className="font-sans text-lg leading-relaxed">
+              Varje fest är unik – och det ska musiken också vara. Oavsett om det är ett elegant
+              bröllop på Österlen, en födelsedagsfest i centrala Malmö eller en studentfest i Lund,
+              så levererar jag en musikalisk upplevelse som känns både lyxig och skräddarsydd.
+            </p>
+          </>
+        }
       />
       <PriceCalculator />
       <FAQ faqItems={faqItems} defaultOpen={0} />

@@ -150,12 +150,12 @@ export default function Bröllopsfest() {
             💃🏽🕺
             <br />
             <br />
-            Här är en Spotify lista med top 50 populära vals/första dans låtar:{' '}
+            Här är en Spotify lista med top 50 populära vals/första dans låtar: <br />
             <Link
               href="https://open.spotify.com/playlist/7i9b5URpfidwpWVvzm8pvn"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-pink-500 hover:text-pink-600 underline"
+              className="text-[#00ff97] hover:text-[#00daa8] underline transition-colors"
             >
               Till spellistan
             </Link>

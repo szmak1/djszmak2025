@@ -194,7 +194,7 @@ export default function GoogleReviews() {
   }
 
   return (
-    <section className="py-20">
+    <section className="py-8 md:py-12">
       <div className="container mx-auto px-4">
         <h2 className="font-heading text-4xl md:text-6xl font-bold text-center mb-4">
           <span className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent">

@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, ReactNode } from 'react';
 import Link from 'next/link';
 
 interface VideoWithTextProps {
   title: string;
-  description: string;
+  description: ReactNode;
   videoSrc: string;
   buttonText?: string;
   buttonLink?: string;
@@ -47,7 +47,7 @@ export default function VideoWithText({
   }, []);
 
   return (
-    <div className="py-16 md:py-24 bg-[#0a0a0a]">
+    <div className="py-8 md:py-12 bg-[#0a0a0a]">
       <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-16 2xl:px-32">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center">
           {/* Video */}
@@ -65,14 +65,12 @@ export default function VideoWithText({
 
           {/* Text Content */}
           <div className="flex flex-col">
-            <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
+            <h2 className="font-heading text-4xl md:text-6xl font-extrabold mb-6">
               <span className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent">
                 {title}
               </span>
             </h2>
-            <p className="font-sans text-lg text-white/90 mb-8 whitespace-pre-line">
-              {description}
-            </p>
+            <div className="font-sans text-lg text-white/90 mb-8">{description}</div>
             {buttonText && buttonLink && (
               <Link
                 href={buttonLink}

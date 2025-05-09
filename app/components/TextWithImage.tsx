@@ -38,12 +38,12 @@ export default function TextWithImage({
   };
 
   return (
-    <div className="py-16 md:py-24">
+    <section className="py-8 md:py-12">
       <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-16 2xl:px-32">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center">
           {/* Text Content */}
           <div className={`flex flex-col ${contentOrder}`}>
-            <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
+            <h2 className="font-heading text-4xl md:text-6xl font-extrabold mb-6">
               <span className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent">
                 {title}
               </span>
@@ -74,6 +74,6 @@ export default function TextWithImage({
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

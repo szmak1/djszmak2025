@@ -626,7 +626,7 @@ export default function PriceCalculator({
   const { features, excludedFeatures } = getSelectedFeatures();
 
   return (
-    <div id="pricecalculator" className="w-full py-16">
+    <div id="pricecalculator" className="w-full py-8 md:py-12 pt-16 md:pt-24">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -759,7 +759,7 @@ export default function PriceCalculator({
         }}
       />
       <div className="container px-0">
-        <h2 className="text-2xl md:text-5xl font-heading font-bold text-[#00ff97] text-center mb-4 md:mb-6">
+        <h2 className="font-heading text-4xl md:text-6xl font-extrabold bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent text-center mb-4 md:mb-6">
           Skapa Ditt DJ-paket
         </h2>
         <div className="max-w-4xl mx-auto text-center mb-8 md:mb-12">

@@ -44,14 +44,16 @@ export default function VideoSection({
   }, []);
 
   return (
-    <section className="py-8 md:pb-10 md:pt-16">
+    <section className="py-8 md:pb-16 md:pt-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <p className="text-sm md:text-base font-semibold tracking-wide uppercase bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] text-transparent bg-clip-text mb-2">
             {videoHeading}
           </p>
-          <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold tracking-tight text-white mb-8 md:mb-12">
-            {videoTitle}
+          <h2 className="font-heading text-4xl md:text-6xl font-extrabold mb-8 md:mb-12">
+            <span className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent">
+              {videoTitle}
+            </span>
           </h2>
         </div>
 

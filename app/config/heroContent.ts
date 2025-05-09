@@ -11,7 +11,7 @@ export const heroContent: Record<string, HeroContent> = {
     title: 'DJ i Malmö & Skåne med LJUD, LJUS & LEDGOLV',
     subtitle:
       'Hyr en erfaren DJ med professionell utrustning till bröllop, födelsedagsfest, studentfest, företagsfest och nattklubb i Malmö och Skåne. Vi erbjuder proffsig DJ-service med kvalitetsutrustning för alla typer av evenemang.',
-    buttonText: 'Boka Din Event Nu',
+    buttonText: 'Boka ditt event nu',
     buttonLink: '/kontakt',
     videoSrc: '/videos/main-dj.mp4',
   },
