@@ -49,7 +49,7 @@ export default function PartyCards() {
       <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-16 2xl:px-32">
         {/* Title and Description */}
         <div className="text-center mb-12 md:mb-16">
-          <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent mb-4 max-w-2xl mx-auto">
+          <h2 className="font-heading text-4xl md:text-6xl font-extrabold bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent mb-4 max-w-2xl mx-auto">
             Välj din festtyp
           </h2>
           <p className="font-sans text-lg text-white/90 max-w-2xl mx-auto">
