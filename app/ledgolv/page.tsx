@@ -46,7 +46,7 @@ export default function Ledgolv() {
       description: 'Ange adressen till din festplats',
     },
     step4: {
-      title: 'Kontaktinformation',
+      title: 'Kontaktinfo',
       description: 'Fyll i dina uppgifter för att skicka din förfrågan',
     },
   };
@@ -137,7 +137,7 @@ Besök LEDGOLV.se för att se alla våra paket och få en skräddarsydd offert f
 Boka tidigt för att säkra ditt datum - särskilt under helger och högsäsong går datumen snabbt åt. Kontakta oss redan idag för en skräddarsydd offert till ditt event i Skåne."
       />
 
-      <PriceCalculator stepDescriptions={stepDescriptions} />
+      <PriceCalculator />
 
       <FAQ faqItems={faqItems} defaultOpen={0} />
 

@@ -54,7 +54,7 @@ const birthdayStepDescriptions = {
     description: 'Ange festplatsens adress för att beräkna avstånd från Malmö',
   },
   step4: {
-    title: 'Kontaktinformation',
+    title: 'Kontaktinfo',
     description: 'Fyll i dina uppgifter för att skicka din förfrågan',
   },
 };
@@ -258,7 +258,7 @@ Om du inte har en specifik spellista på din födelsedagsfest är det smart att 
         buttonText="Läs mer"
         buttonLink="/ledgolv"
       />
-      <PriceCalculator defaultPartyType="birthday" stepDescriptions={birthdayStepDescriptions} />
+      <PriceCalculator defaultPartyType="birthday" />
       <FAQ faqItems={faqItems} />
       <GoogleReviews />
     </div>

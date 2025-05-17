@@ -168,7 +168,7 @@ export default function Home() {
         }
         videoSrc="/videos/ledgolv-dans.mp4"
         buttonText="Kontakta mig"
-        buttonLink="/contact"
+        buttonLink="/kontakt"
       />
 
       {/* Prepared DJ Section */}

@@ -46,7 +46,7 @@ export default function Foretagsfest() {
       description: 'Ange adressen till din festplats',
     },
     step4: {
-      title: 'Kontaktinformation',
+      title: 'Kontaktinfo',
       description: 'Fyll i dina uppgifter för att skicka din förfrågan',
     },
   };
@@ -116,7 +116,7 @@ Jag är den DJ:n!"
         title="Boka erfaren DJ till företagsfest och säkra festen"
         description="Hos mig kan du boka en lyhörd och mångsidig DJ som spelar den bästa musikmixen för alla smaker på firmafester och evenemang i Malmö och i Skåne. Jag har lång erfarenhet som DJ och får publiken att dansa och ha kul tillsammans. Skicka in din förfrågan till mig och berätta mer om din företagsfest, så får du en offert inom 24h."
       />
-      <PriceCalculator defaultPartyType="corporate" stepDescriptions={stepDescriptions} />
+      <PriceCalculator defaultPartyType="corporate" />
       <FAQ faqItems={faqItems} defaultOpen={0} />
       <GoogleReviews />
     </div>

@@ -46,7 +46,7 @@ export default function Nattklubbsgig() {
       description: 'Ange adressen till din festplats',
     },
     step4: {
-      title: 'Kontaktinformation',
+      title: 'Kontaktinfo',
       description: 'Fyll i dina uppgifter för att skicka din förfrågan',
     },
   };
@@ -136,7 +136,7 @@ Föreställ dig ett dansgolv som pulserar i takt med musiken, visar coola mönst
 Från energifyllda danskvällar till exklusiva lounge-event, jag anpassar musiken och stämningen för att matcha din klubbss identitet. Med professionell utrustning och möjlighet till LED-golv kan vi ta upplevelsen till nästa nivå. Boka tidigt för att säkra ditt datum - särskilt under helger går datumen snabbt åt. Kontakta mig redan idag för en skräddarsydd offert till din nattklubb i Skåne."
       />
 
-      <PriceCalculator defaultPartyType="club" stepDescriptions={stepDescriptions} />
+      <PriceCalculator defaultPartyType="club" />
 
       <FAQ faqItems={faqItems} defaultOpen={0} />
 

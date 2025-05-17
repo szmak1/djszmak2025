@@ -46,7 +46,7 @@ export default function Studentfest() {
       description: 'Ange adressen till din festplats',
     },
     step4: {
-      title: 'Kontaktinformation',
+      title: 'Kontaktinfo',
       description: 'Fyll i dina uppgifter för att skicka din förfrågan',
     },
   };
@@ -128,7 +128,7 @@ Vill ni ta er fest till nästa nivå? Mitt kompletta paket med professionellt lj
 
 Boka tidigt för att säkra ditt datum - särskilt under maj och juni går datumen snabbt åt. Kontakta mig redan idag för en skräddarsydd offert till din studentfest i Skåne. Tillsammans skapar vi ett oförglömligt firande som du och dina gäster kommer att minnas för alltid!"
       />
-      <PriceCalculator defaultPartyType="student" stepDescriptions={stepDescriptions} />
+      <PriceCalculator defaultPartyType="student" />
       <FAQ faqItems={faqItems} defaultOpen={0} />
       <GoogleReviews />
     </div>

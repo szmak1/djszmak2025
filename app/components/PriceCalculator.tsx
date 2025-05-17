@@ -19,6 +19,10 @@ import {
   FaCheckCircle,
   FaChartLine,
   FaShieldAlt,
+  FaCalendarAlt,
+  FaExclamationTriangle,
+  FaChevronLeft,
+  FaChevronRight,
 } from 'react-icons/fa';
 import { IconType } from 'react-icons';
 import {
@@ -28,11 +32,37 @@ import {
   serverTimestamp,
   doc,
   runTransaction,
+  query,
+  where,
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { PriceSyncService } from '../lib/priceSync';
 import { DocumentData } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
+
+// Custom style for date input calendar - Monday first day
+const calendarStyles = `
+  :root {
+    color-scheme: dark;
+  }
+  
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
+  }
+  
+  /* Make Monday first day in date picker */
+  input[type="date"] {
+    text-transform: uppercase; /* Force specific date format */
+  }
+  
+  /* Set first day of week to Monday in Firefox */
+  @supports (-moz-appearance:none) {
+    input[type="date"] {
+      -moz-locale: "sv-SE";
+    }
+  }
+`;
 
 interface OfferDataForFirebase {
   partyType: string;
@@ -60,6 +90,9 @@ interface OfferDataForFirebase {
   offerNumber?: number;
   createdAt?: any;
   status?: string;
+  isBooked?: boolean;
+  needsRecommendation?: boolean;
+  originalDateBooked?: boolean;
 }
 
 interface PartyType {
@@ -218,6 +251,7 @@ const defaultTransportConfig = {
 interface PriceCalculatorProps {
   defaultPartyType?: string;
   stepDescriptions?: {
+    step0: { title: string; description: string };
     step1: { title: string; description: string };
     step2: { title: string; description: string };
     step3: { title: string; description: string };
@@ -225,12 +259,196 @@ interface PriceCalculatorProps {
   };
 }
 
+// Custom Calendar component that starts with Monday
+const MondayFirstCalendar = ({
+  selectedDate,
+  setSelectedDate,
+  minDate,
+}: {
+  selectedDate: string;
+  setSelectedDate: (date: string) => void;
+  minDate: string;
+}) => {
+  const [currentMonth, setCurrentMonth] = useState(() => {
+    return selectedDate ? new Date(selectedDate).getMonth() : new Date().getMonth();
+  });
+
+  const [currentYear, setCurrentYear] = useState(() => {
+    return selectedDate ? new Date(selectedDate).getFullYear() : new Date().getFullYear();
+  });
+
+  const daysOfWeek = ['Mån', 'Tis', 'Ons', 'Tor', 'Fre', 'Lör', 'Sön'];
+  const monthNames = [
+    'Januari',
+    'Februari',
+    'Mars',
+    'April',
+    'Maj',
+    'Juni',
+    'Juli',
+    'Augusti',
+    'September',
+    'Oktober',
+    'November',
+    'December',
+  ];
+
+  // Function to get days in month (accounting for leap years)
+  const getDaysInMonth = (year: number, month: number) => {
+    return new Date(year, month + 1, 0).getDate();
+  };
+
+  // Function to get the day of week index where Monday is 0
+  const getMondayBasedDayIndex = (date: Date) => {
+    const sundayBasedIndex = date.getDay(); // 0 = Sunday, 1 = Monday, etc.
+    return sundayBasedIndex === 0 ? 6 : sundayBasedIndex - 1; // Transform to 0 = Monday, 6 = Sunday
+  };
+
+  // Generate calendar days for current month
+  const generateCalendarDays = () => {
+    const firstDayOfMonth = new Date(currentYear, currentMonth, 1);
+    const daysInMonth = getDaysInMonth(currentYear, currentMonth);
+    const startingDayIndex = getMondayBasedDayIndex(firstDayOfMonth);
+
+    // Get minimum date values
+    const minDateObj = minDate ? new Date(minDate) : new Date();
+    minDateObj.setHours(0, 0, 0, 0);
+
+    const days = [];
+
+    // Add empty cells for days before the 1st of the month
+    for (let i = 0; i < startingDayIndex; i++) {
+      days.push(<div key={`empty-${i}`} className="h-10 w-10"></div>);
+    }
+
+    // Add the days of the month
+    for (let day = 1; day <= daysInMonth; day++) {
+      const date = new Date(currentYear, currentMonth, day);
+      date.setHours(0, 0, 0, 0);
+
+      const isSelected = selectedDate === formatDate(date);
+      const isDisabled = date < minDateObj;
+      const formattedDate = formatDate(date);
+
+      days.push(
+        <button
+          key={day}
+          type="button"
+          disabled={isDisabled}
+          onClick={() => setSelectedDate(formattedDate)}
+          className={`
+            h-10 w-10 rounded-full flex items-center justify-center text-sm transition-colors
+            ${isSelected ? 'bg-[#00ff97] text-black font-bold' : 'text-white hover:bg-[#00ff97]/20'}
+            ${isDisabled ? 'opacity-30 cursor-not-allowed hover:bg-transparent' : 'cursor-pointer'}
+          `}
+        >
+          {day}
+        </button>
+      );
+    }
+
+    return days;
+  };
+
+  // Format date to YYYY-MM-DD
+  const formatDate = (date: Date) => {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  // Handle previous month
+  const handlePrevMonth = () => {
+    if (currentMonth === 0) {
+      setCurrentMonth(11);
+      setCurrentYear(currentYear - 1);
+    } else {
+      setCurrentMonth(currentMonth - 1);
+    }
+  };
+
+  // Handle next month
+  const handleNextMonth = () => {
+    if (currentMonth === 11) {
+      setCurrentMonth(0);
+      setCurrentYear(currentYear + 1);
+    } else {
+      setCurrentMonth(currentMonth + 1);
+    }
+  };
+
+  // Check if previous month should be disabled (if min date is in current month)
+  const isPrevMonthDisabled = () => {
+    if (!minDate) return false;
+
+    const minDateObj = new Date(minDate);
+    return minDateObj.getFullYear() === currentYear && minDateObj.getMonth() === currentMonth;
+  };
+
+  return (
+    <div className="bg-black/50 border border-[#00ff97]/20 rounded-lg p-4">
+      {/* Calendar header */}
+      <div className="flex items-center justify-between mb-4">
+        <button
+          type="button"
+          onClick={handlePrevMonth}
+          disabled={isPrevMonthDisabled()}
+          className={`p-2 rounded-full ${
+            isPrevMonthDisabled()
+              ? 'text-gray-500 cursor-not-allowed'
+              : 'text-white hover:bg-[#00ff97]/20'
+          }`}
+        >
+          <FaChevronLeft />
+        </button>
+        <h3 className="text-white font-medium">
+          {monthNames[currentMonth]} {currentYear}
+        </h3>
+        <button
+          type="button"
+          onClick={handleNextMonth}
+          className="p-2 rounded-full text-white hover:bg-[#00ff97]/20"
+        >
+          <FaChevronRight />
+        </button>
+      </div>
+
+      {/* Days of week */}
+      <div className="grid grid-cols-7 gap-1 mb-2">
+        {daysOfWeek.map(day => (
+          <div key={day} className="h-8 flex items-center justify-center text-xs text-gray-400">
+            {day}
+          </div>
+        ))}
+      </div>
+
+      {/* Calendar days */}
+      <div className="grid grid-cols-7 gap-1">{generateCalendarDays()}</div>
+
+      {/* Selected date display */}
+      {selectedDate && (
+        <div className="mt-4 pt-4 border-t border-[#00ff97]/20 text-center">
+          <p className="text-[#00ff97]">
+            {new Date(selectedDate).toLocaleDateString('sv-SE', {
+              weekday: 'long',
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            })}
+          </p>
+        </div>
+      )}
+    </div>
+  );
+};
+
 export default function PriceCalculator({
   defaultPartyType,
   stepDescriptions,
 }: PriceCalculatorProps) {
   const router = useRouter();
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(0);
   const [selectedParty, setSelectedParty] = useState<string>(defaultPartyType || '');
   const [selectedAddons, setSelectedAddons] = useState<string[]>([]);
   const [expandedAddon, setExpandedAddon] = useState<string | null>(null);
@@ -248,6 +466,12 @@ export default function PriceCalculator({
     location: '',
     message: '',
   });
+  const [selectedDate, setSelectedDate] = useState<string>('');
+  const [isDateAvailable, setIsDateAvailable] = useState<boolean>(true);
+  const [isCheckingDate, setIsCheckingDate] = useState<boolean>(false);
+  const [dateCheckError, setDateCheckError] = useState<string>('');
+  const [bookedDates, setBookedDates] = useState<string[]>([]);
+  const [wantRecommendation, setWantRecommendation] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
@@ -258,23 +482,33 @@ export default function PriceCalculator({
 
   const formRef = useRef<HTMLFormElement>(null);
 
+  const stepKeys = ['step0', 'step1', 'step2', 'step3', 'step4'] as const;
+
   const steps = stepDescriptions || {
+    step0: {
+      title: 'Välj Datum',
+      description: 'Kontrollera tillgänglighet för din fest',
+    },
     step1: {
       title: 'Välj Festtyp',
+      description: 'Välj den typ av fest du planerar',
     },
     step2: {
       title: 'Välj Extra Tjänster',
+      description: 'Anpassa din upplevelse med tilläggstjänster',
     },
     step3: {
       title: 'Beräkna Transport',
+      description: 'Ange adress för att beräkna transportkostnad',
     },
     step4: {
-      title: 'Kontaktinformation',
+      title: 'Kontaktinfo',
+      description: 'Fyll i dina uppgifter och skicka din förfrågan',
     },
   };
 
   useEffect(() => {
-    if (currentStep > 1) {
+    if (currentStep > 0) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'auto';
@@ -348,6 +582,82 @@ export default function PriceCalculator({
     };
   }, [transportConfig.fixedFee, transportConfig.ledFloorExtra]);
 
+  // Load all booked dates when component mounts
+  useEffect(() => {
+    const loadBookedDates = async () => {
+      try {
+        const offersRef = collection(db, 'offers');
+        const bookedQuery = query(
+          offersRef,
+          where('status', '==', 'accepted'),
+          where('isBooked', '==', true)
+        );
+
+        const querySnapshot = await getDocs(bookedQuery);
+        const dates: string[] = [];
+
+        querySnapshot.forEach(doc => {
+          const data = doc.data();
+          if (data.customerInfo?.date) {
+            dates.push(data.customerInfo.date);
+          }
+        });
+
+        setBookedDates(dates);
+      } catch (error) {
+        console.error('Error loading booked dates:', error);
+      }
+    };
+
+    loadBookedDates();
+  }, []);
+
+  const checkDateAvailability = async (date: string) => {
+    if (!date) return;
+
+    setIsCheckingDate(true);
+    setDateCheckError('');
+
+    try {
+      // First check against already loaded dates for immediate feedback
+      if (bookedDates.includes(date)) {
+        setIsDateAvailable(false);
+        setIsCheckingDate(false);
+        return;
+      }
+
+      // Then double-check with Firebase for the most up-to-date information
+      const offersRef = collection(db, 'offers');
+      const q = query(
+        offersRef,
+        where('customerInfo.date', '==', date),
+        where('status', '==', 'accepted'),
+        where('isBooked', '==', true)
+      );
+
+      const querySnapshot = await getDocs(q);
+
+      if (!querySnapshot.empty) {
+        setIsDateAvailable(false);
+      } else {
+        setIsDateAvailable(true);
+      }
+    } catch (error) {
+      console.error('Error checking date availability:', error);
+      setDateCheckError('Det gick inte att kontrollera datumet. Försök igen senare.');
+    } finally {
+      setIsCheckingDate(false);
+    }
+  };
+
+  // Update formData when selectedDate changes
+  useEffect(() => {
+    if (selectedDate) {
+      setFormData(prev => ({ ...prev, date: selectedDate }));
+      checkDateAvailability(selectedDate);
+    }
+  }, [selectedDate]);
+
   const calculateTotal = () => {
     let total = 0;
 
@@ -380,6 +690,16 @@ export default function PriceCalculator({
   };
 
   const handleNext = () => {
+    if (currentStep === 0) {
+      if (!selectedDate) {
+        setError('Vänligen välj ett datum för din fest');
+        return;
+      }
+      if (!isDateAvailable) {
+        setError('Det valda datumet är redan bokat. Vänligen välj ett annat datum.');
+        return;
+      }
+    }
     if (currentStep === 1 && !selectedParty) {
       setError('Välj en festtyp för att fortsätta');
       return;
@@ -521,6 +841,7 @@ export default function PriceCalculator({
         partyExtraHourRate,
         includedHours,
         ...(fixedFeeComponent > 0 && { ledFloorTransportFee: fixedFeeComponent }),
+        ...(wantRecommendation && { needsRecommendation: true, originalDateBooked: true }),
       };
 
       savedOfferNumber = await runTransaction(db, async transaction => {
@@ -556,6 +877,10 @@ export default function PriceCalculator({
       formDataToSubmit.append('distance', Math.round(distanceInfo.distance).toString());
       formDataToSubmit.append('totalPrice', finalTotalPrice.toString());
       formDataToSubmit.append('transportCost', calculatedTransportCost.toString());
+      if (wantRecommendation) {
+        formDataToSubmit.append('needsRecommendation', 'true');
+        formDataToSubmit.append('originalDateBooked', 'true');
+      }
       if (fixedFeeComponent > 0) {
         formDataToSubmit.append('ledFloorTransportFee', fixedFeeComponent.toString());
       }
@@ -627,6 +952,7 @@ export default function PriceCalculator({
 
   return (
     <div id="pricecalculator" className="w-full py-8 md:py-12 pt-16 md:pt-24">
+      <style dangerouslySetInnerHTML={{ __html: calendarStyles }} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -767,157 +1093,285 @@ export default function PriceCalculator({
             Få en skräddarsydd offert för din fest genom att fylla i formuläret nedan. Vi erbjuder
             professionella DJ-tjänster för alla typer av evenemang.
           </p>
-          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-2 md:gap-6 text-gray-400">
-            <div className="bg-black/50 border border-[#00ff97]/20 p-2 md:p-4 rounded-lg">
-              <div className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent text-base md:text-2xl mb-1">
-                1
-              </div>
-              <p className="font-semibold text-white text-xs md:text-base">{steps.step1.title}</p>
-            </div>
-            <div className="bg-black/50 border border-[#00ff97]/20 p-2 md:p-4 rounded-lg">
-              <div className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent text-base md:text-2xl mb-1">
-                2
-              </div>
-              <p className="font-semibold text-white text-xs md:text-base">{steps.step2.title}</p>
-            </div>
-            <div className="bg-black/50 border border-[#00ff97]/20 p-2 md:p-4 rounded-lg">
-              <div className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent text-base md:text-2xl mb-1">
-                3
-              </div>
-              <p className="font-semibold text-white text-xs md:text-base">{steps.step3.title}</p>
-            </div>
-            <div className="bg-black/50 border border-[#00ff97]/20 p-2 md:p-4 rounded-lg">
-              <div className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent text-base md:text-2xl mb-1">
-                4
-              </div>
-              <p className="font-semibold text-white text-xs md:text-base">{steps.step4.title}</p>
-            </div>
-          </div>
-          <div className="mt-6 md:mt-8 text-gray-300 text-sm md:text-base">
+          <div className="mt-6 md:mt-8 text-gray-300 text-sm md:text-base mb-8">
             <p className="mb-1 md:mb-2">✓ Få svar inom 24 timmar</p>
             <p className="mb-1 md:mb-2">✓ Gratis offert</p>
             <p className="mb-1 md:mb-2">✓ Inga bindande avtal</p>
             <p className="mb-1 md:mb-2">✓ Skräddarsydda paket för ditt evenemang</p>
           </div>
-        </div>
-
-        <div
-          className={`${
-            currentStep > 1
-              ? 'fixed top-0 left-0 right-0 z-50 bg-black/95 backdrop-blur-sm py-2 md:py-4'
-              : 'mb-12'
-          }`}
-        >
-          <div className="container mx-auto px-4">
-            <div className="flex items-center justify-center">
-              {[1, 2, 3, 4].map(step => (
-                <div key={step} className="flex items-center">
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-2 md:gap-6 text-gray-400">
+            {stepKeys.map((stepKey, idx) => {
+              const isActive = currentStep === idx;
+              const isLast = idx === 4;
+              return (
+                <div
+                  key={stepKey}
+                  className={
+                    `bg-black/50 border border-[#00ff97]/20 p-2 md:p-4 rounded-lg ` +
+                    (isActive
+                      ? 'bg-gradient-to-r from-[#00ff97] to-[#00daa8] text-black font-bold' // active step
+                      : 'text-gray-400')
+                  }
+                  style={
+                    isActive
+                      ? {
+                          background: 'linear-gradient(90deg, #00ff97 0%, #00daa8 100%)',
+                          color: '#0a0a0a',
+                        }
+                      : {}
+                  }
+                >
                   <div
-                    className={`w-6 h-6 md:w-10 md:h-10 rounded-full flex items-center justify-center text-xs md:text-base ${
-                      currentStep >= step
-                        ? 'bg-gradient-to-r from-[#00ff97] to-[#007ed4] text-white'
-                        : 'bg-gray-700 text-gray-400'
-                    }`}
+                    className={
+                      `bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text ` +
+                      (isActive ? 'text-black' : 'text-transparent') +
+                      ' text-base md:text-2xl mb-1'
+                    }
                   >
-                    {step}
+                    {idx + 1}
                   </div>
-                  {step < 4 && (
-                    <div
-                      className={`w-6 md:w-20 h-1 mx-1 md:mx-2 ${
-                        currentStep >= step
-                          ? 'bg-gradient-to-r from-[#00ff97] to-[#007ed4]'
-                          : 'bg-gray-700'
-                      }`}
-                    />
-                  )}
+                  <p
+                    className={
+                      `font-semibold ` +
+                      (isActive ? 'text-black' : 'text-white') +
+                      ' text-xs md:text-base ' +
+                      (isLast ? 'break-words md:text-sm lg:text-base' : '')
+                    }
+                    style={
+                      isLast ? { wordBreak: 'break-word', fontSize: 'clamp(12px,2vw,18px)' } : {}
+                    }
+                  >
+                    {steps[stepKey]?.title}
+                  </p>
                 </div>
-              ))}
-            </div>
+              );
+            })}
           </div>
         </div>
 
+        {/* Stepper progress bar: only show for steps > 0 */}
+        {currentStep > 0 && (
+          <div
+            className={`${
+              currentStep > 0
+                ? 'fixed top-0 left-0 right-0 z-50 bg-black/95 backdrop-blur-sm py-2 md:py-4'
+                : 'mb-12'
+            }`}
+          >
+            <div className="container mx-auto px-4">
+              <div className="flex items-center justify-center">
+                {[0, 1, 2, 3, 4].map(step => (
+                  <div key={step} className="flex items-center">
+                    <div
+                      className={`w-6 h-6 md:w-10 md:h-10 rounded-full flex items-center justify-center text-xs md:text-base ${
+                        currentStep >= step
+                          ? 'bg-gradient-to-r from-[#00ff97] to-[#007ed4] text-white'
+                          : 'bg-gray-700 text-gray-400'
+                      }`}
+                    >
+                      {step + 1}
+                    </div>
+                    {step < 4 && (
+                      <div
+                        className={`w-6 md:w-20 h-1 mx-1 md:mx-2 ${
+                          currentStep > step
+                            ? 'bg-gradient-to-r from-[#00ff97] to-[#007ed4]'
+                            : 'bg-gray-700'
+                        }`}
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
         <div
           className={`${
-            currentStep > 1 ? 'fixed inset-0 z-40 bg-black pt-16 md:pt-20 overflow-hidden' : ''
+            currentStep > 0 ? 'fixed inset-0 z-40 bg-black pt-16 md:pt-20 overflow-hidden' : ''
           }`}
         >
-          <div className={`${currentStep > 1 ? 'h-full flex flex-col' : ''}`}>
+          <div className={`${currentStep > 0 ? 'h-full flex flex-col' : ''}`}>
             <div
               className={`${
-                currentStep > 1
+                currentStep > 0
                   ? 'fixed top-12 md:top-16 left-0 right-0 z-40 bg-black/95 backdrop-blur-sm py-1 md:py-2'
                   : ''
               }`}
             >
               <div className="container mx-auto px-4">
-                <div className="flex flex-col justify-between items-start items-center gap-1 md:gap-2">
-                  <div>
-                    {currentStep === 1 && (
-                      <>
-                        <div className="text-center mb-6 md:mb-8">
-                          <h3 className="text-base md:text-xl font-heading font-semibold text-white mb-1">
-                            {selectedParty ? 'Lägg till extra DJ timmar' : 'Välj Festtyp'}
-                          </h3>
-                          <p className="text-xs md:text-sm text-gray-400">
-                            {selectedParty
-                              ? 'Välj hur många extra timmar du vill ha med DJ:n'
-                              : 'Välj en festtyp för att fortsätta'}
-                          </p>
-                        </div>
-                      </>
-                    )}
-                    {currentStep === 2 && (
-                      <>
-                        <div className="w-full flex justify-center items-center">
-                          <div className="text-center">
-                            <h3 className="font-heading text-4xl md:text-6xl font-extrabold tracking-tight">
-                              <span className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent">
-                                Välj tillägg för festen
-                              </span>
+                {/* Step headers for steps 1-4 only */}
+                {currentStep > 0 && (
+                  <div className="flex flex-col justify-between items-start items-center gap-1 md:gap-2">
+                    <div>
+                      {currentStep === 1 && (
+                        <>
+                          <div className="text-center mb-6 md:mb-8">
+                            <h3 className="text-base md:text-xl font-heading font-semibold text-white mb-1">
+                              {selectedParty ? 'Lägg till extra DJ timmar' : 'Välj Festtyp'}
                             </h3>
-                          </div>
-                        </div>
-                      </>
-                    )}
-                    {currentStep === 3 && (
-                      <>
-                        <div className="w-full flex justify-center items-center">
-                          <div className="text-center">
-                            <h3 className="font-heading text-4xl md:text-6xl font-extrabold tracking-tight">
-                              <span className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent">
-                                Beräkna Transport
-                              </span>
-                            </h3>
-                            <p className="text-gray-400 text-sm md:text-base mt-2">
-                              Ange adressen till din festplats för att beräkna resekostnaden från
-                              Malmö
+                            <p className="text-xs md:text-sm text-gray-400">
+                              {selectedParty
+                                ? 'Välj hur många extra timmar du vill ha med DJ:n'
+                                : 'Välj en festtyp för att fortsätta'}
                             </p>
                           </div>
-                        </div>
-                      </>
-                    )}
-                    {currentStep === 4 && (
-                      <>
-                        <h3 className="text-base md:text-xl font-heading font-semibold text-white">
-                          Kontaktinformation
-                        </h3>
-                        <p className="text-xs text-gray-400">
-                          Fyll i dina uppgifter för att skicka din förfrågan
-                        </p>
-                      </>
-                    )}
+                        </>
+                      )}
+                      {currentStep === 2 && (
+                        <>
+                          <div className="w-full flex justify-center items-center">
+                            <div className="text-center">
+                              <h3 className="font-heading text-4xl md:text-6xl font-extrabold tracking-tight">
+                                <span className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent">
+                                  Välj tillägg för festen
+                                </span>
+                              </h3>
+                            </div>
+                          </div>
+                        </>
+                      )}
+                      {currentStep === 3 && (
+                        <>
+                          <div className="w-full flex justify-center items-center">
+                            <div className="text-center">
+                              <h3 className="font-heading text-4xl md:text-6xl font-extrabold tracking-tight">
+                                <span className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent">
+                                  Beräkna Transport
+                                </span>
+                              </h3>
+                              <p className="text-gray-400 text-sm md:text-base mt-2">
+                                Ange adressen till din festplats för att beräkna resekostnaden från
+                                Malmö
+                              </p>
+                            </div>
+                          </div>
+                        </>
+                      )}
+                      {currentStep === 4 && (
+                        <>
+                          <h3 className="text-base md:text-xl font-heading font-semibold text-white">
+                            Kontaktinformation
+                          </h3>
+                          <p className="text-xs text-gray-400">
+                            Fyll i dina uppgifter för att skicka din förfrågan
+                          </p>
+                        </>
+                      )}
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
 
             <div
               className={`${
-                currentStep > 1 ? 'flex-1 overflow-y-auto pt-14 md:pt-24 pb-20 md:pb-24' : ''
+                currentStep > 0 ? 'flex-1 overflow-y-auto pt-14 md:pt-24 pb-20 md:pb-24' : ''
               }`}
             >
               <div className="container mx-auto px-2 md:px-4">
-                <div className={`rounded-lg ${currentStep > 1 ? 'animate-fade-in' : ''}`}>
+                <div className={`rounded-lg ${currentStep > 0 ? 'animate-fade-in' : ''}`}>
+                  {currentStep === 0 && (
+                    <div className="min-h-[calc(100vh-300px)] flex items-center justify-center">
+                      <div className="w-full max-w-2xl mx-auto px-2 md:px-4">
+                        <div className="flex flex-col items-center justify-center gap-8 md:gap-12">
+                          <div className="text-center mb-4 md:mb-6">
+                            <h3 className="font-heading text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight">
+                              <span className="bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent">
+                                Välj datum för din fest
+                              </span>
+                            </h3>
+                            <p className="text-gray-400 text-sm md:text-base mt-2">
+                              Kontrollera tillgänglighet för önskat datum
+                            </p>
+                          </div>
+
+                          <div className="w-full max-w-md">
+                            <div className="bg-black/50 border border-[#00ff97]/20 rounded-lg p-6">
+                              <div className="flex items-center justify-between mb-4">
+                                <span className="flex items-center gap-2 text-lg md:text-xl text-white font-semibold">
+                                  <FaCalendarAlt className="text-[#00ff97]" />
+                                  Välj datum
+                                </span>
+                              </div>
+
+                              <MondayFirstCalendar
+                                selectedDate={selectedDate}
+                                setSelectedDate={setSelectedDate}
+                                minDate={new Date().toISOString().split('T')[0]}
+                              />
+
+                              {selectedDate && (
+                                <div
+                                  className={`mt-4 p-4 rounded-lg ${
+                                    isCheckingDate
+                                      ? 'bg-gray-800/50 border border-gray-700'
+                                      : isDateAvailable
+                                      ? 'bg-green-900/20 border border-green-800'
+                                      : 'bg-red-900/20 border border-red-800'
+                                  }`}
+                                >
+                                  {isCheckingDate ? (
+                                    <div className="flex items-center justify-center">
+                                      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#00ff97]"></div>
+                                      <span className="ml-2 text-gray-300">
+                                        Kontrollerar tillgänglighet...
+                                      </span>
+                                    </div>
+                                  ) : isDateAvailable ? (
+                                    <div className="flex items-center text-green-400">
+                                      <FaCheckCircle className="mr-2" />
+                                      <span>Datumet är tillgängligt!</span>
+                                    </div>
+                                  ) : (
+                                    <div className="space-y-3">
+                                      <div className="flex items-center text-red-400">
+                                        <FaExclamationTriangle className="mr-2 shrink-0" />
+                                        <span>DJ Szmak är redan bokad detta datum.</span>
+                                      </div>
+                                      <div className="bg-black/40 p-3 rounded border border-[#00ff97]/20">
+                                        <p className="text-white mb-2">
+                                          Behöver du en DJ till detta datum?
+                                        </p>
+                                        <p className="text-sm text-gray-300 mb-3">
+                                          DJ Szmak kan rekommendera en av sina samarbetspartners
+                                          från ett nätverk av professionella DJs i Skåne.
+                                        </p>
+                                        <div className="flex flex-wrap gap-2">
+                                          <button
+                                            onClick={() => {
+                                              setIsDateAvailable(true);
+                                              setWantRecommendation(true);
+                                              setError('');
+                                            }}
+                                            className="px-3 py-2 bg-[#00ff97]/20 text-[#00ff97] rounded-lg hover:bg-[#00ff97]/30 text-sm font-medium"
+                                          >
+                                            Ja, jag vill ha en rekommendation
+                                          </button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+
+                              {dateCheckError && (
+                                <div className="mt-2 text-red-500 text-sm">{dateCheckError}</div>
+                              )}
+                            </div>
+
+                            {error && (
+                              <div className="mt-4 text-red-500 text-sm md:text-base text-center">
+                                {error}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
                   {currentStep === 1 && (
                     <div>
                       <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-6 justify-items-center">
@@ -1056,158 +1510,6 @@ export default function PriceCalculator({
                   )}
 
                   {currentStep === 2 && (
-                    <div className="h-full">
-                      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-6 items-start">
-                        {addons.map(addon => {
-                          const Icon = addon.icon;
-                          const isSelected = selectedAddons.includes(addon.id);
-                          const isExpanded = expandedAddon === addon.id;
-                          return (
-                            <div
-                              key={addon.id}
-                              onClick={() => !isSelected && toggleAddon(addon.id)}
-                              className={`bg-black/50 border border-[#00ff97]/20 rounded-lg p-2 md:p-3 lg:p-6 transition-all duration-300 ${
-                                isSelected
-                                  ? 'ring-2 ring-[#00ff97] shadow-lg'
-                                  : 'hover:shadow-[0_0_20px_rgba(0,255,151,0.2)] hover:-translate-y-1 cursor-pointer'
-                              } ${addon.id === 'ledfloor' ? 'relative overflow-hidden' : ''} ${
-                                isExpanded ? 'h-auto' : 'h-auto'
-                              }`}
-                            >
-                              {addon.id === 'ledfloor' && (
-                                <>
-                                  <div className="absolute inset-0 z-0">
-                                    <Image
-                                      src="/images/ledgolv.webp"
-                                      alt="LED Floor"
-                                      fill
-                                      className="object-cover"
-                                      priority
-                                    />
-                                  </div>
-                                  <div className="absolute inset-0 bg-black/70 z-10" />
-                                </>
-                              )}
-                              <div className="relative z-20">
-                                <div className="flex items-center justify-between mb-2 md:mb-3 lg:mb-4">
-                                  <div className="relative w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 flex items-center justify-center bg-[#00ff97]/10 rounded-lg">
-                                    <Icon className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 text-[#00ff97]" />
-                                  </div>
-                                  <div className="text-right">
-                                    <h4 className="text-[14px] md:text-base lg:text-xl font-heading font-semibold text-white leading-tight">
-                                      {addon.name}
-                                    </h4>
-                                    <p className="hidden md:block text-xs lg:text-sm text-white leading-tight">
-                                      {addon.description}
-                                    </p>
-                                  </div>
-                                </div>
-                                {isSelected ? (
-                                  <div className="mt-2 md:mt-4">
-                                    <div className="flex items-center justify-between">
-                                      <div className="text-lg md:text-2xl font-bold bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent">
-                                        {addon.price.toLocaleString('sv-SE')} kr
-                                      </div>
-                                      <div className="flex items-center gap-2">
-                                        {expandedAddon === addon.id ? (
-                                          <>
-                                            <button
-                                              onClick={e => {
-                                                e.stopPropagation();
-                                                setExpandedAddon(null);
-                                              }}
-                                              className="px-3 md:px-4 py-1.5 md:py-2 bg-[#00ff97] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(0,255,151,0.5)] text-[12px] md:text-sm font-bold"
-                                            >
-                                              Stäng Detaljer
-                                            </button>
-                                            <button
-                                              onClick={e => {
-                                                e.stopPropagation();
-                                                toggleAddon(addon.id);
-                                              }}
-                                              className="px-3 md:px-4 py-1.5 md:py-2 bg-red-500 text-[#0a0a0a] rounded-lg hover:bg-red-600 transition-colors duration-300 text-[12px] md:text-sm font-bold"
-                                            >
-                                              Ångra
-                                            </button>
-                                          </>
-                                        ) : (
-                                          <>
-                                            <button
-                                              onClick={e => {
-                                                e.stopPropagation();
-                                                setExpandedAddon(addon.id);
-                                              }}
-                                              className="px-3 md:px-4 py-1.5 md:py-2 bg-[#00ff97] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(0,255,151,0.5)] text-[12px] md:text-sm font-bold"
-                                            >
-                                              Visa Detaljer
-                                            </button>
-                                            <button
-                                              onClick={e => {
-                                                e.stopPropagation();
-                                                toggleAddon(addon.id);
-                                              }}
-                                              className="px-3 md:px-4 py-1.5 md:py-2 bg-red-500 text-[#0a0a0a] rounded-lg hover:bg-red-600 transition-colors duration-300 text-[12px] md:text-sm font-bold"
-                                            >
-                                              Ångra
-                                            </button>
-                                          </>
-                                        )}
-                                      </div>
-                                    </div>
-                                    {expandedAddon === addon.id && (
-                                      <div className="mt-4">
-                                        <ul className="space-y-0.5">
-                                          {addon.features.map((feature, index) => (
-                                            <li key={index} className="flex items-center gap-2">
-                                              <svg
-                                                className="w-4 h-4 md:w-5 md:h-5 text-green-500 shrink-0"
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                                stroke="currentColor"
-                                              >
-                                                <path
-                                                  strokeLinecap="round"
-                                                  strokeLinejoin="round"
-                                                  strokeWidth={2}
-                                                  d="M5 13l4 4L19 7"
-                                                />
-                                              </svg>
-                                              <span className="text-xs md:text-sm lg:text-base text-gray-300">
-                                                {feature}
-                                              </span>
-                                            </li>
-                                          ))}
-                                        </ul>
-                                      </div>
-                                    )}
-                                  </div>
-                                ) : (
-                                  <div className="mt-2 md:mt-4">
-                                    <div className="flex items-center justify-between">
-                                      <div className="text-lg md:text-2xl font-bold bg-gradient-to-r from-[#00ff97] via-[#00daa8] to-[#007ed4] bg-clip-text text-transparent">
-                                        {addon.price.toLocaleString('sv-SE')} kr
-                                      </div>
-                                      <button
-                                        onClick={e => {
-                                          e.stopPropagation();
-                                          toggleAddon(addon.id);
-                                        }}
-                                        className="px-4 md:px-6 py-2 md:py-2 bg-[#00ff97] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(0,255,151,0.5)] text-[14px] md:text-base font-bold"
-                                      >
-                                        Välj
-                                      </button>
-                                    </div>
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  )}
-
-                  {currentStep === 3 && (
                     <div className="min-h-[calc(100vh-300px)] flex items-center justify-center">
                       <div className="w-full max-w-2xl mx-auto px-2 md:px-4">
                         <div className="flex flex-col items-center justify-center gap-8 md:gap-12">
@@ -1362,7 +1664,7 @@ export default function PriceCalculator({
                     </div>
                   )}
 
-                  {currentStep === 4 && (
+                  {currentStep === 3 && (
                     <div className="h-full flex items-center justify-center">
                       <div className="max-w-2xl mx-auto px-2 md:px-4 w-full">
                         <form
@@ -1491,17 +1793,20 @@ export default function PriceCalculator({
 
             <div
               className={`${
-                currentStep > 1
+                currentStep > 0
                   ? 'fixed bottom-0 left-0 right-0 z-40 bg-black/95 backdrop-blur-sm py-4 md:py-8'
                   : 'mt-12'
               }`}
             >
               <div className="container mx-auto px-4">
                 <div className="flex items-center justify-center gap-8 md:gap-12">
-                  {(currentStep > 1 || selectedParty) && (
+                  {(currentStep > 0 || selectedDate) && (
                     <button
                       onClick={() => {
-                        if (currentStep === 1) {
+                        if (currentStep === 0) {
+                          setSelectedDate('');
+                          setIsDateAvailable(true);
+                        } else if (currentStep === 1 && selectedParty) {
                           setSelectedParty('');
                         } else {
                           setCurrentStep(prev => prev - 1);
@@ -1512,7 +1817,7 @@ export default function PriceCalculator({
                       Tillbaka
                     </button>
                   )}
-                  {selectedParty && (
+                  {currentStep > 0 && selectedParty && (
                     <div className="text-center">
                       <h3 className="text-sm md:text-lg font-heading font-semibold text-white mb-2 md:mb-3">
                         Totalt Pris
@@ -1526,14 +1831,18 @@ export default function PriceCalculator({
                       </div>
                     </div>
                   )}
-                  {currentStep < 4 && (currentStep > 1 || selectedParty) ? (
+                  {currentStep < 4 && (
                     <button
                       onClick={handleNext}
-                      className="px-8 md:px-10 py-3 md:py-4 bg-[#00ff97] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(0,255,151,0.5)] text-sm md:text-base font-bold"
+                      disabled={
+                        currentStep === 0 && (!selectedDate || !isDateAvailable || isCheckingDate)
+                      }
+                      className="px-8 md:px-10 py-3 md:py-4 bg-[#00ff97] text-[#0a0a0a] rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(0,255,151,0.5)] text-sm md:text-base font-bold disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                     >
-                      Nästa
+                      {currentStep === 0 && isCheckingDate ? 'Kontrollerar...' : 'Nästa'}
                     </button>
-                  ) : currentStep === 4 ? (
+                  )}
+                  {currentStep === 4 && (
                     <button
                       type="submit"
                       form="price-calculator-form"
@@ -1550,7 +1859,7 @@ export default function PriceCalculator({
                     >
                       {isSubmitting ? 'Skickar...' : 'Skicka Förfrågan'}
                     </button>
-                  ) : null}
+                  )}
                 </div>
               </div>
             </div>

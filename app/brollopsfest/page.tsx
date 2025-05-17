@@ -111,7 +111,7 @@ const weddingStepDescriptions = {
     description: 'Ange bröllopslokalens adress för att beräkna avstånd från Malmö',
   },
   step4: {
-    title: 'Kontaktinformation',
+    title: 'Kontaktinfo',
     description: 'Fyll i era uppgifter för att skicka er förfrågan',
   },
 };
@@ -172,7 +172,7 @@ export default function Bröllopsfest() {
         imageAlt="LED-golv för bröllopsfest"
         imagePosition="right"
       />
-      <PriceCalculator defaultPartyType="wedding" stepDescriptions={weddingStepDescriptions} />
+      <PriceCalculator defaultPartyType="wedding" />
       <FAQ faqItems={faqItems} />
       <GoogleReviews />
     </div>
